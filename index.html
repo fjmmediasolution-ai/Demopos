@@ -40,7 +40,7 @@
         body.theme-crimson { --primary: #e11d48; --primary-rgb: 225, 29, 72; --primary-gradient: linear-gradient(135deg, #be123c 0%, #fb7185 100%); --sidebar-bg: #18181b; --dark: #09090b; --bg-light: #fff1f2; }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--bg-light); overflow: hidden; transition: background 0.3s ease; }
+        body { background: var(--bg-light); overflow-x: hidden; transition: background 0.3s ease; }
         button { cursor: pointer; }
 
         #login-page { position: fixed; inset: 0; z-index: 99999; background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(2, 6, 23, 0.95)), url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat; display: flex; align-items: center; justify-content: center; transition: opacity 0.5s ease; padding: 20px; }
@@ -62,7 +62,7 @@
         @keyframes fadeInAuth { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
         .wrapper { display: flex; height: 100vh; width: 100vw; }
-        .sidebar { width: var(--sidebar-w); background: var(--sidebar-bg); color: white; transition: var(--transition); display: flex; flex-direction: column; position: relative; flex-shrink: 0; z-index: 1001; }
+        .sidebar { width: var(--sidebar-w); background: var(--sidebar-bg); color: white; transition: var(--transition); display: flex; flex-direction: column; position: relative; flex-shrink: 0; z-index: 10001; }
         .sidebar.collapsed { width: var(--sidebar-c); }
         .logo-details { height: 85px; display: flex; align-items: center; padding: 0 18px; gap: 12px; overflow: hidden; border-bottom: 1px solid rgba(255,255,255,0.08); }
         .sidebar-brand-box { display: flex; flex-direction: column; overflow: hidden; }
@@ -265,13 +265,144 @@
             #invoice-modal .invoice-content, #invoice-modal .invoice-content * { visibility: visible; }
             #invoice-modal .invoice-content { position: absolute; left: 0; top: 0; width: 100%; }
         }
-        @media (max-width: 992px) { .view.active { flex-direction: column; } .order-panel { width: 100%; border-left: none; border-top: 1px solid var(--border-color); } }
+
+        /* ===================================================
+           MOBILE AUTO-ADJUSTMENT & RESPONSIVE DESIGN FIXES
+           =================================================== */
+        @media (max-width: 992px) {
+            body {
+                overflow-y: auto !important;
+                height: auto !important;
+            }
+            .wrapper {
+                height: auto !important;
+                min-height: 100vh;
+                overflow: visible !important;
+            }
+            .main-container {
+                height: auto !important;
+                overflow: visible !important;
+            }
+            .view {
+                height: auto !important;
+                min-height: calc(100vh - 70px);
+                overflow: visible !important;
+            }
+            .view.active {
+                display: flex !important;
+                flex-direction: column !important;
+            }
+            .pos-main {
+                padding: 14px !important;
+                overflow: visible !important;
+            }
+            .order-panel {
+                width: 100% !important;
+                border-left: none !important;
+                border-top: 2px solid var(--border-color) !important;
+                padding: 16px !important;
+                position: static !important;
+                box-shadow: 0 -4px 15px rgba(0,0,0,0.05);
+            }
+            #cart-items {
+                max-height: 250px !important;
+            }
+        }
+
         @media (max-width: 768px) {
-            .sidebar { position: fixed; left: -100%; height: 100vh; }
-            .sidebar.mobile-open { left: 0; width: var(--sidebar-w) !important; }
-            .toggle-arrow { display: none; }
-            .mobile-toggle { display: block; }
-            header { padding: 0 20px; }
+            header {
+                padding: 0 12px !important;
+                height: 60px !important;
+                gap: 8px !important;
+            }
+            #header-title {
+                font-size: 15px !important;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 120px;
+            }
+            .header-theme-selector {
+                display: none !important;
+            }
+            .user-header-badge {
+                padding: 4px 8px !important;
+                font-size: 0.75rem !important;
+            }
+            #header-user-display {
+                max-width: 75px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .pos-filters {
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 8px !important;
+            }
+            .search-box {
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            .category-filters {
+                display: flex;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 6px;
+                gap: 6px;
+            }
+            .category-filters::-webkit-scrollbar {
+                height: 4px;
+            }
+            .category-filters button {
+                padding: 7px 14px !important;
+                font-size: 0.8rem !important;
+            }
+            .menu-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+            }
+            .card {
+                padding: 10px !important;
+            }
+            .card img {
+                height: 95px !important;
+            }
+            .card h4 {
+                font-size: 0.85rem !important;
+            }
+            .sidebar {
+                position: fixed !important;
+                left: -100% !important;
+                top: 0;
+                bottom: 0;
+                height: 100vh !important;
+                z-index: 10001 !important;
+                transition: left 0.3s ease !important;
+            }
+            .sidebar.mobile-open {
+                left: 0 !important;
+                width: 270px !important;
+            }
+            .toggle-arrow {
+                display: none !important;
+            }
+            .mobile-toggle {
+                display: block !important;
+            }
+            .stock-table-wrapper {
+                padding: 10px !important;
+                border-radius: 12px !important;
+            }
+            .custom-table th, .custom-table td {
+                padding: 8px 6px !important;
+                font-size: 0.78rem !important;
+            }
+            .modal-content {
+                width: 95% !important;
+                padding: 18px !important;
+                margin: 10px !important;
+            }
         }
     </style>
 </head>
@@ -360,6 +491,8 @@
                 <li id="nav-users"><a href="#" onclick="switchView('users')"><i class='bx bx-user-pin'></i><span class="links_name">Users & Access</span></a></li>
             </ul>
         </nav>
+
+        <div id="mobile-backdrop" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:10000;" onclick="toggleMobile()"></div>
 
         <div class="main-container">
             <header>
@@ -472,7 +605,6 @@
                         </div>
                     </div>
                     
-                    <!-- ORDER SUMMARY: TAX COMPLETELY REMOVED -->
                     <div class="order-summary">
                         <div class="summary-line"><span>Subtotal</span><span id="subtotal-amount">Rs. 0</span></div>
                         <div class="summary-line"><span>Discount (Rs.)</span><input type="number" id="manual-discount-input" class="manual-input-box" placeholder="0" min="0" style="color:#ef4444;"></div>
@@ -1230,7 +1362,7 @@
             isScanThrottled = true;
 
             processScannedCode(decodedText);
-            stopCameraScanner(); // Camera foran close ho jaye taake cart nazar aaye
+            stopCameraScanner();
 
             setTimeout(() => { isScanThrottled = false; }, 1500);
         }
@@ -1265,7 +1397,12 @@
                     return;
                 }
                 playBeepSound();
-                addToCart(matchedItem.id); // Seedha cart mein add hoga!
+                
+                if (typeof window.addToCart === 'function') {
+                    window.addToCart(matchedItem.id);
+                } else {
+                    console.error("addToCart function nahi mila!");
+                }
             } else {
                 alert(`Barcode [${rawCode}] se koi product nahi mila!`);
             }
@@ -1871,7 +2008,6 @@
                 const activeBtn = document.querySelector('#pos-category-filters button.active');
                 const activeCategory = activeBtn ? activeBtn.dataset.category : 'all';
                 
-                // CRUCIAL: Number(item.stock) > 0 ensures 0 stock products disappear from POS grid!
                 const filteredItems = window.menuItems.filter(item => 
                     Number(item.stock || 0) > 0 && 
                     (activeCategory === 'all' || item.category === activeCategory) && 
@@ -1910,19 +2046,19 @@
                     const code = this.value.trim();
                     if (!code) return;
 
-                    processScannedCode(code); // Direct cart entry
+                    processScannedCode(code);
                     this.value = '';
                     window.filterMenu();
                 }
             });
 
-            // Cart Functions
-            function addToCart(itemId) {
+            // Cart Functions (Globally accessible)
+            window.addToCart = function(itemId) {
                 const item = window.menuItems.find(i => i.id === itemId);
                 if (item && Number(item.stock) > 0) {
                     const existing = cart.find(i => i.id === itemId);
                     if (existing) {
-                        if (existing.qty < item.stock) {
+                        if (existing.qty < Number(item.stock)) {
                             existing.qty++;
                         } else {
                             alert("Stock limit reached!");
@@ -1931,19 +2067,20 @@
                     } else {
                         cart.push({ ...item, qty: 1 });
                     }
-                    renderCart();
+                    window.renderCart();
                 } else {
-                    alert("Out of stock!");
+                    alert("Product out of stock hai!");
                 }
-            }
+            };
 
             window.clearCart = function() {
                 cart = [];
-                renderCart();
+                window.renderCart();
             };
 
-            function renderCart() {
+            window.renderCart = function() {
                 const container = document.getElementById('cart-items');
+                if (!container) return;
                 container.innerHTML = cart.length === 0 ? '<div class="cart-empty-msg">Cart is empty</div>' : '';
                 cart.forEach(item => {
                     const div = document.createElement('div'); 
@@ -1960,13 +2097,13 @@
                             </div>
                         </div>
                         <div class="cart-item-actions">
-                            <span class="price">Rs. ${(item.price * item.qty).toLocaleString()}</span>
+                            <span class="price">Rs. ${(Number(item.price) * item.qty).toLocaleString()}</span>
                             <button class="remove-item"><i class='bx bxs-trash-alt'></i></button>
                         </div>`;
                     container.appendChild(div);
                 });
                 updateSummary();
-            }
+            };
 
             document.getElementById('cart-items').addEventListener('click', (e) => {
                 const row = e.target.closest('.cart-item'); 
@@ -1986,13 +2123,12 @@
                 if(e.target.closest('.remove-item')) { 
                     cart = cart.filter(i => i.id !== id); 
                 }
-                renderCart(); 
+                window.renderCart(); 
             });
 
             const discountInputEl = document.getElementById('manual-discount-input');
             discountInputEl.addEventListener('input', () => updateSummary());
 
-            // Order Summary calculation: TAX REMOVED!
             function updateSummary() {
                 const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
                 const manualDiscount = parseFloat(discountInputEl.value) || 0;
@@ -2048,7 +2184,6 @@
                 try {
                     await salesDB.add(saleRecord);
 
-                    // Decrement Stock in Cloud Database (Once stock becomes 0, it hides automatically)
                     for(let item of cart) {
                         if(item.id) {
                             await productsDB.doc(item.id).update({
@@ -2064,7 +2199,7 @@
                     document.getElementById('pos-cust-name').value = '';
                     document.getElementById('pos-cust-phone').value = '';
                     window.setPaymentMode('Cash');
-                    renderCart();
+                    window.renderCart();
                 } catch(err) {
                     alert("Sale Save Error: " + err.message);
                 }
@@ -3000,9 +3135,28 @@
             };
 
             window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('collapsed');
-            window.toggleMobile = () => document.getElementById('sidebar').classList.toggle('mobile-open');
             
+            // Toggle Mobile Drawer & Backdrop
+            window.toggleMobile = () => {
+                const sidebar = document.getElementById('sidebar');
+                const backdrop = document.getElementById('mobile-backdrop');
+                sidebar.classList.toggle('mobile-open');
+                if (backdrop) {
+                    backdrop.style.display = sidebar.classList.contains('mobile-open') ? 'block' : 'none';
+                }
+            };
+            
+            // Switch View with Auto-Close Menu for Mobile
             window.switchView = (v) => {
+                const sidebar = document.getElementById('sidebar');
+                const backdrop = document.getElementById('mobile-backdrop');
+                if (sidebar && sidebar.classList.contains('mobile-open')) {
+                    sidebar.classList.remove('mobile-open');
+                }
+                if (backdrop) {
+                    backdrop.style.display = 'none';
+                }
+
                 const currentUserStr = sessionStorage.getItem('pos_current_user');
                 if (currentUserStr) {
                     const currentUser = JSON.parse(currentUserStr);
