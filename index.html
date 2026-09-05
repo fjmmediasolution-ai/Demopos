@@ -131,7 +131,7 @@
         .card .cost-p { color: #64748b; font-size: 0.75rem; font-weight: 600; margin-top: 2px; }
 
         .order-panel { width: 400px; flex-shrink: 0; background: white; border-left: 1px solid var(--border-color); padding: 22px; display: flex; flex-direction: column; overflow-y: auto; }
-        #cart-items { flex-grow: 1; min-height: 180px; max-height: 280px; overflow-y: auto; margin-bottom: 12px; }
+        #cart-items { flex-grow: 1; min-height: 200px; max-height: 320px; overflow-y: auto; margin-bottom: 12px; }
         .cart-empty-msg { height: 100%; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-style: italic; min-height: 120px; }
         .cart-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
         .cart-item img { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; }
@@ -246,7 +246,6 @@
         .pl-standard-data-table th { background-color: #f3f4f6; color: #1f2937; font-size: 12px; font-weight: 700; padding: 10px 14px; border: 1px solid #e5e7eb; text-align: left; }
         .pl-standard-data-table th.num, .pl-standard-data-table td.num { text-align: right; }
         .pl-standard-data-table td { padding: 10px 14px; border: 1px solid #e5e7eb; font-size: 12.5px; color: #374151; }
-        .pl-empty-box { border: 1px solid #e5e7eb; padding: 12px 14px; font-size: 12px; color: #4b5563; background: #ffffff; margin-bottom: 25px; }
 
         #standard-pdf-hidden-host { position: absolute; left: -99999px; top: 0; width: 800px; background: #ffffff; }
         #pl-pdf-offscreen-wrapper { position: absolute; left: -99999px; top: 0; width: 800px; background: #ffffff; }
@@ -425,7 +424,7 @@
                 </div>
             </div>
 
-            <!-- 2. POS VIEW (WITH MOBILE CAMERA SCAN BUTTON) -->
+            <!-- 2. POS VIEW -->
             <div id="pos-view" class="view">
                 <main class="pos-main">
                     <div class="pos-filters">
@@ -473,9 +472,9 @@
                         </div>
                     </div>
                     
+                    <!-- ORDER SUMMARY: TAX COMPLETELY REMOVED -->
                     <div class="order-summary">
                         <div class="summary-line"><span>Subtotal</span><span id="subtotal-amount">Rs. 0</span></div>
-                        <div class="summary-line"><span>Tax (Rs.)</span><input type="number" id="manual-tax-input" class="manual-input-box" placeholder="0" min="0"></div>
                         <div class="summary-line"><span>Discount (Rs.)</span><input type="number" id="manual-discount-input" class="manual-input-box" placeholder="0" min="0" style="color:#ef4444;"></div>
                         <div class="summary-line total"><span>Total Payable</span><span id="total-amount">Rs. 0</span></div>
                         <button class="charge-btn" id="charge-btn">Charge Rs. 0</button>
@@ -832,13 +831,6 @@
                         <div class="form-group" style="margin-top: 15px;"><label>Business Name</label><input type="text" id="restaurant-name" value="KORVEXA SOFTWARE"></div>
                         <div class="form-group"><label>Phone Number</label><input type="text" id="restaurant-number" value="(0300) 1234567"></div>
                         <div class="form-group"><label>Receipt Footer Note</label><textarea id="invoice-note" rows="2">YOUR WORK OUR IDENTITY. Thank you for your business!</textarea></div>
-
-                        <hr style="margin: 25px 0; border-color: var(--border-color);">
-                        <h2>Financial Settings</h2>
-                        <div class="form-group toggle"><label>Enable Default Tax</label><input type="checkbox" id="tax-enabled"></div>
-                        <div class="form-group"><label>Default Tax Rate (%)</label><input type="number" id="tax-rate" min="0" value="0"></div>
-                        <div class="form-group toggle"><label>Enable Default Discount</label><input type="checkbox" id="discount-enabled"></div>
-                        <div class="form-group"><label>Default Discount Rate (%)</label><input type="number" id="discount-rate" min="0" value="0"></div>
                         
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; flex-wrap:wrap; gap:10px;">
                             <button class="save-btn" id="save-settings-btn"><i class='bx bx-check'></i> Save Settings</button>
@@ -950,37 +942,6 @@
                 </div>
             </div>
             <button class="save-btn" style="width: 100%; margin-top: 10px; justify-content:center;" onclick="saveStock()">Save Product</button>
-        </div>
-    </div>
-
-    <!-- MODAL: SCANNED PRODUCT DETAILS POPUP -->
-    <div id="scan-details-modal" class="modal-overlay">
-        <div class="modal-content" style="max-width: 380px; text-align: center;">
-            <span class="close-modal" onclick="closeScanModal()">&times;</span>
-            <div style="background:#dcfce7; color:#15803d; padding:6px 14px; border-radius:20px; display:inline-flex; align-items:center; gap:6px; font-weight:700; font-size:0.85rem; margin-bottom:12px;">
-                <i class='bx bx-check-circle' style="font-size: 1.1rem;"></i> Product Scanned!
-            </div>
-            <img id="scan-modal-img" src="" style="width:120px; height:120px; border-radius:14px; object-fit:cover; margin:0 auto 12px; border:2px solid var(--border-color); display:block;">
-            <h3 id="scan-modal-name" style="margin-bottom:4px; font-size:1.15rem; font-weight:800;">-</h3>
-            <p style="color:#64748b; font-size:0.85rem; margin-bottom:12px;">Barcode: <strong id="scan-modal-barcode" style="color:var(--dark);">-</strong></p>
-            
-            <div style="display:flex; justify-content:space-around; background:#f8fafc; padding:12px; border-radius:12px; margin-bottom:15px; border:1px solid var(--border-color);">
-                <div>
-                    <small style="color:#64748b; display:block; font-size:0.75rem;">Sell Price</small>
-                    <strong id="scan-modal-price" style="color:var(--primary); font-size:1.1rem;">Rs. 0</strong>
-                </div>
-                <div>
-                    <small style="color:#64748b; display:block; font-size:0.75rem;">Stock Left</small>
-                    <strong id="scan-modal-stock" style="font-size:1.1rem; color:#10b981;">0</strong>
-                </div>
-                <div>
-                    <small style="color:#64748b; display:block; font-size:0.75rem;">Category</small>
-                    <strong id="scan-modal-cat" style="text-transform:capitalize; font-size:0.95rem;">-</strong>
-                </div>
-            </div>
-            
-            <p style="font-size:0.85rem; color:#16a34a; font-weight:700; margin-bottom:15px;">✓ Added directly to current cart</p>
-            <button class="save-btn" style="width:100%; justify-content:center;" onclick="closeScanModal()">Continue Scanning</button>
         </div>
     </div>
 
@@ -1128,7 +1089,6 @@
             </table>
             <div class="invoice-summary">
                 <p>Subtotal: <span id="invoice-subtotal"></span></p>
-                <p>Tax: <span id="invoice-tax"></span></p>
                 <p>Discount: <span id="invoice-discount"></span></p>
                 <p style="font-size: 1.15rem; margin-top: 5px;"><b>Total: <span id="invoice-total"></span></b></p>
                 <p style="margin-top:4px;">Payment: <strong id="invoice-payment-method"></strong></p>
@@ -1196,7 +1156,7 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        // 2. Collections
+        // Collections
         const usersDB      = db.collection('korvexa_users');
         const categoriesDB = db.collection('korvexa_categories');
         const productsDB   = db.collection('korvexa_products');
@@ -1218,7 +1178,7 @@
         let salesChartInstance = null;
 
         // ==========================================
-        // MOBILE LIVE CAMERA SCANNER LOGIC
+        // FAST DIRECT MOBILE CAMERA & BARCODE SCANNER
         // ==========================================
         let cameraScanner = null;
         let isScanThrottled = false;
@@ -1227,14 +1187,30 @@
             document.getElementById('camera-scanner-modal').classList.add('visible');
             
             if (cameraScanner) {
-                cameraScanner.clear();
+                try { cameraScanner.clear(); } catch(e){}
             }
 
-            cameraScanner = new Html5Qrcode("camera-preview-box");
+            const formats = [
+                Html5QrcodeSupportedFormats.CODE_128,
+                Html5QrcodeSupportedFormats.CODE_39,
+                Html5QrcodeSupportedFormats.EAN_13,
+                Html5QrcodeSupportedFormats.EAN_8,
+                Html5QrcodeSupportedFormats.UPC_A,
+                Html5QrcodeSupportedFormats.UPC_E,
+                Html5QrcodeSupportedFormats.QR_CODE
+            ];
+
+            cameraScanner = new Html5Qrcode("camera-preview-box", { 
+                formatsToSupport: formats,
+                verbose: false,
+                experimentalFeatures: {
+                    useBarCodeDetectorIfSupported: true
+                }
+            });
             
             const config = { 
-                fps: 15,
-                qrbox: { width: 280, height: 160 },
+                fps: 25,
+                qrbox: { width: 280, height: 130 },
                 aspectRatio: 1.0
             };
 
@@ -1253,21 +1229,8 @@
             if (isScanThrottled) return;
             isScanThrottled = true;
 
-            const code = decodedText.trim().toLowerCase();
-            
-            const matchedItem = window.menuItems.find(item => 
-                (item.barcode && item.barcode.toLowerCase() === code) ||
-                (item.name && item.name.toLowerCase() === code)
-            );
-
-            if (matchedItem) {
-                playBeepSound();
-                addToCart(matchedItem.id);
-                stopCameraScanner();
-                showScanDetailsModal(matchedItem);
-            } else {
-                alert(`Barcode [${decodedText}] se koi product nahi mila!`);
-            }
+            processScannedCode(decodedText);
+            stopCameraScanner(); // Camera foran close ho jaye taake cart nazar aaye
 
             setTimeout(() => { isScanThrottled = false; }, 1500);
         }
@@ -1284,6 +1247,29 @@
                 document.getElementById('camera-scanner-modal').classList.remove('visible');
             }
         };
+
+        // Unified Function: Barcode match & Direct Cart Entry
+        function processScannedCode(rawCode) {
+            if (!rawCode) return;
+            const code = String(rawCode).trim().toLowerCase();
+            
+            const matchedItem = window.menuItems.find(item => {
+                const itemBc = item.barcode != null ? String(item.barcode).trim().toLowerCase() : '';
+                const itemNm = item.name != null ? String(item.name).trim().toLowerCase() : '';
+                return itemBc === code || itemNm === code;
+            });
+
+            if (matchedItem) {
+                if (Number(matchedItem.stock) <= 0) {
+                    alert(`"${matchedItem.name}" ka stock khatam (0) hai!`);
+                    return;
+                }
+                playBeepSound();
+                addToCart(matchedItem.id); // Seedha cart mein add hoga!
+            } else {
+                alert(`Barcode [${rawCode}] se koi product nahi mila!`);
+            }
+        }
 
         function playBeepSound() {
             try {
@@ -1879,21 +1865,24 @@
                 }
             };
 
-            // Menu Filter in POS
+            // Menu Filter in POS (ZERO QUANTITY PRODUCTS ARE COMPLETELY HIDDEN)
             window.filterMenu = function() {
                 const searchTerm = document.getElementById('menu-search').value.toLowerCase().trim();
                 const activeBtn = document.querySelector('#pos-category-filters button.active');
                 const activeCategory = activeBtn ? activeBtn.dataset.category : 'all';
                 
+                // CRUCIAL: Number(item.stock) > 0 ensures 0 stock products disappear from POS grid!
                 const filteredItems = window.menuItems.filter(item => 
+                    Number(item.stock || 0) > 0 && 
                     (activeCategory === 'all' || item.category === activeCategory) && 
-                    ((item.name && item.name.toLowerCase().includes(searchTerm)) || (item.barcode && item.barcode.toLowerCase().includes(searchTerm)))
+                    ((item.name && item.name.toLowerCase().includes(searchTerm)) || 
+                     (item.barcode && String(item.barcode).toLowerCase().includes(searchTerm)))
                 );
                 
                 const menuGrid = document.getElementById('menu-grid');
                 menuGrid.innerHTML = '';
                 if (filteredItems.length === 0) {
-                    menuGrid.innerHTML = `<div class="empty-placeholder"><i class='bx bx-box' style="font-size:3rem; display:block; margin-bottom:8px;"></i>No products found. Add products in "Manage Stock" to start selling.</div>`;
+                    menuGrid.innerHTML = `<div class="empty-placeholder"><i class='bx bx-box' style="font-size:3rem; display:block; margin-bottom:8px;"></i>Koi product stock mein nahi bacha ya search match nahi hua.</div>`;
                     return;
                 }
                 filteredItems.forEach(item => {
@@ -1913,46 +1902,24 @@
                 window.updateDashboardMetrics();
             };
 
+            // Barcode Gun / Manual Input on POS search field
             const searchInput = document.getElementById('menu-search');
             searchInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    const code = this.value.trim().toLowerCase();
+                    const code = this.value.trim();
                     if (!code) return;
 
-                    const matchedItem = window.menuItems.find(item => 
-                        (item.barcode && item.barcode.toLowerCase() === code) || 
-                        (item.name && item.name.toLowerCase() === code)
-                    );
-
-                    if (matchedItem) {
-                        playBeepSound();
-                        addToCart(matchedItem.id);
-                        showScanDetailsModal(matchedItem);
-                        this.value = '';
-                        window.filterMenu();
-                    } else {
-                        alert(`No product found with Barcode / Name: "${code}"`);
-                    }
+                    processScannedCode(code); // Direct cart entry
+                    this.value = '';
+                    window.filterMenu();
                 }
             });
-
-            window.showScanDetailsModal = function(item) {
-                document.getElementById('scan-modal-img').src = item.img || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80';
-                document.getElementById('scan-modal-name').textContent = item.name;
-                document.getElementById('scan-modal-barcode').textContent = item.barcode || 'N/A';
-                document.getElementById('scan-modal-price').textContent = `Rs. ${Number(item.price || 0).toLocaleString()}`;
-                document.getElementById('scan-modal-stock').textContent = item.stock;
-                document.getElementById('scan-modal-cat').textContent = item.category;
-                document.getElementById('scan-details-modal').classList.add('visible');
-            };
-
-            window.closeScanModal = () => document.getElementById('scan-details-modal').classList.remove('visible');
 
             // Cart Functions
             function addToCart(itemId) {
                 const item = window.menuItems.find(i => i.id === itemId);
-                if (item && item.stock > 0) {
+                if (item && Number(item.stock) > 0) {
                     const existing = cart.find(i => i.id === itemId);
                     if (existing) {
                         if (existing.qty < item.stock) {
@@ -2022,16 +1989,14 @@
                 renderCart(); 
             });
 
-            const taxInputEl = document.getElementById('manual-tax-input');
             const discountInputEl = document.getElementById('manual-discount-input');
-            taxInputEl.addEventListener('input', () => updateSummary());
             discountInputEl.addEventListener('input', () => updateSummary());
 
+            // Order Summary calculation: TAX REMOVED!
             function updateSummary() {
                 const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-                const manualTax = parseFloat(taxInputEl.value) || 0;
                 const manualDiscount = parseFloat(discountInputEl.value) || 0;
-                const grandTotal = Math.max(0, subtotal + manualTax - manualDiscount);
+                const grandTotal = Math.max(0, subtotal - manualDiscount);
 
                 document.getElementById('subtotal-amount').textContent = `Rs. ${subtotal.toLocaleString()}`;
                 document.getElementById('total-amount').textContent = `Rs. ${grandTotal.toLocaleString()}`;
@@ -2039,6 +2004,7 @@
                 document.getElementById('charge-btn').textContent = `${btnLabel} Rs. ${grandTotal.toLocaleString()}`;
             }
 
+            // CHARGE BUTTON: DEDUCTS STOCK AND CREATES SALE
             document.getElementById('charge-btn').addEventListener('click', async () => { 
                 if(cart.length === 0) { alert("Cart is empty!"); return; }
                 let custName = document.getElementById('pos-cust-name').value.trim();
@@ -2065,9 +2031,8 @@
                 }
 
                 const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-                const taxVal = parseFloat(taxInputEl.value) || 0;
                 const discVal = parseFloat(discountInputEl.value) || 0;
-                const total = Math.max(0, subtotal + taxVal - discVal);
+                const total = Math.max(0, subtotal - discVal);
                 const invId = (Math.floor(Math.random() * 900) + 100).toString();
                 const now = new Date();
                 const invDate = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
@@ -2076,14 +2041,14 @@
                     invoiceId: invId, date: invDate, customerName: custName, customerPhone: custPhone,
                     paymentMode: finalPaymentMode, paymentStatus: paymentStatus,
                     items: cart.map(i => ({ id: i.id, name: i.name, qty: i.qty, costPrice: (i.costPrice || 0), price: i.price })),
-                    subtotal: subtotal, tax: taxVal, discount: discVal, total: total,
+                    subtotal: subtotal, tax: 0, discount: discVal, total: total,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
                 try {
                     await salesDB.add(saleRecord);
 
-                    // Decrement Stock in Cloud Database
+                    // Decrement Stock in Cloud Database (Once stock becomes 0, it hides automatically)
                     for(let item of cart) {
                         if(item.id) {
                             await productsDB.doc(item.id).update({
@@ -2095,7 +2060,6 @@
 
                     showInvoiceModal(saleRecord);
                     cart = [];
-                    taxInputEl.value = '';
                     discountInputEl.value = '';
                     document.getElementById('pos-cust-name').value = '';
                     document.getElementById('pos-cust-phone').value = '';
@@ -2119,7 +2083,6 @@
                 });
 
                 document.getElementById('invoice-subtotal').textContent = `Rs. ${sale.subtotal.toLocaleString()}`;
-                document.getElementById('invoice-tax').textContent = `Rs. ${sale.tax.toLocaleString()}`;
                 document.getElementById('invoice-discount').textContent = `-Rs. ${sale.discount.toLocaleString()}`;
                 document.getElementById('invoice-total').textContent = `Rs. ${sale.total.toLocaleString()}`;
                 document.getElementById('invoice-payment-method').textContent = `${sale.paymentMode} (${sale.paymentStatus.toUpperCase()})`;
@@ -2923,9 +2886,7 @@
                 }
             };
 
-            // ==========================================
-            // USERS MANAGEMENT & APPROVAL TABLE LOGIC
-            // ==========================================
+            // Users Management
             function renderUsersManagementTable() {
                 const tbody = document.getElementById('users-table-tbody');
                 if (!tbody) return;
@@ -2972,7 +2933,7 @@
             window.quickApproveUser = async function(userId) {
                 try {
                     await usersDB.doc(userId).update({ status: 'active' });
-                    alert("User approved successfully! Ab yeh user apni Email se login kar sakega.");
+                    alert("User approved successfully!");
                 } catch(e) {
                     alert("Error: " + e.message);
                 }
