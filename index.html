@@ -9,6 +9,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+
+    <!-- Mobile Camera Live Barcode Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
+
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         
@@ -106,7 +114,7 @@
 
         .pos-main { flex-grow: 1; display: flex; flex-direction: column; padding: 22px; overflow-y: auto; }
         .pos-filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 20px; }
-        .search-box { background: white; padding: 9px 16px; border-radius: 12px; display: flex; align-items: center; border: 1px solid var(--border-color); flex-grow: 1; max-width: 420px; }
+        .search-box { background: white; padding: 9px 16px; border-radius: 12px; display: flex; align-items: center; border: 1px solid var(--border-color); flex-grow: 1; max-width: 480px; }
         .search-box input { border: none; outline: none; background: transparent; margin-left: 10px; width: 100%; font-size: 0.95rem; }
         .category-filters button { padding: 9px 18px; border-radius: 10px; border: 1px solid var(--border-color); background: white; font-weight: 600; transition: var(--transition); text-transform: capitalize; color: #475569; font-size: 0.9rem; }
         .category-filters button.active, .category-filters button:hover { background: var(--primary); background-image: var(--primary-gradient); color: white; border-color: transparent; }
@@ -279,29 +287,35 @@
                 <h2 style="font-size: 22px; font-weight: 800; color: #070b14; letter-spacing: 0.5px;">KORVEXA SOFTWARE</h2>
                 <span style="font-size: 9px; font-weight: 700; color: #0066ff; letter-spacing: 2px;">YOUR WORK OUR IDENTITY</span>
             </div>
+            
+            <!-- 1. SIGN IN BOX -->
             <div id="login-box" class="auth-box active">
                 <p id="login-error" class="auth-msg error"></p>
-                <input type="text" id="username" placeholder="Username (e.g. admin)">
-                <input type="password" id="password" placeholder="Password (e.g. password123)">
+                <input type="text" id="login-identifier" placeholder="Email ya Username (Master: korwesa.com)">
+                <input type="password" id="password" placeholder="Password (Master: admin123)">
                 <div class="auth-links">
-                    <span style="color:#64748b; font-size:0.82rem;">Demo: admin / password123</span>
+                    <span style="color:#64748b; font-size:0.82rem;">Master: korwesa.com / admin123</span>
                     <a href="javascript:void(0)" onclick="switchAuthMode('forgot')">Forgot Password?</a>
                 </div>
                 <button class="auth-btn" onclick="handleLogin()">Sign In to Dashboard</button>
                 <p class="auth-switch-text">Don't have an account? <a href="javascript:void(0)" onclick="switchAuthMode('register')">Register Now</a></p>
             </div>
+
+            <!-- 2. REGISTRATION BOX -->
             <div id="register-box" class="auth-box">
                 <p id="register-msg" class="auth-msg"></p>
-                <input type="text" id="reg-fullname" placeholder="Full Name or Business Name">
-                <input type="text" id="reg-username" placeholder="Choose Username">
-                <input type="password" id="reg-password" placeholder="New Password">
+                <input type="text" id="reg-username" placeholder="Username (e.g. cashier01)">
+                <input type="email" id="reg-email" placeholder="Email (Login ke liye istemal hoga)">
+                <input type="password" id="reg-new-password" placeholder="New Password">
                 <input type="password" id="reg-confirm-password" placeholder="Confirm Password">
-                <button class="auth-btn" onclick="handleRegister()">Create Account</button>
+                <button class="auth-btn" onclick="handleRegister()">Submit Registration</button>
                 <p class="auth-switch-text">Already registered? <a href="javascript:void(0)" onclick="switchAuthMode('login')">Sign In</a></p>
             </div>
+
+            <!-- 3. FORGOT PASSWORD BOX -->
             <div id="forgot-box" class="auth-box">
                 <p id="forgot-msg" class="auth-msg"></p>
-                <input type="text" id="forgot-username" placeholder="Enter Your Username">
+                <input type="text" id="forgot-email" placeholder="Enter Your Registered Email">
                 <input type="password" id="forgot-new-password" placeholder="Enter New Password">
                 <button class="auth-btn" onclick="handleForgotPassword()">Reset Password</button>
                 <p class="auth-switch-text"><a href="javascript:void(0)" onclick="switchAuthMode('login')">Back to Login</a></p>
@@ -323,11 +337,11 @@
                 </div>
             </div>
             <ul class="nav-list">
-                <li><a href="#" class="active" onclick="switchView('dashboard')"><i class='bx bx-grid-alt'></i><span class="links_name">Dashboard</span></a></li>
-                <li><a href="#" onclick="switchView('pos')"><i class='bx bx-store'></i><span class="links_name">POS & Scan</span></a></li>
-                <li><a href="#" onclick="switchView('manage-stock')"><i class='bx bx-package'></i><span class="links_name">Manage Stock</span></a></li>
+                <li id="nav-dashboard"><a href="#" class="active" onclick="switchView('dashboard')"><i class='bx bx-grid-alt'></i><span class="links_name">Dashboard</span></a></li>
+                <li id="nav-pos"><a href="#" onclick="switchView('pos')"><i class='bx bx-store'></i><span class="links_name">POS & Scan</span></a></li>
+                <li id="nav-stock"><a href="#" onclick="switchView('manage-stock')"><i class='bx bx-package'></i><span class="links_name">Manage Stock</span></a></li>
 
-                <li class="has-submenu" id="reports-menu-wrapper">
+                <li class="has-submenu" id="nav-reports">
                     <a href="#" onclick="toggleSubmenu(event, this)">
                         <i class='bx bx-line-chart'></i>
                         <span class="links_name">Reports</span>
@@ -339,11 +353,12 @@
                     </ul>
                 </li>
 
-                <li><a href="#" onclick="switchView('sell')"><i class='bx bx-dollar-circle'></i><span class="links_name">Sales & Ledger</span></a></li>
-                <li><a href="#" onclick="switchView('return')"><i class='bx bx-undo'></i><span class="links_name">Return Log</span></a></li>
-                <li><a href="#" onclick="switchView('exchange')"><i class='bx bx-transfer-alt'></i><span class="links_name">Exchange Log</span></a></li>
-                <li><a href="#" onclick="switchView('expense')"><i class='bx bx-wallet'></i><span class="links_name">Expenses</span></a></li>
-                <li><a href="#" onclick="switchView('settings')"><i class='bx bx-cog'></i><span class="links_name">Settings</span></a></li>
+                <li id="nav-sales"><a href="#" onclick="switchView('sell')"><i class='bx bx-dollar-circle'></i><span class="links_name">Sales & Ledger</span></a></li>
+                <li id="nav-returns"><a href="#" onclick="switchView('return')"><i class='bx bx-undo'></i><span class="links_name">Return Log</span></a></li>
+                <li id="nav-exchanges"><a href="#" onclick="switchView('exchange')"><i class='bx bx-transfer-alt'></i><span class="links_name">Exchange Log</span></a></li>
+                <li id="nav-expenses"><a href="#" onclick="switchView('expense')"><i class='bx bx-wallet'></i><span class="links_name">Expenses</span></a></li>
+                <li id="nav-settings"><a href="#" onclick="switchView('settings')"><i class='bx bx-cog'></i><span class="links_name">Settings</span></a></li>
+                <li id="nav-users"><a href="#" onclick="switchView('users')"><i class='bx bx-user-pin'></i><span class="links_name">Users & Access</span></a></li>
             </ul>
         </nav>
 
@@ -354,9 +369,14 @@
                     <h2 id="header-title" style="font-size: 20px; font-weight: 700; color: #0f172a;">Dashboard</h2>
                 </div>
                 <div style="display: flex; align-items: center; gap: 16px;">
+                    <div id="admin-notif-btn" title="Pending User Approvals" style="position: relative; cursor: pointer; display: flex; align-items: center;" onclick="switchView('users')">
+                        <i class='bx bx-bell' style="font-size: 1.65rem; color: #475569;"></i>
+                        <span id="pending-notif-count" style="display: none; position: absolute; top: -5px; right: -6px; background: #ef4444; color: white; border-radius: 50%; font-size: 0.72rem; font-weight: 800; width: 19px; height: 19px; text-align: center; line-height: 19px; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);">0</span>
+                    </div>
+
                     <div class="user-header-badge">
                         <i class='bx bxs-user-circle' style="font-size: 1.2rem; color: var(--primary);"></i>
-                        <span id="header-user-display">Admin</span>
+                        <span id="header-user-display">Master Admin</span>
                         <i class='bx bx-log-out logout-link' title="Log Out" onclick="handleLogout()"></i>
                     </div>
                     <div class="header-theme-selector">
@@ -405,13 +425,16 @@
                 </div>
             </div>
 
-            <!-- 2. POS VIEW -->
+            <!-- 2. POS VIEW (WITH MOBILE CAMERA SCAN BUTTON) -->
             <div id="pos-view" class="view">
                 <main class="pos-main">
                     <div class="pos-filters">
-                        <div class="search-box" style="border: 2px solid var(--primary);">
+                        <div class="search-box" style="border: 2px solid var(--primary); display: flex; align-items: center; gap: 8px;">
                             <i class='bx bx-barcode-reader' style="font-size: 24px; color: var(--primary);"></i>
-                            <input type="text" id="menu-search" placeholder="Scan Barcode / Type product name & press Enter...">
+                            <input type="text" id="menu-search" placeholder="Scan Barcode / Type name & press Enter...">
+                            <button type="button" class="save-btn" style="padding: 7px 12px; font-size: 0.82rem; white-space: nowrap; border-radius: 8px; gap: 4px;" onclick="startCameraScanner()">
+                                <i class='bx bx-camera' style="font-size: 1.15rem;"></i> Cam Scan
+                            </button>
                         </div>
                         <div class="category-filters" id="pos-category-filters"></div>
                     </div>
@@ -819,15 +842,65 @@
                         
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-top:20px; flex-wrap:wrap; gap:10px;">
                             <button class="save-btn" id="save-settings-btn"><i class='bx bx-check'></i> Save Settings</button>
-                            <button class="danger-btn" onclick="factoryResetDatabase()"><i class='bx bx-trash'></i> Factory Reset Everything</button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- 11. USERS & ACCESS CONTROL VIEW -->
+            <div id="users-view" class="view">
+                <div class="content-wrapper">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+                        <div>
+                            <h2>User Accounts & Permissions Control</h2>
+                            <p style="color: #64748b; font-size: 0.88rem;">Approve staff requests, assign permitted modules, or block accounts.</p>
+                        </div>
+                        <div id="pending-users-badge-alert" style="background:#fee2e2; color:#b91c1c; padding:8px 16px; border-radius:12px; font-weight:700; font-size:0.85rem; display:none;">
+                            <i class='bx bxs-bell-ring'></i> <span id="pending-users-count-text">0 Pending Approvals</span>
+                        </div>
+                    </div>
+
+                    <div class="stock-table-wrapper">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email (Login ID)</th>
+                                    <th>Requested Date</th>
+                                    <th>Status</th>
+                                    <th>Active Permissions</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
     
     <!-- MODALS -->
+
+    <!-- MODAL: MOBILE CAMERA LENS SCANNER -->
+    <div id="camera-scanner-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 440px; text-align: center; padding: 22px;">
+            <span class="close-modal" onclick="stopCameraScanner()">&times;</span>
+            <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom: 6px;">
+                <i class='bx bx-scan' style="font-size: 1.6rem; color: var(--primary);"></i>
+                <h3 style="font-weight: 800; font-size: 1.2rem;">Mobile Barcode Lens</h3>
+            </div>
+            <p style="font-size: 0.82rem; color: #64748b; margin-bottom: 14px;">Barcode ko camera window ke bilkul samne rakhein</p>
+            
+            <div id="camera-preview-box" style="width: 100%; min-height: 260px; background: #0b1326; border-radius: 14px; overflow: hidden; position: relative;"></div>
+            
+            <button class="danger-btn" style="width: 100%; margin-top: 15px; justify-content: center;" onclick="stopCameraScanner()">
+                <i class='bx bx-x-circle'></i> Close Camera Lens
+            </button>
+        </div>
+    </div>
+
     <!-- MODAL: ADD / EDIT STOCK -->
     <div id="stock-modal" class="modal-overlay">
         <div class="modal-content">
@@ -911,28 +984,26 @@
         </div>
     </div>
 
-   <!-- MODAL: BARCODE STICKER PREVIEW & PRINT -->
-<div id="barcode-modal" class="modal-overlay">
-    <div class="modal-content" style="max-width: 400px; text-align: center;">
-        <span class="close-modal" onclick="closeBarcodeModal()">&times;</span>
-        <h3 style="margin-bottom: 12px;"><i class='bx bx-barcode'></i> Barcode Sticker</h3>
-        
-        <!-- Sticker Preview Box -->
-        <div id="barcode-print-box" style="background: white; border: 1px dashed #94a3b8; border-radius: 12px; padding: 18px; margin-bottom: 15px;">
-            <div id="bc-store-name" style="font-size: 0.75rem; font-weight: 700; color: #64748b; letter-spacing: 1px; text-transform: uppercase;">KORVEXA SOFTWARE</div>
-            <h4 id="bc-prod-name" style="font-size: 1.1rem; font-weight: 800; margin: 4px 0;">-</h4>
-            <p id="bc-prod-price" style="font-weight: 800; font-size: 1.25rem; color: var(--primary); margin-bottom: 6px;">Rs. 0</p>
-            <svg id="barcode-canvas" style="max-width: 100%; display: block; margin: 0 auto;"></svg>
-        </div>
+    <!-- MODAL: BARCODE STICKER PREVIEW & PRINT -->
+    <div id="barcode-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <span class="close-modal" onclick="closeBarcodeModal()">&times;</span>
+            <h3 style="margin-bottom: 12px;"><i class='bx bx-barcode'></i> Barcode Sticker</h3>
+            
+            <div id="barcode-print-box" style="background: white; border: 1px dashed #94a3b8; border-radius: 12px; padding: 18px; margin-bottom: 15px;">
+                <div id="bc-store-name" style="font-size: 0.75rem; font-weight: 700; color: #64748b; letter-spacing: 1px; text-transform: uppercase;">KORVEXA SOFTWARE</div>
+                <h4 id="bc-prod-name" style="font-size: 1.1rem; font-weight: 800; margin: 4px 0;">-</h4>
+                <p id="bc-prod-price" style="font-weight: 800; font-size: 1.25rem; color: var(--primary); margin-bottom: 6px;">Rs. 0</p>
+                <svg id="barcode-canvas" style="max-width: 100%; display: block; margin: 0 auto;"></svg>
+            </div>
 
-        <!-- Action Buttons -->
-        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <button class="outline-btn" style="flex: 1; justify-content: center; padding: 9px;" onclick="closeBarcodeModal()">Close</button>
-            <button class="save-btn" style="flex: 1.3; justify-content: center; padding: 9px; background: #10b981; background-image: linear-gradient(135deg, #059669, #10b981);" onclick="downloadBarcodeImage()"><i class='bx bx-download'></i> Download PNG</button>
-            <button class="save-btn" style="flex: 1; justify-content: center; padding: 9px;" onclick="printBarcodeSticker()"><i class='bx bx-printer'></i> Print</button>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                <button class="outline-btn" style="flex: 1; justify-content: center; padding: 9px;" onclick="closeBarcodeModal()">Close</button>
+                <button class="save-btn" style="flex: 1.3; justify-content: center; padding: 9px; background: #10b981; background-image: linear-gradient(135deg, #059669, #10b981);" onclick="downloadBarcodeImage()"><i class='bx bx-download'></i> Download PNG</button>
+                <button class="save-btn" style="flex: 1; justify-content: center; padding: 9px;" onclick="printBarcodeSticker()"><i class='bx bx-printer'></i> Print</button>
+            </div>
         </div>
     </div>
-</div>
 
     <!-- MODAL: CATEGORY -->
     <div id="category-modal" class="modal-overlay">
@@ -1071,35 +1142,167 @@
         </div>
     </div>
 
+    <!-- MODAL: EDIT USER PERMISSIONS & APPROVAL -->
+    <div id="user-access-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 480px;">
+            <span class="close-modal" onclick="closeUserAccessModal()">&times;</span>
+            <h2 style="margin-bottom: 6px;"><i class='bx bx-shield-quarter' style="color:var(--primary);"></i> Edit Module Access</h2>
+            <p style="color:#64748b; font-size:0.85rem; margin-bottom: 16px;">Set permissions for: <strong id="perm-user-name" style="color:var(--dark);">-</strong></p>
+            <input type="hidden" id="perm-user-id">
+
+            <div class="form-group">
+                <label>Account Status</label>
+                <select id="perm-user-status">
+                    <option value="active">Active (Approved)</option>
+                    <option value="pending">Pending (Waiting for Approval)</option>
+                    <option value="blocked">Blocked (No Access)</option>
+                </select>
+            </div>
+
+            <label style="font-weight: 700; margin-bottom: 8px; display: block;">Allowed Modules (Checked = Visible in Sidebar):</label>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 14px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 16px;">
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-dashboard"> Dashboard</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-pos"> POS & Scan</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-stock"> Manage Stock</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-reports"> Reports (P&L)</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-sales"> Sales & Ledger</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-returns"> Return Log</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-exchanges"> Exchange Log</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-expenses"> Expenses</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-settings"> Settings</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:var(--primary); font-weight:700;"><input type="checkbox" id="perm-users"> Users & Access</label>
+            </div>
+
+            <button class="save-btn" style="width: 100%; justify-content: center;" onclick="saveUserPermissions()"><i class='bx bx-check-shield'></i> Save Permissions</button>
+        </div>
+    </div>
+
     <!-- JAVASCRIPT -->
     <script>
-        const STORAGE_PREFIX = 'korvexa_fresh_';
-        
-        function getStoredData(key, fallback = []) {
-            try {
-                const data = localStorage.getItem(STORAGE_PREFIX + key);
-                return data ? JSON.parse(data) : fallback;
-            } catch (e) {
-                return fallback;
+        // ==========================================
+        // 1. FIREBASE CONFIGURATION & INITIALIZATION
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyBikNeZBOjNMyI0KyKWpWud_l9EowWotQA",
+            authDomain: "korvexa-pos.firebaseapp.com",
+            projectId: "korvexa-pos",
+            storageBucket: "korvexa-pos.firebasestorage.app",
+            messagingSenderId: "663089875476",
+            appId: "1:663089875476:web:6da9af5a31cb636648f501",
+            measurementId: "G-YKHN60HV9L"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // 2. Collections
+        const usersDB      = db.collection('korvexa_users');
+        const categoriesDB = db.collection('korvexa_categories');
+        const productsDB   = db.collection('korvexa_products');
+        const salesDB      = db.collection('korvexa_sales');
+        const returnsDB    = db.collection('korvexa_returns');
+        const exchangeDB   = db.collection('korvexa_exchanges');
+        const expensesDB   = db.collection('korvexa_expenses');
+        const settingsDB   = db.collection('korvexa_settings');
+
+        // Global States
+        window.categories = [];
+        window.menuItems = [];
+        window.salesHistory = [];
+        window.returnsList = [];
+        window.exchangeList = [];
+        window.expensesList = [];
+        window.systemUsersList = [];
+        let cart = [];
+        let salesChartInstance = null;
+
+        // ==========================================
+        // MOBILE LIVE CAMERA SCANNER LOGIC
+        // ==========================================
+        let cameraScanner = null;
+        let isScanThrottled = false;
+
+        window.startCameraScanner = function() {
+            document.getElementById('camera-scanner-modal').classList.add('visible');
+            
+            if (cameraScanner) {
+                cameraScanner.clear();
             }
+
+            cameraScanner = new Html5Qrcode("camera-preview-box");
+            
+            const config = { 
+                fps: 15,
+                qrbox: { width: 280, height: 160 },
+                aspectRatio: 1.0
+            };
+
+            cameraScanner.start(
+                { facingMode: "environment" }, 
+                config, 
+                onBarcodeDetected
+            ).catch(err => {
+                console.error("Camera error:", err);
+                alert("Camera access nahi mila! Meharbani farma kar check karein ke site HTTPS pe chal rahi hai aur camera permission ALLOW hai.");
+                stopCameraScanner();
+            });
+        };
+
+        function onBarcodeDetected(decodedText) {
+            if (isScanThrottled) return;
+            isScanThrottled = true;
+
+            const code = decodedText.trim().toLowerCase();
+            
+            const matchedItem = window.menuItems.find(item => 
+                (item.barcode && item.barcode.toLowerCase() === code) ||
+                (item.name && item.name.toLowerCase() === code)
+            );
+
+            if (matchedItem) {
+                playBeepSound();
+                addToCart(matchedItem.id);
+                stopCameraScanner();
+                showScanDetailsModal(matchedItem);
+            } else {
+                alert(`Barcode [${decodedText}] se koi product nahi mila!`);
+            }
+
+            setTimeout(() => { isScanThrottled = false; }, 1500);
         }
 
-        function setStoredData(key, value) {
-            localStorage.setItem(STORAGE_PREFIX + key, JSON.stringify(value));
+        window.stopCameraScanner = function() {
+            if (cameraScanner) {
+                cameraScanner.stop().then(() => {
+                    cameraScanner.clear();
+                    document.getElementById('camera-scanner-modal').classList.remove('visible');
+                }).catch(() => {
+                    document.getElementById('camera-scanner-modal').classList.remove('visible');
+                });
+            } else {
+                document.getElementById('camera-scanner-modal').classList.remove('visible');
+            }
+        };
+
+        function playBeepSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.value = 950;
+                gain.gain.setValueAtTime(0.25, audioCtx.currentTime);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.15);
+            } catch(e) {}
         }
 
-        function getStoredUsers() {
-            const users = localStorage.getItem('pos_registered_users');
-            if (users) { try { return JSON.parse(users); } catch(e) { return []; } }
-            const defaultUsers = [{ username: 'admin', password: 'password123', name: 'Master Admin' }];
-            localStorage.setItem('pos_registered_users', JSON.stringify(defaultUsers));
-            return defaultUsers;
-        }
-
-        function saveStoredUsers(users) {
-            localStorage.setItem('pos_registered_users', JSON.stringify(users));
-        }
-
+        // ==========================================
+        // AUTHENTICATION MODULE
+        // ==========================================
         window.switchAuthMode = function(mode) {
             document.querySelectorAll('.auth-box').forEach(box => box.classList.remove('active'));
             document.querySelectorAll('.auth-msg').forEach(m => { m.textContent = ''; m.className = 'auth-msg'; });
@@ -1108,49 +1311,187 @@
             else if (mode === 'forgot') document.getElementById('forgot-box').classList.add('active');
         };
 
-        function handleLogin() {
-            const u = document.getElementById('username').value.trim().toLowerCase();
+        async function handleLogin() {
+            const iden = document.getElementById('login-identifier').value.trim().toLowerCase();
             const p = document.getElementById('password').value;
             const err = document.getElementById('login-error');
-            if (!u || !p) { err.textContent = 'Enter username and password'; err.className = 'auth-msg error'; return; }
-            const users = getStoredUsers();
-            const user = users.find(x => x.username.toLowerCase() === u && x.password === p);
-            if (user) {
+            
+            err.textContent = '';
+            err.className = 'auth-msg';
+
+            if (!iden || !p) {
+                err.textContent = 'Email/Username aur Password dono likhein!';
+                err.className = 'auth-msg error';
+                return;
+            }
+            
+            // MASTER ADMIN LOGIN
+            if (iden === 'korwesa.com' && p === 'admin123') {
+                const masterUser = {
+                    id: 'master_admin',
+                    name: 'Master Admin',
+                    username: 'korwesa.com',
+                    email: 'korwesa.com',
+                    role: 'superadmin',
+                    status: 'active',
+                    permissions: {
+                        dashboard: true, pos: true, stock: true, reports: true,
+                        sales: true, returns: true, exchanges: true, expenses: true,
+                        settings: true, users: true
+                    }
+                };
+                sessionStorage.setItem('pos_current_user', JSON.stringify(masterUser));
                 document.getElementById('login-page').classList.add('hidden');
-                document.getElementById('header-user-display').textContent = user.name || user.username;
-                sessionStorage.setItem('pos_current_user', JSON.stringify(user));
-            } else {
-                err.textContent = 'Invalid username or password!';
+                document.getElementById('header-user-display').textContent = 'Master Admin';
+                applyUserPermissions(masterUser);
+                return;
+            }
+
+            try {
+                err.textContent = 'Checking credentials...';
+                err.className = 'auth-msg';
+
+                let snap = await usersDB.where('email', '==', iden).where('password', '==', p).get();
+                if (snap.empty) {
+                    snap = await usersDB.where('username', '==', iden).where('password', '==', p).get();
+                }
+
+                if (snap.empty) {
+                    err.textContent = 'Ghalat Email ya Password!';
+                    err.className = 'auth-msg error';
+                    return;
+                }
+
+                const userDoc = snap.docs[0];
+                const userData = { id: userDoc.id, ...userDoc.data() };
+
+                if (userData.status === 'pending') {
+                    err.textContent = 'Account pending hai! Admin approval ke baad login hoga.';
+                    err.className = 'auth-msg error';
+                    alert("Aapka account Admin ki approval ke intezar mein hai.");
+                    return;
+                }
+
+                if (userData.status === 'blocked') {
+                    err.textContent = 'Yeh account Block hai! Access denied.';
+                    err.className = 'auth-msg error';
+                    return;
+                }
+
+                if (userData.status === 'active') {
+                    sessionStorage.setItem('pos_current_user', JSON.stringify(userData));
+                    document.getElementById('login-page').classList.add('hidden');
+                    document.getElementById('header-user-display').textContent = userData.username || userData.email;
+                    applyUserPermissions(userData);
+                } else {
+                    err.textContent = 'Account active nahi hai!';
+                    err.className = 'auth-msg error';
+                }
+
+            } catch(e) {
+                console.error("Login Error:", e);
+                err.textContent = 'Error: ' + e.message;
                 err.className = 'auth-msg error';
             }
         }
 
-        function handleRegister() {
-            const name = document.getElementById('reg-fullname').value.trim();
+        async function handleRegister() {
             const u = document.getElementById('reg-username').value.trim().toLowerCase();
-            const p = document.getElementById('reg-password').value;
+            const email = document.getElementById('reg-email').value.trim().toLowerCase();
+            const p = document.getElementById('reg-new-password').value;
             const cp = document.getElementById('reg-confirm-password').value;
             const msg = document.getElementById('register-msg');
-            if (!name || !u || !p || !cp || p !== cp) { msg.textContent = 'Please fill correctly!'; msg.className = 'auth-msg error'; return; }
-            const users = getStoredUsers();
-            if (users.some(x => x.username.toLowerCase() === u)) { msg.textContent = 'Username taken!'; msg.className = 'auth-msg error'; return; }
-            users.push({ username: u, password: p, name: name });
-            saveStoredUsers(users);
-            msg.textContent = 'Registered successfully!'; msg.className = 'auth-msg success';
-            setTimeout(() => switchAuthMode('login'), 1000);
+
+            if (!u || !email || !p || !cp) { 
+                msg.textContent = 'Tamam fields bharein!'; 
+                msg.className = 'auth-msg error'; 
+                return; 
+            }
+
+            if (!email.includes('@') || !email.includes('.')) {
+                msg.textContent = 'Sahi Email address likhein!';
+                msg.className = 'auth-msg error';
+                return;
+            }
+
+            if (p !== cp) {
+                msg.textContent = 'Passwords match nahi kar rahe!';
+                msg.className = 'auth-msg error';
+                return;
+            }
+
+            if (email === 'korwesa.com' || u === 'korwesa.com') {
+                msg.textContent = 'Yeh identity reserved hai!'; 
+                msg.className = 'auth-msg error'; 
+                return;
+            }
+
+            try {
+                const existEmail = await usersDB.where('email', '==', email).get();
+                if (!existEmail.empty) { 
+                    msg.textContent = 'Yeh Email pehle se registered hai!'; 
+                    msg.className = 'auth-msg error'; 
+                    return; 
+                }
+
+                const existUser = await usersDB.where('username', '==', u).get();
+                if (!existUser.empty) { 
+                    msg.textContent = 'Yeh Username pehle se maujood hai!'; 
+                    msg.className = 'auth-msg error'; 
+                    return; 
+                }
+
+                await usersDB.add({
+                    username: u,
+                    email: email,
+                    password: p,
+                    status: 'pending',
+                    role: 'staff',
+                    permissions: {
+                        dashboard: true,
+                        pos: true,
+                        stock: false,
+                        reports: false,
+                        sales: false,
+                        returns: false,
+                        exchanges: false,
+                        expenses: false,
+                        settings: false,
+                        users: false
+                    },
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                msg.textContent = 'Request bhej di gayi! Admin approve karega tab aap login kar sakenge.';
+                msg.className = 'auth-msg success';
+
+                document.getElementById('reg-username').value = '';
+                document.getElementById('reg-email').value = '';
+                document.getElementById('reg-new-password').value = '';
+                document.getElementById('reg-confirm-password').value = '';
+
+                setTimeout(() => switchAuthMode('login'), 3000);
+            } catch(e) {
+                msg.textContent = 'Error: ' + e.message; 
+                msg.className = 'auth-msg error';
+            }
         }
 
-        function handleForgotPassword() {
-            const u = document.getElementById('forgot-username').value.trim().toLowerCase();
+        async function handleForgotPassword() {
+            const email = document.getElementById('forgot-email').value.trim().toLowerCase();
             const newP = document.getElementById('forgot-new-password').value;
             const msg = document.getElementById('forgot-msg');
-            const users = getStoredUsers();
-            const idx = users.findIndex(x => x.username.toLowerCase() === u);
-            if (idx === -1) { msg.textContent = 'User not found!'; msg.className = 'auth-msg error'; return; }
-            users[idx].password = newP;
-            saveStoredUsers(users);
-            msg.textContent = 'Password reset done!'; msg.className = 'auth-msg success';
-            setTimeout(() => switchAuthMode('login'), 1000);
+            if (!email || !newP) { msg.textContent = 'Fill all fields!'; msg.className = 'auth-msg error'; return; }
+
+            try {
+                const snap = await usersDB.where('email', '==', email).get();
+                if (snap.empty) { msg.textContent = 'Email not found!'; msg.className = 'auth-msg error'; return; }
+                await usersDB.doc(snap.docs[0].id).update({ password: newP });
+                msg.textContent = 'Password reset done!'; msg.className = 'auth-msg success';
+                setTimeout(() => switchAuthMode('login'), 1000);
+            } catch(e) {
+                msg.textContent = 'Error: ' + e.message; msg.className = 'auth-msg error';
+            }
         }
 
         window.handleLogout = function() {
@@ -1165,6 +1506,46 @@
             event.preventDefault(); 
             element.parentElement.classList.toggle('open');
             document.getElementById('sidebar').classList.remove('collapsed');
+        }
+
+        // ==========================================
+        // DYNAMIC ACCESS ENGINE
+        // ==========================================
+        function applyUserPermissions(user) {
+            if (!user) return;
+
+            if (user.role === 'superadmin') {
+                document.querySelectorAll('.nav-list li').forEach(li => li.style.display = 'block');
+                document.getElementById('admin-notif-btn').style.display = 'flex';
+                return;
+            }
+
+            const p = user.permissions || {};
+
+            const setDisplay = (id, allowed) => {
+                const el = document.getElementById(id);
+                if (el) el.style.display = allowed ? 'block' : 'none';
+            };
+
+            setDisplay('nav-dashboard', p.dashboard);
+            setDisplay('nav-pos', p.pos);
+            setDisplay('nav-stock', p.stock);
+            setDisplay('nav-reports', p.reports);
+            setDisplay('nav-sales', p.sales);
+            setDisplay('nav-returns', p.returns);
+            setDisplay('nav-exchanges', p.exchanges);
+            setDisplay('nav-expenses', p.expenses);
+            setDisplay('nav-settings', p.settings);
+            setDisplay('nav-users', p.users);
+
+            document.getElementById('admin-notif-btn').style.display = p.users ? 'flex' : 'none';
+
+            if (p.dashboard) switchView('dashboard');
+            else if (p.pos) switchView('pos');
+            else if (p.stock) switchView('manage-stock');
+            else if (p.sales) switchView('sell');
+            else if (p.reports) switchView('profit-loss');
+            else if (p.users) switchView('users');
         }
 
         window.currentTheme = localStorage.getItem('pos_active_theme') || 'theme-korvexa';
@@ -1199,50 +1580,112 @@
             }
         };
 
-        window.factoryResetDatabase = function() {
-            if (confirm("⚠️ WARNING: पूरा डेटा रीसेट करना चाहते हैं? सभी प्रोडक्ट्स, सेल्स और खर्च खाली हो जाएंगे!")) {
-                localStorage.removeItem(STORAGE_PREFIX + 'menu_items');
-                localStorage.removeItem(STORAGE_PREFIX + 'categories');
-                localStorage.removeItem(STORAGE_PREFIX + 'sales_history');
-                localStorage.removeItem(STORAGE_PREFIX + 'returns_list');
-                localStorage.removeItem(STORAGE_PREFIX + 'exchange_list');
-                localStorage.removeItem(STORAGE_PREFIX + 'expenses_list');
-                location.reload();
-            }
-        };
+        // ==========================================
+        // REALTIME FIREBASE SYNC LISTENERS
+        // ==========================================
+        function initRealtimeSync() {
+            productsDB.onSnapshot(snapshot => {
+                window.menuItems = [];
+                snapshot.forEach(doc => {
+                    window.menuItems.push({ id: doc.id, ...doc.data() });
+                });
+                window.filterMenu();
+                window.renderManageStock();
+                window.renderStockReport();
+                window.updateDashboardMetrics();
+            });
 
+            categoriesDB.onSnapshot(snapshot => {
+                window.categories = [];
+                snapshot.forEach(doc => {
+                    window.categories.push({ id: doc.id, name: doc.data().name });
+                });
+                window.renderCategories();
+            });
+
+            salesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+                window.salesHistory = [];
+                snapshot.forEach(doc => {
+                    window.salesHistory.push({ id: doc.id, ...doc.data() });
+                });
+                window.renderSellView();
+                window.updateDashboardMetrics();
+            });
+
+            returnsDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+                window.returnsList = [];
+                snapshot.forEach(doc => {
+                    window.returnsList.push({ id: doc.id, ...doc.data() });
+                });
+                window.renderReturnView();
+                window.updateDashboardMetrics();
+            });
+
+            exchangeDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+                window.exchangeList = [];
+                snapshot.forEach(doc => {
+                    window.exchangeList.push({ id: doc.id, ...doc.data() });
+                });
+                window.renderExchangeView();
+                window.updateDashboardMetrics();
+            });
+
+            expensesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+                window.expensesList = [];
+                snapshot.forEach(doc => {
+                    window.expensesList.push({ id: doc.id, ...doc.data() });
+                });
+                window.renderExpenseView();
+                window.updateDashboardMetrics();
+            });
+
+            usersDB.orderBy('createdAt', 'desc').onSnapshot(snapshot => {
+                window.systemUsersList = [];
+                let pendingCount = 0;
+
+                snapshot.forEach(doc => {
+                    const uData = { id: doc.id, ...doc.data() };
+                    window.systemUsersList.push(uData);
+                    if (uData.status === 'pending') pendingCount++;
+                });
+
+                const badge = document.getElementById('pending-notif-count');
+                const alertBox = document.getElementById('pending-users-badge-alert');
+                const alertText = document.getElementById('pending-users-count-text');
+
+                if (pendingCount > 0) {
+                    badge.style.display = 'block';
+                    badge.textContent = pendingCount;
+                    if (alertBox) {
+                        alertBox.style.display = 'block';
+                        alertText.textContent = `${pendingCount} Naye Users Approval Ke Intezar Mein Hain`;
+                    }
+                } else {
+                    badge.style.display = 'none';
+                    if (alertBox) alertBox.style.display = 'none';
+                }
+
+                renderUsersManagementTable();
+            });
+        }
+
+        // ==========================================
+        // DOM LOADED INITIALIZATION
+        // ==========================================
         document.addEventListener('DOMContentLoaded', () => {
             window.applyTheme(window.currentTheme);
-            getStoredUsers();
 
-            const activeUser = sessionStorage.getItem('pos_current_user');
-            if (activeUser) {
+            const activeUserStr = sessionStorage.getItem('pos_current_user');
+            if (activeUserStr) {
                 try {
-                    const parsed = JSON.parse(activeUser);
-                    document.getElementById('header-user-display').textContent = parsed.name || parsed.username;
+                    const parsed = JSON.parse(activeUserStr);
+                    document.getElementById('header-user-display').textContent = parsed.username || parsed.email;
                     document.getElementById('login-page').classList.add('hidden');
+                    applyUserPermissions(parsed);
                 } catch(e) {}
             }
 
-            // COMPLETELY EMPTY / FRESH STATE INITIALIZATION
-            window.categories = getStoredData('categories', []);
-            window.menuItems = getStoredData('menu_items', []);
-            window.salesHistory = getStoredData('sales_history', []);
-            window.returnsList = getStoredData('returns_list', []);
-            window.exchangeList = getStoredData('exchange_list', []);
-            window.expensesList = getStoredData('expenses_list', []);
-            
-            function syncAllData() {
-                setStoredData('categories', window.categories);
-                setStoredData('menu_items', window.menuItems);
-                setStoredData('sales_history', window.salesHistory);
-                setStoredData('returns_list', window.returnsList);
-                setStoredData('exchange_list', window.exchangeList);
-                setStoredData('expenses_list', window.expensesList);
-            }
-
-            let cart = [];
-            let salesChartInstance = null;
+            initRealtimeSync();
 
             function formatToYMD(d) {
                 const year = d.getFullYear();
@@ -1305,29 +1748,29 @@
             window.resetPLFilter = function() { window.setPLPreset('all'); };
 
             window.updateDashboardMetrics = function() {
-                const totalStock = window.menuItems.reduce((acc, item) => acc + Number(item.stock), 0);
+                const totalStock = window.menuItems.reduce((acc, item) => acc + Number(item.stock || 0), 0);
                 document.getElementById('dash-total-stock').innerHTML = `${totalStock} <span style="font-size:1rem">units</span>`;
 
-                const totalCashBankSales = window.salesHistory.filter(s => s.paymentStatus === 'Paid').reduce((acc, sale) => acc + Number(sale.total), 0);
+                const totalCashBankSales = window.salesHistory.filter(s => s.paymentStatus === 'Paid').reduce((acc, sale) => acc + Number(sale.total || 0), 0);
                 document.getElementById('dash-total-sell').textContent = `Rs. ${totalCashBankSales.toLocaleString()}`;
 
-                const totalCreditSales = window.salesHistory.filter(s => s.paymentStatus === 'Unpaid').reduce((acc, sale) => acc + Number(sale.total), 0);
+                const totalCreditSales = window.salesHistory.filter(s => s.paymentStatus === 'Unpaid').reduce((acc, sale) => acc + Number(sale.total || 0), 0);
                 document.getElementById('dash-total-udhar').textContent = `Rs. ${totalCreditSales.toLocaleString()}`;
 
-                const totalReturns = window.returnsList.reduce((acc, ret) => acc + Number(ret.refund), 0);
+                const totalReturns = window.returnsList.reduce((acc, ret) => acc + Number(ret.refund || 0), 0);
                 document.getElementById('dash-total-return').textContent = `Rs. ${totalReturns.toLocaleString()}`;
 
-                const totalExpenses = window.expensesList.reduce((acc, exp) => acc + Number(exp.amount), 0);
+                const totalExpenses = window.expensesList.reduce((acc, exp) => acc + Number(exp.amount || 0), 0);
                 document.getElementById('dash-total-expense').textContent = `Rs. ${totalExpenses.toLocaleString()}`;
                 document.getElementById('total-expense-card-val').textContent = `Rs. ${totalExpenses.toLocaleString()}`;
                 
-                let totalSoldRevenue = window.salesHistory.reduce((acc, s) => acc + s.total, 0);
+                let totalSoldRevenue = window.salesHistory.reduce((acc, s) => acc + Number(s.total || 0), 0);
                 let totalCogs = 0;
                 window.salesHistory.forEach(s => {
-                    s.items.forEach(it => {
+                    (s.items || []).forEach(it => {
                         const originalProd = window.menuItems.find(m => m.id === it.id);
-                        const cp = it.costPrice !== undefined ? it.costPrice : (originalProd ? originalProd.costPrice : 0);
-                        totalCogs += (cp * it.qty);
+                        const cp = it.costPrice !== undefined ? Number(it.costPrice) : (originalProd ? Number(originalProd.costPrice || 0) : 0);
+                        totalCogs += (cp * Number(it.qty || 1));
                     });
                 });
                 const estNetProfit = totalSoldRevenue - totalCogs - totalExpenses;
@@ -1354,13 +1797,14 @@
                 });
             }
 
+            // Categories UI Render
             window.renderCategories = function() {
                 const posFilters = document.getElementById('pos-category-filters');
                 const activeBtn = posFilters.querySelector('button.active');
                 const activeCat = activeBtn ? activeBtn.dataset.category : 'all';
                 posFilters.innerHTML = `<button data-category="all" class="${activeCat === 'all' ? 'active' : ''}">All</button>`;
                 window.categories.forEach(cat => {
-                    posFilters.innerHTML += `<button data-category="${cat}" class="${activeCat === cat ? 'active' : ''}">${cat}</button>`;
+                    posFilters.innerHTML += `<button data-category="${cat.name}" class="${activeCat === cat.name ? 'active' : ''}">${cat.name}</button>`;
                 });
                 posFilters.querySelectorAll('button').forEach(btn => {
                     btn.addEventListener('click', () => {
@@ -1376,7 +1820,7 @@
                     selectMenu.innerHTML = '<option value="">No categories yet (Create first)</option>';
                 } else {
                     window.categories.forEach(cat => {
-                        selectMenu.innerHTML += `<option value="${cat}" style="text-transform: capitalize;">${cat}</option>`;
+                        selectMenu.innerHTML += `<option value="${cat.name}" style="text-transform: capitalize;">${cat.name}</option>`;
                     });
                 }
 
@@ -1385,11 +1829,11 @@
                 if (window.categories.length === 0) {
                     listContainer.innerHTML = '<div style="padding:15px; color:#94a3b8; text-align:center;">No categories added yet. Add one above!</div>';
                 } else {
-                    window.categories.forEach((cat, index) => {
+                    window.categories.forEach(cat => {
                         listContainer.innerHTML += `
                             <div class="cat-item" style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #eee;">
-                                <span style="font-weight: 600; text-transform: capitalize;">${cat}</span>
-                                <button onclick="deleteCategory(${index})" style="background:none; border:none; color:#ef4444; font-size:1.1rem;"><i class='bx bx-trash'></i></button>
+                                <span style="font-weight: 600; text-transform: capitalize;">${cat.name}</span>
+                                <button onclick="deleteCategory('${cat.id}')" style="background:none; border:none; color:#ef4444; font-size:1.1rem;"><i class='bx bx-trash'></i></button>
                             </div>`;
                     });
                 }
@@ -1397,25 +1841,45 @@
 
             window.openCategoryModal = () => document.getElementById('category-modal').classList.add('visible');
             window.closeCategoryModal = () => document.getElementById('category-modal').classList.remove('visible');
-            window.addCategory = function() {
+
+            window.addCategory = async function() {
                 const input = document.getElementById('new-category-name');
                 const val = input.value.trim().toLowerCase();
-                if(val && !window.categories.includes(val)) {
-                    window.categories.push(val);
-                    syncAllData();
-                    input.value = '';
-                    window.renderCategories();
+
+                if (!val) {
+                    alert("Meharbani farma kar Category ka naam likhein!");
+                    input.focus();
+                    return;
                 }
-            };
-            window.deleteCategory = function(index) {
-                if(confirm("Delete this category?")) {
-                    window.categories.splice(index, 1);
-                    syncAllData();
-                    window.renderCategories();
-                    window.filterMenu();
+
+                try {
+                    const existing = window.categories.find(c => c.name.toLowerCase() === val);
+                    if (existing) {
+                        alert("Yeh category pehle se maujood hai!");
+                        return;
+                    }
+
+                    await categoriesDB.add({
+                        name: val,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+
+                    input.value = '';
+                    alert("Category kamyabi se add ho gayi!");
+                    
+                } catch (error) {
+                    console.error("Category Error:", error);
+                    alert("Firebase Error: " + error.message);
                 }
             };
 
+            window.deleteCategory = async function(docId) {
+                if(confirm("Delete this category?")) {
+                    await categoriesDB.doc(docId).delete();
+                }
+            };
+
+            // Menu Filter in POS
             window.filterMenu = function() {
                 const searchTerm = document.getElementById('menu-search').value.toLowerCase().trim();
                 const activeBtn = document.querySelector('#pos-category-filters button.active');
@@ -1423,7 +1887,7 @@
                 
                 const filteredItems = window.menuItems.filter(item => 
                     (activeCategory === 'all' || item.category === activeCategory) && 
-                    (item.name.toLowerCase().includes(searchTerm) || (item.barcode && item.barcode.toLowerCase().includes(searchTerm)))
+                    ((item.name && item.name.toLowerCase().includes(searchTerm)) || (item.barcode && item.barcode.toLowerCase().includes(searchTerm)))
                 );
                 
                 const menuGrid = document.getElementById('menu-grid');
@@ -1440,7 +1904,7 @@
                         <div class="stock-qty">Qty: ${item.stock}</div>
                         <img src="${item.img || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80'}" alt="${item.name}">
                         <h4>${item.name}</h4>
-                        <p class="selling-p">Rs. ${parseFloat(item.price).toLocaleString()}</p>
+                        <p class="selling-p">Rs. ${parseFloat(item.price || 0).toLocaleString()}</p>
                         <p class="cost-p">Cost: Rs. ${parseFloat(item.costPrice || 0).toLocaleString()}</p>
                     `;
                     card.addEventListener('click', () => addToCart(item.id));
@@ -1458,10 +1922,11 @@
 
                     const matchedItem = window.menuItems.find(item => 
                         (item.barcode && item.barcode.toLowerCase() === code) || 
-                        item.name.toLowerCase() === code
+                        (item.name && item.name.toLowerCase() === code)
                     );
 
                     if (matchedItem) {
+                        playBeepSound();
                         addToCart(matchedItem.id);
                         showScanDetailsModal(matchedItem);
                         this.value = '';
@@ -1476,7 +1941,7 @@
                 document.getElementById('scan-modal-img').src = item.img || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80';
                 document.getElementById('scan-modal-name').textContent = item.name;
                 document.getElementById('scan-modal-barcode').textContent = item.barcode || 'N/A';
-                document.getElementById('scan-modal-price').textContent = `Rs. ${item.price.toLocaleString()}`;
+                document.getElementById('scan-modal-price').textContent = `Rs. ${Number(item.price || 0).toLocaleString()}`;
                 document.getElementById('scan-modal-stock').textContent = item.stock;
                 document.getElementById('scan-modal-cat').textContent = item.category;
                 document.getElementById('scan-details-modal').classList.add('visible');
@@ -1484,15 +1949,21 @@
 
             window.closeScanModal = () => document.getElementById('scan-details-modal').classList.remove('visible');
 
+            // Cart Functions
             function addToCart(itemId) {
-                const item = window.menuItems.find(i => i.id == itemId);
+                const item = window.menuItems.find(i => i.id === itemId);
                 if (item && item.stock > 0) {
-                    const existing = cart.find(i => i.id == itemId);
-                    if (existing) existing.qty++;
-                    else cart.push({ ...item, qty: 1 });
-                    item.stock--; 
-                    syncAllData();
-                    window.filterMenu(); 
+                    const existing = cart.find(i => i.id === itemId);
+                    if (existing) {
+                        if (existing.qty < item.stock) {
+                            existing.qty++;
+                        } else {
+                            alert("Stock limit reached!");
+                            return;
+                        }
+                    } else {
+                        cart.push({ ...item, qty: 1 });
+                    }
                     renderCart();
                 } else {
                     alert("Out of stock!");
@@ -1500,15 +1971,8 @@
             }
 
             window.clearCart = function() {
-                if (cart.length === 0) return;
-                cart.forEach(c => {
-                    const m = window.menuItems.find(i => i.id == c.id);
-                    if (m) m.stock += c.qty;
-                });
                 cart = [];
-                syncAllData();
                 renderCart();
-                window.filterMenu();
             };
 
             function renderCart() {
@@ -1541,24 +2005,21 @@
                 const row = e.target.closest('.cart-item'); 
                 if(!row) return;
                 const id = row.dataset.id;
-                const cartItem = cart.find(i => i.id == id);
-                const menuItem = window.menuItems.find(i => i.id == id);
+                const cartItem = cart.find(i => i.id === id);
+                const menuItem = window.menuItems.find(i => i.id === id);
                 
                 if(e.target.closest('.qty-plus')) { 
-                    if(menuItem && menuItem.stock > 0) { cartItem.qty++; menuItem.stock--; } 
+                    if(menuItem && menuItem.stock > cartItem.qty) { cartItem.qty++; } 
                     else alert("Stock limit reached!"); 
                 }
                 if(e.target.closest('.qty-minus')) { 
-                    if(cartItem.qty > 1) { cartItem.qty--; if (menuItem) menuItem.stock++; } 
-                    else { if (menuItem) menuItem.stock++; cart = cart.filter(i=>i.id != id); } 
+                    if(cartItem.qty > 1) { cartItem.qty--; } 
+                    else { cart = cart.filter(i => i.id !== id); } 
                 }
                 if(e.target.closest('.remove-item')) { 
-                    if (menuItem) menuItem.stock += cartItem.qty; 
-                    cart = cart.filter(i=>i.id != id); 
+                    cart = cart.filter(i => i.id !== id); 
                 }
-                syncAllData();
                 renderCart(); 
-                window.filterMenu();
             });
 
             const taxInputEl = document.getElementById('manual-tax-input');
@@ -1578,7 +2039,7 @@
                 document.getElementById('charge-btn').textContent = `${btnLabel} Rs. ${grandTotal.toLocaleString()}`;
             }
 
-            document.getElementById('charge-btn').addEventListener('click', () => { 
+            document.getElementById('charge-btn').addEventListener('click', async () => { 
                 if(cart.length === 0) { alert("Cart is empty!"); return; }
                 let custName = document.getElementById('pos-cust-name').value.trim();
                 let custPhone = document.getElementById('pos-cust-phone').value.trim();
@@ -1604,35 +2065,45 @@
                 }
 
                 const subtotal = cart.reduce((a, b) => a + (b.price * b.qty), 0);
-                const total = Math.max(0, subtotal + (parseFloat(taxInputEl.value)||0) - (parseFloat(discountInputEl.value)||0));
+                const taxVal = parseFloat(taxInputEl.value) || 0;
+                const discVal = parseFloat(discountInputEl.value) || 0;
+                const total = Math.max(0, subtotal + taxVal - discVal);
                 const invId = (Math.floor(Math.random() * 900) + 100).toString();
                 const now = new Date();
                 const invDate = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-
-                cart.forEach(c => {
-                    const found = window.menuItems.find(m => m.id == c.id);
-                    if(found) found.sold = (found.sold || 0) + c.qty;
-                });
 
                 const saleRecord = {
                     invoiceId: invId, date: invDate, customerName: custName, customerPhone: custPhone,
                     paymentMode: finalPaymentMode, paymentStatus: paymentStatus,
                     items: cart.map(i => ({ id: i.id, name: i.name, qty: i.qty, costPrice: (i.costPrice || 0), price: i.price })),
-                    subtotal: subtotal, tax: parseFloat(taxInputEl.value)||0, discount: parseFloat(discountInputEl.value)||0, total: total
+                    subtotal: subtotal, tax: taxVal, discount: discVal, total: total,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 };
-                window.salesHistory.unshift(saleRecord);
-                syncAllData();
 
-                showInvoiceModal(saleRecord);
-                cart = [];
-                taxInputEl.value = '';
-                discountInputEl.value = '';
-                document.getElementById('pos-cust-name').value = '';
-                document.getElementById('pos-cust-phone').value = '';
-                window.setPaymentMode('Cash');
-                renderCart();
-                window.filterMenu();
-                window.updateDashboardMetrics();
+                try {
+                    await salesDB.add(saleRecord);
+
+                    // Decrement Stock in Cloud Database
+                    for(let item of cart) {
+                        if(item.id) {
+                            await productsDB.doc(item.id).update({
+                                stock: firebase.firestore.FieldValue.increment(-item.qty),
+                                sold: firebase.firestore.FieldValue.increment(item.qty)
+                            });
+                        }
+                    }
+
+                    showInvoiceModal(saleRecord);
+                    cart = [];
+                    taxInputEl.value = '';
+                    discountInputEl.value = '';
+                    document.getElementById('pos-cust-name').value = '';
+                    document.getElementById('pos-cust-phone').value = '';
+                    window.setPaymentMode('Cash');
+                    renderCart();
+                } catch(err) {
+                    alert("Sale Save Error: " + err.message);
+                }
             });
 
             window.showInvoiceModal = function(sale) {
@@ -1664,6 +2135,7 @@
                 document.getElementById('stock-barcode').value = randomCode;
             };
 
+            // Manage Stock Table Render
             window.renderManageStock = function() {
                 const tbody = document.getElementById('stock-tbody'); 
                 if (!tbody) return;
@@ -1681,13 +2153,13 @@
                         <td><strong>${item.name}</strong></td>
                         <td style="text-transform: capitalize;">${item.category || 'General'}</td>
                         <td style="color:#ea580c; font-weight:700;">Rs. ${parseFloat(item.costPrice || 0).toLocaleString()}</td>
-                        <td style="color:var(--primary); font-weight:700;">Rs. ${parseFloat(item.price).toLocaleString()}</td>
+                        <td style="color:var(--primary); font-weight:700;">Rs. ${parseFloat(item.price || 0).toLocaleString()}</td>
                         <td style="color:#10b981; font-weight:700;">+Rs. ${margin.toLocaleString()}</td>
                         <td><span style="background: ${item.stock <= 5 ? '#ef4444' : '#f1f5f9'}; color: ${item.stock <= 5 ? 'white' : 'black'}; padding: 4px 10px; border-radius: 6px; font-weight:700;">${item.stock}</span></td>
                         <td class="action-btns">
-                            <button class="btn-barcode" onclick="viewBarcode(${item.id})" title="Print Barcode"><i class='bx bx-barcode'></i> Barcode</button>
-                            <button class="btn-edit" onclick="openEditStockModal(${item.id})"><i class='bx bx-edit'></i> Edit</button>
-                            <button class="btn-delete" onclick="deleteStock(${item.id})"><i class='bx bx-trash'></i> Delete</button>
+                            <button class="btn-barcode" onclick="viewBarcode('${item.id}')" title="Print Barcode"><i class='bx bx-barcode'></i> Barcode</button>
+                            <button class="btn-edit" onclick="openEditStockModal('${item.id}')"><i class='bx bx-edit'></i> Edit</button>
+                            <button class="btn-delete" onclick="deleteStock('${item.id}')"><i class='bx bx-trash'></i> Delete</button>
                         </td>
                     </tr>`;
                 });
@@ -1698,9 +2170,9 @@
                 if (!item) return;
 
                 document.getElementById('bc-prod-name').textContent = item.name;
-                document.getElementById('bc-prod-price').textContent = `Rs. ${item.price.toLocaleString()}`;
+                document.getElementById('bc-prod-price').textContent = `Rs. ${Number(item.price || 0).toLocaleString()}`;
                 
-                JsBarcode("#barcode-canvas", item.barcode || "10000000", {
+                JsBarcode("#barcode-canvas", (item.barcode || "10000000").toString(), {
                     format: "CODE128",
                     lineColor: "#000",
                     width: 2,
@@ -1739,7 +2211,7 @@
 
             window.openAddStockModal = function() {
                 if (window.categories.length === 0) {
-                    alert("पहले कम से कम एक Category जोड़ें!");
+                    alert("Pehle kam az kam aik Category add karein!");
                     openCategoryModal();
                     return;
                 }
@@ -1747,7 +2219,7 @@
                 document.getElementById('stock-id').value = "";
                 document.getElementById('stock-name').value = "";
                 window.generateAutoBarcode();
-                document.getElementById('stock-category').value = window.categories[0] || "";
+                document.getElementById('stock-category').value = window.categories[0]?.name || "";
                 document.getElementById('stock-cost-price').value = "";
                 document.getElementById('stock-price').value = "";
                 document.getElementById('stock-qty').value = "";
@@ -1767,73 +2239,72 @@
                     document.getElementById('stock-cost-price').value = item.costPrice || 0;
                     document.getElementById('stock-price').value = item.price;
                     document.getElementById('stock-qty').value = item.stock;
-                    document.getElementById('stock-image-base64').value = item.img;
+                    document.getElementById('stock-image-base64').value = item.img || '';
                     const preview = document.getElementById('image-preview');
-                    preview.src = item.img;
-                    preview.style.display = 'block';
+                    preview.src = item.img || '';
+                    preview.style.display = item.img ? 'block' : 'none';
                     document.getElementById('stock-modal').classList.add('visible');
                 }
             };
 
             window.closeStockModal = () => document.getElementById('stock-modal').classList.remove('visible');
 
-            window.saveStock = function() {
-                const id = document.getElementById('stock-id').value;
+            window.saveStock = async function() {
+                const docId = document.getElementById('stock-id').value;
                 const barcode = document.getElementById('stock-barcode').value.trim() || Math.floor(10000000 + Math.random() * 90000000).toString();
                 const name = document.getElementById('stock-name').value.trim();
                 const category = document.getElementById('stock-category').value;
                 const costPrice = parseFloat(document.getElementById('stock-cost-price').value) || 0;
-                const price = parseFloat(document.getElementById('stock-price').value);
-                const stock = parseInt(document.getElementById('stock-qty').value);
+                const price = parseFloat(document.getElementById('stock-price').value) || 0;
+                const stock = parseInt(document.getElementById('stock-qty').value) || 0;
                 let img = document.getElementById('stock-image-base64').value || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80';
 
-                if(!name || isNaN(price) || isNaN(stock)) { alert("Please complete all required fields correctly!"); return; }
+                if(!name || isNaN(price)) { alert("Please complete required fields!"); return; }
 
-                if(id) {
-                    const item = window.menuItems.find(i => i.id == id);
-                    item.name = name; item.barcode = barcode; item.category = category; item.costPrice = costPrice; item.price = price; item.stock = stock; item.img = img;
-                } else {
-                    const newId = window.menuItems.length > 0 ? Math.max(...window.menuItems.map(i => i.id)) + 1 : 1;
-                    window.menuItems.push({ id: newId, barcode, name, category, costPrice, price, stock, sold: 0, returned: 0, img });
+                const productData = { barcode, name, category, costPrice, price, stock, img };
+
+                try {
+                    if(docId) {
+                        await productsDB.doc(docId).update(productData);
+                    } else {
+                        productData.sold = 0;
+                        productData.returned = 0;
+                        productData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+                        await productsDB.add(productData);
+                    }
+                    window.closeStockModal(); 
+                } catch(e) {
+                    alert("Firebase Error: " + e.message);
                 }
-
-                syncAllData();
-                window.closeStockModal(); 
-                window.renderManageStock(); 
-                window.filterMenu();
-                window.updateDashboardMetrics();
             };
 
-            window.deleteStock = function(id) {
+            window.deleteStock = async function(id) {
                 if(confirm("Are you sure you want to delete this product?")) {
-                    window.menuItems = window.menuItems.filter(i => i.id !== id);
-                    syncAllData();
-                    window.renderManageStock(); 
-                    window.filterMenu();
-                    window.updateDashboardMetrics();
+                    await productsDB.doc(id).delete();
                 }
             };
 
+            // Reports & P/L calculation
             function calculateProfitLossData() {
                 const sDate = window.plFilterState.startDate;
                 const eDate = window.plFilterState.endDate;
 
                 const filteredSales = window.salesHistory.filter(s => {
-                    const saleDate = s.date.substring(0, 10);
+                    const saleDate = (s.date || '').substring(0, 10);
                     if (sDate && saleDate < sDate) return false;
                     if (eDate && saleDate > eDate) return false;
                     return true;
                 });
 
                 const filteredReturns = window.returnsList.filter(r => {
-                    const retDate = r.date.substring(0, 10);
+                    const retDate = (r.date || '').substring(0, 10);
                     if (sDate && retDate < sDate) return false;
                     if (eDate && retDate > eDate) return false;
                     return true;
                 });
 
                 const filteredExpenses = window.expensesList.filter(e => {
-                    const expDate = e.date.substring(0, 10);
+                    const expDate = (e.date || '').substring(0, 10);
                     if (sDate && expDate < sDate) return false;
                     if (eDate && expDate > eDate) return false;
                     return true;
@@ -1844,20 +2315,20 @@
                 let itemizedSales = [];
 
                 filteredSales.forEach(sale => {
-                    totalRevenue += Number(sale.total);
-                    sale.items.forEach(it => {
+                    totalRevenue += Number(sale.total || 0);
+                    (sale.items || []).forEach(it => {
                         const original = window.menuItems.find(m => m.id === it.id);
-                        const cp = it.costPrice !== undefined ? Number(it.costPrice) : (original ? Number(original.costPrice) : 0);
-                        const rowCost = cp * Number(it.qty);
-                        const rowSale = Number(it.price) * Number(it.qty);
+                        const cp = it.costPrice !== undefined ? Number(it.costPrice) : (original ? Number(original.costPrice || 0) : 0);
+                        const rowCost = cp * Number(it.qty || 1);
+                        const rowSale = Number(it.price || 0) * Number(it.qty || 1);
                         const rowProfit = rowSale - rowCost;
 
                         totalCogs += rowCost;
                         itemizedSales.push({
                             productName: it.name,
                             label: `${it.name} (Inv #${sale.invoiceId})`,
-                            date: sale.date.substring(0, 10),
-                            qty: Number(it.qty),
+                            date: (sale.date || '').substring(0, 10),
+                            qty: Number(it.qty || 1),
                             cost: rowCost,
                             sale: rowSale,
                             profit: rowProfit
@@ -1865,20 +2336,17 @@
                     });
                 });
 
-                const totalReturnRefunds = filteredReturns.reduce((acc, r) => acc + Number(r.refund), 0);
-                const totalOperatingExpenses = filteredExpenses.reduce((acc, e) => acc + Number(e.amount), 0);
+                const totalReturnRefunds = filteredReturns.reduce((acc, r) => acc + Number(r.refund || 0), 0);
+                const totalOperatingExpenses = filteredExpenses.reduce((acc, e) => acc + Number(e.amount || 0), 0);
 
-                const adjustedRevenue = totalRevenue;
-                const adjustedCogs = totalCogs;
-                const grossProfit = adjustedRevenue - adjustedCogs;
-                const returnItemLoss = totalReturnRefunds;
+                const grossProfit = totalRevenue - totalCogs;
                 const netProfit = grossProfit - totalOperatingExpenses;
 
                 return {
-                    revenue: adjustedRevenue,
-                    cogs: adjustedCogs,
+                    revenue: totalRevenue,
+                    cogs: totalCogs,
                     grossProfit: grossProfit,
-                    returnItemLoss: returnItemLoss,
+                    returnItemLoss: totalReturnRefunds,
                     operatingExpenses: totalOperatingExpenses,
                     netProfit: netProfit,
                     itemizedSales: itemizedSales,
@@ -1893,13 +2361,9 @@
                 const eDate = window.plFilterState.endDate;
 
                 let periodText = 'All Recorded Time';
-                if (sDate && eDate) {
-                    periodText = `Period: ${formatToDisplayDate(sDate)} to ${formatToDisplayDate(eDate)}`;
-                } else if (sDate) {
-                    periodText = `Period: From ${formatToDisplayDate(sDate)} onwards`;
-                } else if (eDate) {
-                    periodText = `Period: Up to ${formatToDisplayDate(eDate)}`;
-                }
+                if (sDate && eDate) periodText = `Period: ${formatToDisplayDate(sDate)} to ${formatToDisplayDate(eDate)}`;
+                else if (sDate) periodText = `Period: From ${formatToDisplayDate(sDate)} onwards`;
+                else if (eDate) periodText = `Period: Up to ${formatToDisplayDate(eDate)}`;
 
                 const periodLabel = document.getElementById('pl-screen-period-text');
                 if (periodLabel) periodLabel.textContent = periodText;
@@ -1991,73 +2455,6 @@
                 document.getElementById('pl-ex-return-loss').textContent = `Rs.-${data.returnItemLoss.toFixed(2)}`;
                 document.getElementById('pl-ex-expenses').textContent = `(Rs. ${data.operatingExpenses.toFixed(2)})`;
                 document.getElementById('pl-ex-net').textContent = `Rs.${data.netProfit.toFixed(2)}`;
-
-                const productGroup = {};
-                data.itemizedSales.forEach(item => {
-                    const prodName = item.productName || item.label.split(' (Inv')[0];
-                    if (!productGroup[prodName]) {
-                        productGroup[prodName] = { name: prodName, qty: 0, totalCost: 0, totalSale: 0, profit: 0 };
-                    }
-                    productGroup[prodName].qty += Number(item.qty);
-                    productGroup[prodName].totalCost += Number(item.cost);
-                    productGroup[prodName].totalSale += Number(item.sale);
-                    productGroup[prodName].profit += Number(item.profit);
-                });
-
-                const pdfItemTbody = document.getElementById('pl-ex-itemized-tbody');
-                if (pdfItemTbody) {
-                    pdfItemTbody.innerHTML = '';
-                    const prodKeys = Object.keys(productGroup);
-                    if (prodKeys.length === 0) {
-                        pdfItemTbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:12px; color:#6b7280;">No sales transactions in this period.</td></tr>`;
-                    } else {
-                        prodKeys.forEach(key => {
-                            const row = productGroup[key];
-                            pdfItemTbody.innerHTML += `
-                                <tr>
-                                    <td><b>${row.name}</b></td>
-                                    <td class="num">${row.qty}</td>
-                                    <td class="num">Rs.${row.totalCost.toFixed(2)}</td>
-                                    <td class="num">Rs.${row.totalSale.toFixed(2)}</td>
-                                    <td class="num" style="font-weight:bold; color: ${row.profit >= 0 ? '#111827' : '#ef4444'};">Rs.${row.profit.toFixed(2)}</td>
-                                </tr>
-                            `;
-                        });
-                    }
-                }
-
-                const pdfRetContainer = document.getElementById('pl-ex-returns-container');
-                if (pdfRetContainer) {
-                    if (data.returns.length === 0) {
-                        pdfRetContainer.innerHTML = `<div class="pl-empty-box">No returns in this period.</div>`;
-                    } else {
-                        let pdfRetHtml = `<table class="pl-standard-data-table"><thead><tr><th>Returned Product</th><th>Ref</th><th class="num">Qty</th><th class="num">Refund</th></tr></thead><tbody>`;
-                        data.returns.forEach(r => {
-                            pdfRetHtml += `<tr><td>${r.productName}</td><td>${r.invRef}</td><td class="num">${r.qty}</td><td class="num">Rs.${Number(r.refund).toFixed(2)}</td></tr>`;
-                        });
-                        pdfRetHtml += `</tbody></table>`;
-                        pdfRetContainer.innerHTML = pdfRetHtml;
-                    }
-                }
-
-                const pdfExpTbody = document.getElementById('pl-ex-expenses-tbody');
-                if (pdfExpTbody) {
-                    pdfExpTbody.innerHTML = '';
-                    if (data.expenses.length === 0) {
-                        pdfExpTbody.innerHTML = `<tr><td colspan="4" style="color:#6b7280; padding:10px;">No expenses in this period.</td></tr>`;
-                    } else {
-                        data.expenses.forEach(e => {
-                            pdfExpTbody.innerHTML += `
-                                <tr>
-                                    <td>${e.date}</td>
-                                    <td>${e.category}</td>
-                                    <td>${e.title}</td>
-                                    <td class="num">Rs.${Number(e.amount).toFixed(2)}</td>
-                                </tr>
-                            `;
-                        });
-                    }
-                }
             };
 
             window.downloadCleanProfitLossPDF = function() {
@@ -2099,6 +2496,7 @@
                 });
             };
 
+            // Stock Report
             window.renderStockReport = function() {
                 const tbody = document.getElementById('report-tbody');
                 tbody.innerHTML = '';
@@ -2126,7 +2524,7 @@
                                 <td><strong>${item.name}</strong></td>
                                 <td style="text-transform: capitalize;">${item.category || 'General'}</td>
                                 <td style="color:#ea580c;">Rs. ${parseFloat(item.costPrice || 0).toLocaleString()}</td>
-                                <td style="color:var(--primary);">Rs. ${parseFloat(item.price).toLocaleString()}</td>
+                                <td style="color:var(--primary);">Rs. ${parseFloat(item.price || 0).toLocaleString()}</td>
                                 <td><strong>${item.stock}</strong></td>
                                 <td style="font-weight:700;">Rs. ${costVal.toLocaleString()}</td>
                                 <td>${item.sold || 0}</td>
@@ -2141,58 +2539,7 @@
                 document.getElementById('report-sale-val').textContent = `Rs. ${totalSaleVal.toLocaleString()}`;
             };
 
-            window.generateStockReportPDF = function() {
-                if (window.menuItems.length === 0) { alert("Stock report is currently empty!"); return; }
-                let rowsHtml = '';
-                window.menuItems.forEach((item, idx) => {
-                    const cVal = (item.costPrice || 0) * item.stock;
-                    rowsHtml += `
-                        <tr>
-                            <td>${idx + 1}</td>
-                            <td>${item.barcode || 'N/A'}</td>
-                            <td><strong>${item.name}</strong></td>
-                            <td style="text-transform:capitalize;">${item.category || 'General'}</td>
-                            <td class="num">Rs. ${(item.costPrice || 0).toFixed(2)}</td>
-                            <td class="num">Rs. ${(item.price || 0).toFixed(2)}</td>
-                            <td class="num">${item.stock}</td>
-                            <td class="num">Rs. ${cVal.toFixed(2)}</td>
-                            <td class="num">${item.sold || 0}</td>
-                        </tr>
-                    `;
-                });
-
-                const html = `
-                    <div class="pl-document-container" style="box-shadow:none; border:none; padding:20px;">
-                        <div class="pl-doc-title">Stock & Inventory Valuation Statement</div>
-                        <div class="pl-doc-period">Date: ${new Date().toLocaleDateString()}</div>
-                        <table class="pl-standard-data-table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Barcode</th>
-                                    <th>Product Name</th>
-                                    <th>Category</th>
-                                    <th class="num">Cost Price</th>
-                                    <th class="num">Selling Price</th>
-                                    <th class="num">Stock</th>
-                                    <th class="num">Inventory Cost</th>
-                                    <th class="num">Sold</th>
-                                </tr>
-                            </thead>
-                            <tbody>${rowsHtml}</tbody>
-                        </table>
-                    </div>
-                `;
-
-                const host = document.getElementById('standard-pdf-hidden-host');
-                host.innerHTML = html;
-                html2pdf().set({
-                    margin: 8,
-                    filename: `Stock_Inventory_Report_${new Date().toISOString().split('T')[0]}.pdf`,
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-                }).from(host.children[0]).save().then(() => host.innerHTML = '');
-            };
-
+            // Sales View
             window.activeSalesFilter = 'all';
             window.filterSalesStatus = function(status) {
                 window.activeSalesFilter = status;
@@ -2208,7 +2555,7 @@
 
                 let filtered = window.salesHistory.filter(s => {
                     const matchesStatus = (window.activeSalesFilter === 'all') || (s.paymentStatus === window.activeSalesFilter);
-                    const matchesSearch = s.invoiceId.toLowerCase().includes(search) || (s.customerName && s.customerName.toLowerCase().includes(search));
+                    const matchesSearch = (s.invoiceId && s.invoiceId.toLowerCase().includes(search)) || (s.customerName && s.customerName.toLowerCase().includes(search));
                     return matchesStatus && matchesSearch;
                 });
 
@@ -2218,9 +2565,9 @@
                 }
 
                 filtered.forEach(sale => {
-                    const itemsDesc = sale.items.map(it => `${it.name} (x${it.qty})`).join(', ');
+                    const itemsDesc = (sale.items || []).map(it => `${it.name} (x${it.qty})`).join(', ');
                     const badgeClass = sale.paymentStatus === 'Unpaid' ? 'badge-credit' : 'badge-paid';
-                    let addPaymentBtn = sale.paymentStatus === 'Unpaid' ? `<button class="btn-pay" onclick="openAddPaymentModal('${sale.invoiceId}')"><i class='bx bx-plus-circle'></i> Pay</button>` : '';
+                    let addPaymentBtn = sale.paymentStatus === 'Unpaid' ? `<button class="btn-pay" onclick="openAddPaymentModal('${sale.id}')"><i class='bx bx-plus-circle'></i> Pay</button>` : '';
 
                     tbody.innerHTML += `
                         <tr>
@@ -2229,11 +2576,11 @@
                             <td><strong>${sale.customerName}</strong><br><small>${sale.customerPhone || ''}</small></td>
                             <td style="font-size:0.85rem;">${itemsDesc}</td>
                             <td><span class="status-badge ${badgeClass}">${sale.paymentStatus.toUpperCase()}</span></td>
-                            <td><strong>Rs. ${sale.total.toLocaleString()}</strong></td>
+                            <td><strong>Rs. ${Number(sale.total || 0).toLocaleString()}</strong></td>
                             <td class="action-btns">
-                                <button class="btn-view" onclick="viewHistoricalInvoice('${sale.invoiceId}')"><i class='bx bx-receipt'></i></button>
-                                <button class="btn-return" onclick="triggerReturnFromSale('${sale.invoiceId}')"><i class='bx bx-undo'></i> Return</button>
-                                <button class="btn-exchange" onclick="triggerExchangeFromSale('${sale.invoiceId}')"><i class='bx bx-transfer-alt'></i> Exc</button>
+                                <button class="btn-view" onclick="viewHistoricalInvoice('${sale.id}')"><i class='bx bx-receipt'></i></button>
+                                <button class="btn-return" onclick="triggerReturnFromSale('${sale.id}')"><i class='bx bx-undo'></i> Return</button>
+                                <button class="btn-exchange" onclick="triggerExchangeFromSale('${sale.id}')"><i class='bx bx-transfer-alt'></i> Exc</button>
                                 ${addPaymentBtn}
                             </td>
                         </tr>`;
@@ -2241,15 +2588,15 @@
             };
             document.getElementById('sales-search').addEventListener('input', window.renderSellView);
 
-            window.viewHistoricalInvoice = function(invoiceId) {
-                const sale = window.salesHistory.find(s => s.invoiceId === invoiceId);
+            window.viewHistoricalInvoice = function(id) {
+                const sale = window.salesHistory.find(s => s.id === id);
                 if(sale) showInvoiceModal(sale);
             };
 
-            window.openAddPaymentModal = function(invoiceId) {
-                const sale = window.salesHistory.find(s => s.invoiceId === invoiceId);
+            window.openAddPaymentModal = function(id) {
+                const sale = window.salesHistory.find(s => s.id === id);
                 if (!sale) return;
-                document.getElementById('pay-inv-id').value = sale.invoiceId;
+                document.getElementById('pay-inv-id').value = sale.id;
                 document.getElementById('pay-inv-display').value = sale.invoiceId;
                 document.getElementById('pay-cust-details').value = `${sale.customerName} (${sale.customerPhone || ''})`;
                 document.getElementById('pay-due-amt').value = `Rs. ${sale.total.toLocaleString()}`;
@@ -2258,23 +2605,23 @@
             };
             window.closeAddPaymentModal = () => document.getElementById('add-payment-modal').classList.remove('visible');
             
-            window.confirmAddPayment = function() {
-                const invId = document.getElementById('pay-inv-id').value;
+            window.confirmAddPayment = async function() {
+                const docId = document.getElementById('pay-inv-id').value;
                 const payMode = document.getElementById('pay-received-mode').value;
-                const sale = window.salesHistory.find(s => s.invoiceId === invId);
-                if (sale) {
-                    sale.paymentStatus = 'Paid';
-                    sale.paymentMode = `${payMode} (Cleared)`;
-                    syncAllData();
+                try {
+                    await salesDB.doc(docId).update({
+                        paymentStatus: 'Paid',
+                        paymentMode: `${payMode} (Cleared)`
+                    });
                     closeAddPaymentModal();
-                    window.renderSellView();
-                    window.updateDashboardMetrics();
-                    showInvoiceModal(sale);
+                } catch(e) {
+                    alert("Error: " + e.message);
                 }
             };
 
-            window.triggerReturnFromSale = function(invoiceId) {
-                const sale = window.salesHistory.find(s => s.invoiceId === invoiceId);
+            // Returns
+            window.triggerReturnFromSale = function(saleId) {
+                const sale = window.salesHistory.find(s => s.id === saleId);
                 if (!sale) return;
                 document.getElementById('return-inv-ref').value = sale.invoiceId;
                 const select = document.getElementById('return-product-select');
@@ -2312,59 +2659,44 @@
                 }
             };
 
-            window.saveReturn = function() {
+            window.saveReturn = async function() {
                 const select = document.getElementById('return-product-select');
                 const selected = select.options[select.selectedIndex];
                 if (!selected) { alert("Please select product!"); return; }
 
+                const prodId = selected.value;
                 const prodName = selected.dataset.name;
                 const qty = parseInt(document.getElementById('return-qty').value) || 1;
                 const refund = parseFloat(document.getElementById('return-refund-val').value) || 0;
                 const reason = document.getElementById('return-reason').value || 'Customer Return';
                 const invRef = document.getElementById('return-inv-ref').value;
 
-                const item = window.menuItems.find(m => m.name === prodName);
-                if (item) {
-                    item.stock += qty;
-                    item.sold = Math.max(0, (item.sold || 0) - qty);
-                    item.returned = (item.returned || 0) + qty;
-                }
+                try {
+                    await returnsDB.add({
+                        id: "RET-" + Math.floor(Math.random() * 900 + 100),
+                        invRef: invRef,
+                        date: new Date().toISOString().split('T')[0],
+                        customerName: 'Customer',
+                        productName: prodName,
+                        qty: qty,
+                        refund: refund,
+                        reason: reason,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
 
-                let customerInfo = 'Walk-in';
-                if (invRef && invRef !== 'DIRECT RETURN') {
-                    const saleIndex = window.salesHistory.findIndex(s => s.invoiceId === invRef);
-                    if (saleIndex !== -1) {
-                        customerInfo = window.salesHistory[saleIndex].customerName || 'Walk-in';
-                        window.salesHistory.splice(saleIndex, 1);
+                    if(prodId) {
+                        await productsDB.doc(prodId).update({
+                            stock: firebase.firestore.FieldValue.increment(qty),
+                            sold: firebase.firestore.FieldValue.increment(-qty),
+                            returned: firebase.firestore.FieldValue.increment(qty)
+                        });
                     }
+
+                    closeReturnModal();
+                    window.switchView('return');
+                } catch(e) {
+                    alert("Error: " + e.message);
                 }
-
-                window.returnsList.unshift({
-                    id: "RET-" + Math.floor(Math.random() * 900 + 100),
-                    invRef: invRef,
-                    date: new Date().toISOString().split('T')[0],
-                    customerName: customerInfo,
-                    productName: prodName,
-                    qty: qty,
-                    refund: refund,
-                    reason: reason
-                });
-
-                syncAllData();
-                closeReturnModal();
-                
-                window.renderSellView();
-                window.renderReturnView();
-                window.renderManageStock();
-                window.renderStockReport();
-                window.filterMenu();
-                window.updateDashboardMetrics();
-
-                if (document.getElementById('profit-loss-view').classList.contains('active')) {
-                    window.renderProfitLossReport();
-                }
-
-                window.switchView('return');
             };
 
             window.renderReturnView = function() {
@@ -2378,8 +2710,8 @@
                     tbody.innerHTML = `<tr><td colspan="8" class="empty-placeholder">No return records found.</td></tr>`;
                 } else {
                     window.returnsList.forEach(ret => {
-                        totalReturnQty += Number(ret.qty);
-                        totalRefundAmt += Number(ret.refund);
+                        totalReturnQty += Number(ret.qty || 0);
+                        totalRefundAmt += Number(ret.refund || 0);
                         tbody.innerHTML += `
                             <tr>
                                 <td><strong>${ret.id}</strong></td>
@@ -2397,11 +2729,11 @@
 
                 document.getElementById('total-return-items-qty').textContent = totalReturnQty;
                 document.getElementById('total-return-refund-amt').textContent = `Rs. ${totalRefundAmt.toLocaleString()}`;
-                window.updateDashboardMetrics();
             };
 
-            window.triggerExchangeFromSale = function(invoiceId) {
-                const sale = window.salesHistory.find(s => s.invoiceId === invoiceId);
+            // Exchanges
+            window.triggerExchangeFromSale = function(saleId) {
+                const sale = window.salesHistory.find(s => s.id === saleId);
                 if(!sale) return;
                 document.getElementById('exc-inv-ref').value = sale.invoiceId;
                 document.getElementById('exc-cust-name').value = sale.customerName;
@@ -2445,9 +2777,11 @@
                 document.getElementById('exc-diff-display').textContent = `Rs. ${diff.toLocaleString()}`;
             };
 
-            window.saveExchange = function() {
+            window.saveExchange = async function() {
                 const oldSelect = document.getElementById('exc-old-product');
                 const newSelect = document.getElementById('exc-new-product');
+                const oldId = oldSelect.value;
+                const newId = newSelect.value;
                 const oldName = oldSelect.options[oldSelect.selectedIndex]?.dataset.name;
                 const newName = newSelect.options[newSelect.selectedIndex]?.dataset.name;
                 const oldPrice = parseFloat(oldSelect.options[oldSelect.selectedIndex]?.dataset.price) || 0;
@@ -2457,51 +2791,42 @@
                 const newQty = parseInt(document.getElementById('exc-new-qty').value) || 1;
                 const invRef = document.getElementById('exc-inv-ref').value;
 
-                const oldItem = window.menuItems.find(m => m.name === oldName);
-                const newItem = window.menuItems.find(m => m.name === newName);
-
+                const newItem = window.menuItems.find(m => m.id === newId);
                 if (!newItem || newItem.stock < newQty) {
                     alert(`Not enough stock for "${newName}"!`);
                     return;
                 }
-
-                if (oldItem) {
-                    oldItem.stock += oldQty;
-                    oldItem.sold = Math.max(0, (oldItem.sold || 0) - oldQty);
-                }
-                newItem.stock -= newQty;
-                newItem.sold = (newItem.sold || 0) + newQty;
 
                 const diff = (newPrice * newQty) - (oldPrice * oldQty);
                 const custName = document.getElementById('exc-cust-name').value.trim() || 'Walk-in Customer';
                 const custPhone = document.getElementById('exc-cust-phone').value.trim() || '';
                 const payMode = document.getElementById('exc-payment-mode').value;
 
-                window.exchangeList.unshift({
-                    id: "EXC-" + Math.floor(Math.random() * 900 + 100),
-                    invRef: invRef,
-                    date: new Date().toISOString().split('T')[0],
-                    customerName: custName,
-                    customerPhone: custPhone,
-                    oldItemName: oldName,
-                    oldQty: oldQty,
-                    oldPrice: oldPrice,
-                    newItemName: newName,
-                    newQty: newQty,
-                    newPrice: newPrice,
-                    difference: diff,
-                    paymentMode: payMode
-                });
+                try {
+                    await exchangeDB.add({
+                        id: "EXC-" + Math.floor(Math.random() * 900 + 100),
+                        invRef: invRef,
+                        date: new Date().toISOString().split('T')[0],
+                        customerName: custName,
+                        customerPhone: custPhone,
+                        oldItemName: oldName,
+                        oldQty: oldQty,
+                        oldPrice: oldPrice,
+                        newItemName: newName,
+                        newQty: newQty,
+                        newPrice: newPrice,
+                        difference: diff,
+                        paymentMode: payMode,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
 
-                syncAllData();
-                closeExchangeModal();
+                    if(oldId) await productsDB.doc(oldId).update({ stock: firebase.firestore.FieldValue.increment(oldQty) });
+                    if(newId) await productsDB.doc(newId).update({ stock: firebase.firestore.FieldValue.increment(-newQty) });
 
-                window.renderSellView();
-                window.renderExchangeView();
-                window.renderManageStock();
-                window.renderStockReport();
-                window.filterMenu();
-                window.updateDashboardMetrics();
+                    closeExchangeModal();
+                } catch(e) {
+                    alert("Exchange error: " + e.message);
+                }
             };
 
             window.renderExchangeView = function() {
@@ -2516,20 +2841,20 @@
                 let totalDiffAmt = 0;
 
                 const filtered = window.exchangeList.filter(exc => {
-                    return exc.id.toLowerCase().includes(searchTerm) ||
-                           exc.invRef.toLowerCase().includes(searchTerm) ||
-                           exc.customerName.toLowerCase().includes(searchTerm) ||
-                           exc.oldItemName.toLowerCase().includes(searchTerm) ||
-                           exc.newItemName.toLowerCase().includes(searchTerm);
+                    return (exc.id && exc.id.toLowerCase().includes(searchTerm)) ||
+                           (exc.invRef && exc.invRef.toLowerCase().includes(searchTerm)) ||
+                           (exc.customerName && exc.customerName.toLowerCase().includes(searchTerm)) ||
+                           (exc.oldItemName && exc.oldItemName.toLowerCase().includes(searchTerm)) ||
+                           (exc.newItemName && exc.newItemName.toLowerCase().includes(searchTerm));
                 });
 
                 if (filtered.length === 0) {
                     tbody.innerHTML = `<tr><td colspan="8" class="empty-placeholder">No exchange records found.</td></tr>`;
                 } else {
                     filtered.forEach(exc => {
-                        totalInQty += Number(exc.oldQty);
-                        totalOutQty += Number(exc.newQty);
-                        totalDiffAmt += Number(exc.difference);
+                        totalInQty += Number(exc.oldQty || 0);
+                        totalOutQty += Number(exc.newQty || 0);
+                        totalDiffAmt += Number(exc.difference || 0);
 
                         const diffBadge = exc.difference >= 0 ? 
                             `<span style="color:#10b981; font-weight:700;">+Rs. ${exc.difference.toLocaleString()}</span>` : 
@@ -2556,74 +2881,27 @@
                 document.getElementById('total-exchange-diff-amt').textContent = `Rs. ${totalDiffAmt.toLocaleString()}`;
             };
 
-            window.downloadExchangeReportPDF = function() {
-                if (window.exchangeList.length === 0) { alert("Exchange log is empty!"); return; }
-                let rowsHtml = '';
-                window.exchangeList.forEach((exc, index) => {
-                    rowsHtml += `
-                        <tr>
-                            <td>${index + 1}</td>
-                            <td>${exc.id}</td>
-                            <td>${exc.invRef}</td>
-                            <td>${exc.date}</td>
-                            <td>${exc.customerName}</td>
-                            <td style="color:#15803d; font-weight:bold;">+${exc.oldQty} ${exc.oldItemName}</td>
-                            <td style="color:#b91c1c; font-weight:bold;">-${exc.newQty} ${exc.newItemName}</td>
-                            <td style="text-align:right; font-weight:bold;">Rs. ${exc.difference.toLocaleString()}</td>
-                            <td>${exc.paymentMode}</td>
-                        </tr>
-                    `;
-                });
-
-                const reportHtml = `
-                    <div style="padding: 25px; font-family: -apple-system, BlinkMacSystemFont, sans-serif; color: #111;">
-                        <h2 style="text-align:center; margin-bottom: 4px;">PRODUCT EXCHANGE FINANCIAL REPORT</h2>
-                        <p style="text-align:center; color:#555; font-size:12px; margin-bottom: 20px;">Generated on: ${new Date().toLocaleDateString()}</p>
-                        <table style="width:100%; border-collapse: collapse; font-size: 11.5px; border: 1px solid #ddd;">
-                            <thead>
-                                <tr style="background:#f1f5f9; border-bottom:2px solid #cbd5e1; text-align:left;">
-                                    <th style="padding:8px; border:1px solid #ddd;">#</th>
-                                    <th style="padding:8px; border:1px solid #ddd;">Exchange ID</th>
-                                    <th style="padding:8px; border:1px solid #ddd;">Ref Inv</th>
-                                    <th style="padding:8px; border:1px solid #ddd;">Date</th>
-                                    <th style="padding:8px; border:1px solid #ddd;">Customer</th>
-                                    <th style="padding:8px; border:1px solid #ddd;">Returned (+Stock)</th>
-                                    <th style="padding:8px; border:1px solid #ddd;">Issued (-Stock)</th>
-                                    <th style="padding:8px; border:1px solid #ddd; text-align:right;">Diff (Rs.)</th>
-                                    <th style="padding:8px; border:1px solid #ddd;">Payment</th>
-                                </tr>
-                            </thead>
-                            <tbody>${rowsHtml}</tbody>
-                        </table>
-                    </div>
-                `;
-
-                const host = document.getElementById('standard-pdf-hidden-host');
-                host.innerHTML = reportHtml;
-                html2pdf().set({
-                    margin: 8,
-                    filename: `Exchange_Report_${new Date().toISOString().split('T')[0]}.pdf`,
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
-                }).from(host.children[0]).save().then(() => host.innerHTML = '');
-            };
-
+            // Expenses
             window.openExpenseModal = () => document.getElementById('expense-modal').classList.add('visible');
             window.closeExpenseModal = () => document.getElementById('expense-modal').classList.remove('visible');
             
-            window.saveExpense = function() {
+            window.saveExpense = async function() {
                 const title = document.getElementById('expense-title').value.trim();
                 const category = document.getElementById('expense-category').value;
                 const amount = parseFloat(document.getElementById('expense-amount').value);
                 if (!title || isNaN(amount)) { alert("Please complete all fields!"); return; }
-                window.expensesList.unshift({ id: Date.now(), title, category, amount, date: new Date().toISOString().split('T')[0] });
-                syncAllData();
-                closeExpenseModal();
-                document.getElementById('expense-title').value = '';
-                document.getElementById('expense-amount').value = '';
-                window.renderExpenseView();
-                window.updateDashboardMetrics();
-                if(document.getElementById('profit-loss-view').classList.contains('active')) {
-                    window.renderProfitLossReport();
+
+                try {
+                    await expensesDB.add({
+                        title, category, amount, 
+                        date: new Date().toISOString().split('T')[0],
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    closeExpenseModal();
+                    document.getElementById('expense-title').value = '';
+                    document.getElementById('expense-amount').value = '';
+                } catch(e) {
+                    alert("Error: " + e.message);
                 }
             };
 
@@ -2635,26 +2913,160 @@
                     return;
                 }
                 window.expensesList.forEach(exp => {
-                    tbody.innerHTML += `<tr><td>${exp.title}</td><td>${exp.category}</td><td>${exp.date}</td><td>Rs. ${exp.amount.toLocaleString()}</td><td><button class="btn-delete" onclick="deleteExpense(${exp.id})"><i class='bx bx-trash'></i></button></td></tr>`;
+                    tbody.innerHTML += `<tr><td>${exp.title}</td><td>${exp.category}</td><td>${exp.date}</td><td>Rs. ${exp.amount.toLocaleString()}</td><td><button class="btn-delete" onclick="deleteExpense('${exp.id}')"><i class='bx bx-trash'></i></button></td></tr>`;
                 });
-                window.updateDashboardMetrics();
             };
 
-            window.deleteExpense = function(id) {
+            window.deleteExpense = async function(id) {
                 if(confirm("Are you sure you want to delete this expense?")) {
-                    window.expensesList = window.expensesList.filter(e => e.id !== id);
-                    syncAllData();
-                    window.renderExpenseView();
-                    window.updateDashboardMetrics();
-                    if(document.getElementById('profit-loss-view').classList.contains('active')) {
-                        window.renderProfitLossReport();
+                    await expensesDB.doc(id).delete();
+                }
+            };
+
+            // ==========================================
+            // USERS MANAGEMENT & APPROVAL TABLE LOGIC
+            // ==========================================
+            function renderUsersManagementTable() {
+                const tbody = document.getElementById('users-table-tbody');
+                if (!tbody) return;
+                tbody.innerHTML = '';
+
+                if (!window.systemUsersList || window.systemUsersList.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" class="empty-placeholder">No registered users found.</td></tr>`;
+                    return;
+                }
+
+                window.systemUsersList.forEach(u => {
+                    let statusBadge = '';
+                    let quickApproveBtn = '';
+
+                    if (u.status === 'pending') {
+                        statusBadge = `<span class="status-badge" style="background:#fef3c7; color:#b45309;">Pending Approval</span>`;
+                        quickApproveBtn = `<button class="btn-pay" onclick="quickApproveUser('${u.id}')" title="Approve this user"><i class='bx bx-check'></i> Approve</button>`;
+                    } else if (u.status === 'active') {
+                        statusBadge = `<span class="status-badge badge-paid">Active</span>`;
+                    } else {
+                        statusBadge = `<span class="status-badge badge-credit">Blocked</span>`;
                     }
+
+                    const perms = u.permissions || {};
+                    const allowedCount = Object.values(perms).filter(v => v === true).length;
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><strong>${u.username}</strong></td>
+                            <td><code>${u.email || 'N/A'}</code></td>
+                            <td><small>${u.createdAt?.toDate ? u.createdAt.toDate().toLocaleDateString() : 'Recent'}</small></td>
+                            <td>${statusBadge}</td>
+                            <td><span style="font-weight:700; color:var(--primary);">${allowedCount} Modules Allowed</span></td>
+                            <td class="action-btns">
+                                ${quickApproveBtn}
+                                <button class="btn-edit" onclick="openUserAccessModal('${u.id}')"><i class='bx bx-cog'></i> Access</button>
+                                <button class="btn-delete" onclick="deleteUserAccount('${u.id}')"><i class='bx bx-trash'></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+
+            window.quickApproveUser = async function(userId) {
+                try {
+                    await usersDB.doc(userId).update({ status: 'active' });
+                    alert("User approved successfully! Ab yeh user apni Email se login kar sakega.");
+                } catch(e) {
+                    alert("Error: " + e.message);
+                }
+            };
+
+            window.openUserAccessModal = function(userId) {
+                const user = window.systemUsersList.find(u => u.id === userId);
+                if (!user) return;
+
+                document.getElementById('perm-user-id').value = user.id;
+                document.getElementById('perm-user-name').textContent = `${user.username} (${user.email || ''})`;
+                document.getElementById('perm-user-status').value = user.status || 'active';
+
+                const p = user.permissions || {};
+                document.getElementById('perm-dashboard').checked = !!p.dashboard;
+                document.getElementById('perm-pos').checked = !!p.pos;
+                document.getElementById('perm-stock').checked = !!p.stock;
+                document.getElementById('perm-reports').checked = !!p.reports;
+                document.getElementById('perm-sales').checked = !!p.sales;
+                document.getElementById('perm-returns').checked = !!p.returns;
+                document.getElementById('perm-exchanges').checked = !!p.exchanges;
+                document.getElementById('perm-expenses').checked = !!p.expenses;
+                document.getElementById('perm-settings').checked = !!p.settings;
+                document.getElementById('perm-users').checked = !!p.users;
+
+                document.getElementById('user-access-modal').classList.add('visible');
+            };
+
+            window.closeUserAccessModal = () => document.getElementById('user-access-modal').classList.remove('visible');
+
+            window.saveUserPermissions = async function() {
+                const userId = document.getElementById('perm-user-id').value;
+                const status = document.getElementById('perm-user-status').value;
+
+                const newPermissions = {
+                    dashboard: document.getElementById('perm-dashboard').checked,
+                    pos: document.getElementById('perm-pos').checked,
+                    stock: document.getElementById('perm-stock').checked,
+                    reports: document.getElementById('perm-reports').checked,
+                    sales: document.getElementById('perm-sales').checked,
+                    returns: document.getElementById('perm-returns').checked,
+                    exchanges: document.getElementById('perm-exchanges').checked,
+                    expenses: document.getElementById('perm-expenses').checked,
+                    settings: document.getElementById('perm-settings').checked,
+                    users: document.getElementById('perm-users').checked
+                };
+
+                try {
+                    await usersDB.doc(userId).update({
+                        status: status,
+                        permissions: newPermissions
+                    });
+                    closeUserAccessModal();
+                    alert("Permissions & Status updated successfully!");
+                } catch(e) {
+                    alert("Error saving permissions: " + e.message);
+                }
+            };
+
+            window.deleteUserAccount = async function(userId) {
+                if (confirm("Are you sure you want to delete this user permanently?")) {
+                    await usersDB.doc(userId).delete();
                 }
             };
 
             window.toggleSidebar = () => document.getElementById('sidebar').classList.toggle('collapsed');
             window.toggleMobile = () => document.getElementById('sidebar').classList.toggle('mobile-open');
+            
             window.switchView = (v) => {
+                const currentUserStr = sessionStorage.getItem('pos_current_user');
+                if (currentUserStr) {
+                    const currentUser = JSON.parse(currentUserStr);
+                    if (currentUser.role !== 'superadmin') {
+                        const p = currentUser.permissions || {};
+                        const viewPermMap = {
+                            'dashboard': p.dashboard,
+                            'pos': p.pos,
+                            'manage-stock': p.stock,
+                            'profit-loss': p.reports,
+                            'stock-report': p.reports,
+                            'sell': p.sales,
+                            'return': p.returns,
+                            'exchange': p.exchanges,
+                            'expense': p.expenses,
+                            'settings': p.settings,
+                            'users': p.users
+                        };
+                        if (viewPermMap[v] === false) {
+                            alert("Access Denied! You do not have permission to view this module.");
+                            return;
+                        }
+                    }
+                }
+
                 document.querySelectorAll('.view').forEach(el => el.classList.remove('active'));
                 const targetView = document.getElementById(`${v}-view`);
                 if(targetView) targetView.classList.add('active');
@@ -2669,28 +3081,27 @@
                     'return': 'Return History Log',
                     'exchange': 'Product Exchange Report',
                     'expense': 'Store Expenses Log',
-                    'settings': 'System Settings'
+                    'settings': 'System Settings',
+                    'users': 'User Accounts & Access Control'
                 };
                 document.getElementById('header-title').textContent = titles[v] || 'Dashboard';
 
-                //  YEH SAHI TARIQA HAI:
-if(v === 'dashboard') window.updateDashboardMetrics();
-
-if (v === 'pos') {
-    window.filterMenu();
-    setTimeout(() => {
-        const searchBox = document.getElementById('menu-search');
-        if (searchBox) searchBox.focus();
-    }, 100);
-}
-
-if(v === 'manage-stock') window.renderManageStock(); 
-if(v === 'profit-loss') window.renderProfitLossReport();
-if(v === 'stock-report') window.renderStockReport();
-if(v === 'sell') window.renderSellView();
-if(v === 'return') window.renderReturnView();
-if(v === 'exchange') window.renderExchangeView();
-if(v === 'expense') window.renderExpenseView();
+                if(v === 'dashboard') window.updateDashboardMetrics();
+                if(v === 'pos') {
+                    window.filterMenu();
+                    setTimeout(() => {
+                        const searchBox = document.getElementById('menu-search');
+                        if (searchBox) searchBox.focus();
+                    }, 100);
+                }
+                if(v === 'manage-stock') window.renderManageStock(); 
+                if(v === 'profit-loss') window.renderProfitLossReport();
+                if(v === 'stock-report') window.renderStockReport();
+                if(v === 'sell') window.renderSellView();
+                if(v === 'return') window.renderReturnView();
+                if(v === 'exchange') window.renderExchangeView();
+                if(v === 'expense') window.renderExpenseView();
+                if(v === 'users') renderUsersManagementTable();
                 
                 document.querySelectorAll('.nav-list a').forEach(a => { 
                     a.classList.remove('active'); 
@@ -2704,95 +3115,46 @@ if(v === 'expense') window.renderExpenseView();
                 localStorage.setItem('pos_biz_note', document.getElementById('invoice-note').value);
                 alert("Settings saved successfully!");
             });
-
-            // Initial Renders
-            window.renderCategories();
-            window.filterMenu();
-            window.updateDashboardMetrics();
         });
 
-        // 1. Barcode Modal Open karne ka Updated Function
-window.viewBarcode = function(id) {
-    // Loose equality (==) use ki hai taake string aur number dono ID match ho sakein
-    const item = window.menuItems.find(i => i.id == id);
-    if (!item) {
-        alert("Product nahi mila!");
-        return;
-    }
+        // Barcode PNG Download Logic
+        window.downloadBarcodeImage = function() {
+            const svgElement = document.getElementById('barcode-canvas');
+            if (!svgElement) return;
 
-    window.activeBarcodeItem = item;
-    const bizName = localStorage.getItem('pos_biz_name') || 'KORVEXA SOFTWARE';
-    
-    const storeEl = document.getElementById('bc-store-name');
-    if (storeEl) storeEl.textContent = bizName;
+            const barcodeNumber = svgElement.querySelector('text')?.textContent || 'barcode';
+            const svgString = new XMLSerializer().serializeToString(svgElement);
+            const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+            const URLObject = window.URL || window.webkitURL || window;
+            const blobURL = URLObject.createObjectURL(svgBlob);
 
-    document.getElementById('bc-prod-name').textContent = item.name;
-    document.getElementById('bc-prod-price').textContent = `Rs. ${Number(item.price).toLocaleString()}`;
-    
-    // Barcode draw karna
-    JsBarcode("#barcode-canvas", (item.barcode || "10000000").toString(), {
-        format: "CODE128",
-        lineColor: "#000",
-        width: 2.2,
-        height: 55,
-        displayValue: true,
-        fontSize: 15,
-        textMargin: 4
-    });
+            const img = new Image();
+            img.onload = function() {
+                const bcWidth = img.width || 280;
+                const bcHeight = img.height || 90;
+                const padding = 15;
 
-    document.getElementById('barcode-modal').classList.add('visible');
-};
+                const canvas = document.createElement('canvas');
+                canvas.width = bcWidth + (padding * 2);
+                canvas.height = bcHeight + (padding * 2);
+                const ctx = canvas.getContext('2d');
 
-// Sirf Barcode aur Serial Number download karne ka function
-window.downloadBarcodeImage = function() {
-    const svgElement = document.getElementById('barcode-canvas');
-    if (!svgElement) {
-        alert("Barcode nahi mila!");
-        return;
-    }
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, padding, padding, bcWidth, bcHeight);
 
-    // Filename ke liye barcode serial number uthana
-    const barcodeNumber = svgElement.querySelector('text')?.textContent || 
-                          (window.activeBarcodeItem ? window.activeBarcodeItem.barcode : 'barcode');
+                const pngUrl = canvas.toDataURL('image/png');
+                const downloadLink = document.createElement('a');
+                downloadLink.download = `Barcode_${barcodeNumber}.png`;
+                downloadLink.href = pngUrl;
+                document.body.appendChild(downloadLink);
+                downloadLink.click();
+                document.body.removeChild(downloadLink);
 
-    const svgString = new XMLSerializer().serializeToString(svgElement);
-    const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
-    const URLObject = window.URL || window.webkitURL || window;
-    const blobURL = URLObject.createObjectURL(svgBlob);
-
-    const img = new Image();
-    img.onload = function() {
-        // Barcode ka natural size
-        const bcWidth = img.width || 280;
-        const bcHeight = img.height || 90;
-        const padding = 15; // Thora sa saaf white border
-
-        const canvas = document.createElement('canvas');
-        canvas.width = bcWidth + (padding * 2);
-        canvas.height = bcHeight + (padding * 2);
-        const ctx = canvas.getContext('2d');
-
-        // 1. Saaf White Background
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // 2. SIRF Barcode aur Serial Number draw karna (No Name, No Price, No Header)
-        ctx.drawImage(img, padding, padding, bcWidth, bcHeight);
-
-        // 3. PNG Image Download trigger karna
-        const pngUrl = canvas.toDataURL('image/png');
-        const downloadLink = document.createElement('a');
-        downloadLink.download = `Barcode_${barcodeNumber}.png`;
-        downloadLink.href = pngUrl;
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-
-        URLObject.revokeObjectURL(blobURL);
-    };
-
-    img.src = blobURL;
-};
+                URLObject.revokeObjectURL(blobURL);
+            };
+            img.src = blobURL;
+        };
     </script>
 </body>
 </html>
