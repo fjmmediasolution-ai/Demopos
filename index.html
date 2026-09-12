@@ -491,9 +491,9 @@
 <!-- 1. Manager ke liye Daily Sales & Expense Sheet -->
 <li id="nav-daily-sheet"><a href="#" onclick="switchView('daily-sheet')"><i class='bx bx-spreadsheet'></i><span class="links_name">Daily Sales & Expense</span></a></li>
 
-<!-- All Reports (Master Financial Audit) -->
 <li id="nav-all-reports"><a href="#" onclick="switchView('all-reports')"><i class='bx bx-pie-chart-alt-2'></i><span class="links_name">All Reports</span></a></li>
                 <li id="nav-exchanges"><a href="#" onclick="switchView('exchange')"><i class='bx bx-transfer-alt'></i><span class="links_name">Exchange Management</span></a></li>
+                <li id="nav-returns"><a href="#" onclick="switchView('return')"><i class='bx bx-undo'></i><span class="links_name">Return Management</span></a></li>
                 <li id="nav-expenses"><a href="#" onclick="switchView('expense')"><i class='bx bx-wallet'></i><span class="links_name">Expenses</span></a></li>
 
                 <li class="has-submenu" id="nav-reports">
@@ -673,7 +673,6 @@
                     
                     <div class="order-summary">
                         <div class="summary-line"><span>Subtotal</span><span id="subtotal-amount">Rs. 0</span></div>
-                        <div class="summary-line"><span>Discount (Rs.)</span><input type="number" id="manual-discount-input" class="manual-input-box" placeholder="0" min="0" style="color:#ef4444;"></div>
                         <div class="summary-line total"><span>Total Payable</span><span id="total-amount">Rs. 0</span></div>
                         <button class="charge-btn" id="charge-btn">Charge Rs. 0</button>
                     </div>
@@ -1395,16 +1394,25 @@
                 </div>
             </div>
 
-            <!-- 12. STOCK REPORT -->
+           <!-- 12. STOCK REPORT (WITH AREA / STORE FILTER) -->
             <div id="stock-report-view" class="view">
                 <div class="content-wrapper" style="width: 100%; max-width: 100%; padding: 22px 30px;">
                     <div class="fullscreen-report-wrapper">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 10px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 12px;">
                             <div>
                                 <h2 style="font-size: 1.4rem; font-weight: 800; color: #0f172a;"><i class='bx bx-archive-in' style="color:var(--primary);"></i> Stock & Inventory Valuation Report</h2>
-                                <p style="color: #64748b; font-size: 0.88rem;">Current inventory metrics and unit costing.</p>
+                                <p style="color: #64748b; font-size: 0.88rem;">Area-wise inventory status: Kitna stock kis jagah mojood hai aur kitna sale ho chuka hai.</p>
                             </div>
-                            <button class="save-btn" onclick="generateStockReportPDF()"><i class='bx bxs-file-pdf'></i> Export Stock PDF</button>
+                            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                <!-- Area / Branch Select Dropdown -->
+                                <div class="pos-branch-select-box" style="padding: 6px 14px; background: #ffffff; border: 1.5px solid var(--primary);">
+                                    <label style="font-weight: 700; color: #0f172a; font-size: 0.88rem;"><i class='bx bx-map-pin' style="color:var(--primary);"></i> Select Area / Store:</label>
+                                    <select id="stock-report-branch-filter" onchange="renderStockReport()" style="font-weight: 800; color: var(--primary);">
+                                        <option value="all">Main Godown / All Areas</option>
+                                    </select>
+                                </div>
+                                <button class="save-btn" onclick="generateStockReportPDF()"><i class='bx bxs-file-pdf'></i> Export Stock PDF</button>
+                            </div>
                         </div>
 
                         <div class="dashboard-grid" style="margin-bottom: 10px;">
@@ -2643,15 +2651,85 @@ window.alert = function(message) {
             }, 50);
         };
 
-        window.downloadSingleBarcodePNG = function(canvasId, fileName) {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) { alert("Barcode canvas not found!"); return; }
+       // Clean Standard Barcode Sticker (Only Product Name, Barcode & Price)
+        window.downloadBarcodeStickerPNG = function(productName, price, barcodeVal) {
+            if (!barcodeVal) {
+                alert("Barcode number mojood nahi hai!");
+                return;
+            }
+
+            // Standard Thermal Label Dimensions (Clean & Balanced)
+            const stickerCanvas = document.createElement('canvas');
+            const stickerWidth = 400;
+            const stickerHeight = 220;
+            stickerCanvas.width = stickerWidth;
+            stickerCanvas.height = stickerHeight;
+            const ctx = stickerCanvas.getContext('2d');
+
+            // 1. Plain White Background & Light Border
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, stickerWidth, stickerHeight);
+            ctx.strokeStyle = "#cbd5e1";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(3, 3, stickerWidth - 6, stickerHeight - 6);
+
+            // 2. Sirf Product Name (Upar Center mein Bold)
+            ctx.fillStyle = "#000000";
+            ctx.font = "bold 19px 'Plus Jakarta Sans', Arial, sans-serif";
+            ctx.textAlign = "center";
+            const displayName = productName.length > 26 ? productName.substring(0, 24) + '..' : productName;
+            ctx.fillText(displayName, stickerWidth / 2, 34);
+
+            // 3. Barcode Lines & Digits (Darmiyan mein)
+            const tempBcCanvas = document.createElement('canvas');
+            try {
+                JsBarcode(tempBcCanvas, String(barcodeVal), {
+                    format: "CODE128",
+                    width: 2.0,
+                    height: 75,
+                    displayValue: true,
+                    fontSize: 15,
+                    font: "Arial",
+                    textMargin: 3,
+                    margin: 0
+                });
+
+                const bcX = (stickerWidth - tempBcCanvas.width) / 2;
+                ctx.drawImage(tempBcCanvas, bcX, 48);
+            } catch (err) {
+                console.error("Barcode sticker generation error:", err);
+            }
+
+            // 4. Sirf Price (Neeche Bada aur Saaf Black Bold)
+            const finalPrice = Number(price || 0);
+            ctx.fillStyle = "#000000";
+            ctx.font = "bold 24px 'Plus Jakarta Sans', Arial, sans-serif";
+            ctx.fillText(`PRICE: Rs. ${finalPrice.toLocaleString()}`, stickerWidth / 2, 196);
+
+            // 5. Download Normal PNG Sticker
             const link = document.createElement('a');
-            link.download = `${fileName.replace(/[^a-zA-Z0-9_-]/g, '_')}.png`;
-            link.href = canvas.toDataURL('image/png');
+            const cleanName = (productName || 'Sticker').replace(/[^a-zA-Z0-9_-]/g, '_');
+            link.download = `Sticker_${cleanName}_${barcodeVal}.png`;
+            link.href = stickerCanvas.toDataURL('image/png');
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
+        };
+
+        // Purane links ke sath compatibility
+        window.downloadSingleBarcodePNG = function(canvasId, fileName, pName, pPrice, pBarcode) {
+            if (pName && pBarcode) {
+                window.downloadBarcodeStickerPNG(pName, pPrice, pBarcode);
+            } else {
+                const canvas = document.getElementById(canvasId);
+                if (!canvas) { alert("Barcode canvas not found!"); return; }
+                const link = document.createElement('a');
+                link.download = `${fileName.replace(/[^a-zA-Z0-9_-]/g, '_')}.png`;
+                link.href = canvas.toDataURL('image/png');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
         };
 
         // SUBMIT COMPLETE DIAGRAM PURCHASE
@@ -4138,13 +4216,12 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
             updateSummary();
         };
 
-       function updateSummary() {
-            const discountInputEl = document.getElementById('manual-discount-input');
+      function updateSummary() {
             const grossSubtotal = cart.reduce((a, b) => a + (Number(b.originalPrice || b.price || 0) * b.qty), 0);
             const discountedSubtotal = cart.reduce((a, b) => a + (Number(b.price || 0) * b.qty), 0);
-            const manualDiscount = parseFloat(discountInputEl?.value) || 0;
             
-            const totalDiscount = (grossSubtotal - discountedSubtotal) + manualDiscount;
+            // Ab sirf Settings wala Store Discount hi calculate hoga
+            const totalDiscount = (grossSubtotal - discountedSubtotal);
             const grandTotal = Math.max(0, grossSubtotal - totalDiscount);
 
             const subEl = document.getElementById('subtotal-amount');
@@ -4349,7 +4426,7 @@ window.startCameraScanner = async function() {
         }
 
         // =========================================================
-        // BARCODES VIEW
+        // BARCODES VIEW (FULL STICKER DOWNLOAD: NAME + BARCODE + PRICE)
         // =========================================================
         window.renderAllProductBarcodesView = function() {
             const container = document.getElementById('all-barcode-cards-container');
@@ -4374,20 +4451,21 @@ window.startCameraScanner = async function() {
                 card.className = 'single-barcode-card';
                 const canvasId = `all-bc-canvas-${index}`;
                 const safeBarcode = item.barcode || ('890' + Math.floor(10000000 + Math.random() * 90000000));
+                const itemPrice = Number(item.price || 0);
 
                 card.innerHTML = `
                     <div style="width:100%;">
                         <img src="${item.img || DEFAULT_PROD_IMG}" style="width:50px; height:50px; border-radius:8px; object-fit:cover; margin-bottom:4px;">
                         <h4 style="font-size:1.05rem; font-weight:800; margin:4px 0; color:#0f172a;">${item.name}</h4>
-                        <div style="font-size:0.95rem; font-weight:800; color:var(--primary);">Rs. ${Number(item.price || 0).toLocaleString()}</div>
+                        <div style="font-size:0.95rem; font-weight:800; color:var(--primary);">Rs. ${itemPrice.toLocaleString()}</div>
                     </div>
 
                     <div style="background:#ffffff; padding:8px; border:1px solid #f1f5f9; border-radius:10px; margin:12px 0; width:100%; display:flex; justify-content:center;">
                         <canvas id="${canvasId}"></canvas>
                     </div>
 
-                    <button class="save-btn" style="width:100%; justify-content:center; padding:9px 14px; font-size:0.85rem;" onclick="downloadSingleBarcodePNG('${canvasId}', '${item.name}_${safeBarcode}')">
-                        <i class='bx bx-download'></i> Download Barcode PNG
+                    <button class="save-btn" style="width:100%; justify-content:center; padding:10px 14px; font-size:0.88rem; gap:6px;" onclick="downloadBarcodeStickerPNG('${item.name.replace(/'/g, "\\'")}', ${itemPrice}, '${safeBarcode}')" title="Download Full Sticker (Name, Barcode, Price)">
+                        <i class='bx bx-purchase-tag'></i> Download Sticker PNG
                     </button>
                 `;
 
@@ -5172,12 +5250,11 @@ if (discInput) discInput.value = savedDisc;
                     custName = custName || 'Walk-in';
                 }
 
-                // Asal Subtotal aur Kul Discount calculate karein
+               // Asal Subtotal aur Kul Discount calculate karein (Settings ke discount ke mutabiq)
                 const grossSubtotal = cart.reduce((a, b) => a + (Number(b.originalPrice || b.price || 0) * b.qty), 0);
                 const discountedSubtotal = cart.reduce((a, b) => a + (Number(b.price || 0) * b.qty), 0);
-                const manualDiscVal = parseFloat(document.getElementById('manual-discount-input')?.value) || 0;
                 
-                const totalDiscountVal = (grossSubtotal - discountedSubtotal) + manualDiscVal;
+                const totalDiscountVal = (grossSubtotal - discountedSubtotal);
                 const total = Math.max(0, grossSubtotal - totalDiscountVal);
                 
                 const invId = (Math.floor(Math.random() * 900) + 100).toString();
@@ -5285,7 +5362,7 @@ if (discInput) discInput.value = savedDisc;
             };
 
             // Search Barcode in POS
-            document.getElementById('menu-search')?.addEventListener('keydown', function(e) {
+          document.getElementById('menu-search')?.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     const code = this.value.trim();
@@ -5295,8 +5372,6 @@ if (discInput) discInput.value = savedDisc;
                     window.filterMenu();
                 }
             });
-
-            document.getElementById('manual-discount-input')?.addEventListener('input', () => updateSummary());
 
             // Cart Items row click handler
             document.getElementById('cart-items')?.addEventListener('click', (e) => {
@@ -5679,7 +5754,7 @@ updateSalesChart();
                 const itemsCount = (sale.items || []).reduce((sum, it) => sum + Number(it.qty || 1), 0);
                 const itemsSummary = (sale.items || []).map(it => `${it.name} (x${it.qty})`).join(', ');
 
-                // Agar Udhar baqi hai to "Pay" button show karein
+              // Agar Udhar baqi hai to "Pay" button show karein
                 let payDueBtn = '';
                 if (due > 0 || sale.paymentStatus === 'Unpaid') {
                     payDueBtn = `<button class="btn-pay" onclick="openAddPaymentModal('${sale.id}')" title="Khata / Udhar Clear Karein"><i class='bx bx-money'></i> Pay</button>`;
@@ -5709,8 +5784,12 @@ updateSalesChart();
                             <strong style="color:#0f172a; font-size:1rem;">Rs. ${total.toLocaleString()}</strong><br>
                             <small style="color:#64748b;">Zariya: <b>${sale.paymentMode || 'Cash'}</b></small>
                         </td>
-                        <td class="action-btns">
-                            <button class="btn-view" onclick="reprintSaleInvoice('${sale.id}')" title="Print Invoice / View"><i class='bx bx-printer'></i> Slip</button>
+                        <td class="action-btns" style="display:flex; flex-wrap:wrap; gap:4px;">
+                            <button class="btn-view" onclick="reprintSaleInvoice('${sale.id}')" title="Print Invoice / View"><i class='bx bx-printer'></i></button>
+                            <button class="btn-edit" onclick="editSaleInvoice('${sale.id}')" title="Edit Bill"><i class='bx bx-edit'></i></button>
+                            <button class="btn-return" onclick="openSaleReturn('${sale.id}')" title="Return Product"><i class='bx bx-undo'></i></button>
+                            <button class="btn-exchange" onclick="openSaleExchange('${sale.id}')" title="Exchange Product"><i class='bx bx-transfer'></i></button>
+                            <button class="btn-delete" onclick="deleteSaleRecord('${sale.id}', true)" title="Delete Bill"><i class='bx bx-trash'></i></button>
                             ${payDueBtn}
                         </td>
                     </tr>
@@ -6043,51 +6122,73 @@ updateSalesChart();
         };
 
 
-        // 1. Return Modal Kholna (Direct Return)
-        window.openUniversalReturnModal = function() {
-            const invRefInput = document.getElementById('return-inv-ref');
-            const prodSelect = document.getElementById('return-product-select');
-            const qtyInput = document.getElementById('return-qty');
-            const reasonInput = document.getElementById('return-reason');
+        // 1. Exchange Modal Kholna (Direct Exchange)
+        window.openUniversalExchangeModal = function() {
+            const invRefInput = document.getElementById('exc-inv-ref');
+            const oldSelect = document.getElementById('exc-old-product');
+            const newSelect = document.getElementById('exc-new-product');
+            const oldQtyInput = document.getElementById('exc-old-qty');
+            const newQtyInput = document.getElementById('exc-new-qty');
+            const custNameInput = document.getElementById('exc-cust-name');
+            const custPhoneInput = document.getElementById('exc-cust-phone');
 
-            if (invRefInput) invRefInput.value = 'DIR-' + Math.floor(1000 + Math.random() * 9000);
-            if (qtyInput) qtyInput.value = '1';
-            if (reasonInput) reasonInput.value = '';
+            if (invRefInput) invRefInput.value = 'EXC-' + Math.floor(1000 + Math.random() * 9000);
+            if (oldQtyInput) oldQtyInput.value = '1';
+            if (newQtyInput) newQtyInput.value = '1';
+            if (custNameInput) custNameInput.value = '';
+            if (custPhoneInput) custPhoneInput.value = '';
 
-            // Dropdown mein tamam products load karein
-            if (prodSelect) {
-                prodSelect.innerHTML = '<option value="">-- Chuniye Product --</option>';
-                (window.menuItems || []).forEach(prod => {
-                    prodSelect.innerHTML += `
-                        <option value="${prod.id}" data-name="${prod.name}" data-price="${prod.price || 0}">
-                            ${prod.name} (Rs. ${Number(prod.price || 0).toLocaleString()})
-                        </option>
-                    `;
-                });
+            // Dropdowns mein inventory ke items load karein
+            let optionsHtml = '<option value="">-- Chuniye Product --</option>';
+            (window.menuItems || []).forEach(p => {
+                optionsHtml += `<option value="${p.id}" data-name="${p.name}" data-price="${p.price || 0}" data-stock="${p.stock || 0}">${p.name} (Rs. ${Number(p.price || 0).toLocaleString()} | Stock: ${p.stock || 0})</option>`;
+            });
+
+            if (oldSelect) oldSelect.innerHTML = optionsHtml;
+            if (newSelect) newSelect.innerHTML = optionsHtml;
+
+            window.calcExchangeDifference();
+            document.getElementById('exchange-modal')?.classList.add('visible');
+        };
+
+        // 2. Exchange Modal Band Karna
+        window.closeExchangeModal = function() {
+            document.getElementById('exchange-modal')?.classList.remove('visible');
+        };
+
+        // 3. Difference Amount Auto-Calculate Karna (Customer dega ya Store dega)
+        window.calcExchangeDifference = function() {
+            const oldSelect = document.getElementById('exc-old-product');
+            const newSelect = document.getElementById('exc-new-product');
+            const oldQty = parseInt(document.getElementById('exc-old-qty')?.value) || 0;
+            const newQty = parseInt(document.getElementById('exc-new-qty')?.value) || 0;
+
+            const oldOpt = oldSelect?.options[oldSelect.selectedIndex];
+            const newOpt = newSelect?.options[newSelect.selectedIndex];
+
+            const oldUnitPrice = parseFloat(oldOpt?.dataset?.price) || 0;
+            const newUnitPrice = parseFloat(newOpt?.dataset?.price) || 0;
+
+            const oldVal = oldUnitPrice * oldQty;
+            const newVal = newUnitPrice * newQty;
+            const diff = newVal - oldVal;
+
+            const oldValInput = document.getElementById('exc-old-val');
+            const newValInput = document.getElementById('exc-new-val');
+            const diffDisp = document.getElementById('exc-diff-display');
+
+            if (oldValInput) oldValInput.value = oldVal;
+            if (newValInput) newValInput.value = newVal;
+
+            if (diffDisp) {
+                if (diff > 0) {
+                    diffDisp.innerHTML = `<span style="color:#10b981;">Customer Dega: Rs. ${diff.toLocaleString()}</span>`;
+                } else if (diff < 0) {
+                    diffDisp.innerHTML = `<span style="color:#ef4444;">Wapas (Refund) Karein: Rs. ${Math.abs(diff).toLocaleString()}</span>`;
+                } else {
+                    diffDisp.innerHTML = `<span style="color:var(--primary);">Barabar (Rs. 0)</span>`;
+                }
             }
-
-            window.autoFillReturnPrice();
-            document.getElementById('return-modal')?.classList.add('visible');
-        };
-
-        // 2. Return Modal Band Karna
-        window.closeReturnModal = function() {
-            document.getElementById('return-modal')?.classList.remove('visible');
-        };
-
-        // 3. Product select hone ya Qty badalne par Refund amount auto-calculate hona
-        window.autoFillReturnPrice = function() {
-            const prodSelect = document.getElementById('return-product-select');
-            const qtyInput = document.getElementById('return-qty');
-            const refundInput = document.getElementById('return-refund-val');
-
-            if (!prodSelect || !qtyInput || !refundInput) return;
-
-            const selectedOption = prodSelect.options[prodSelect.selectedIndex];
-            const unitPrice = parseFloat(selectedOption?.dataset?.price) || 0;
-            const qty = parseInt(qtyInput.value) || 1;
-
-            refundInput.value = unitPrice * qty;
         };
 
         // 4. Return Save Karna aur Stock Wapas Add Karna
@@ -7382,117 +7483,201 @@ updateSalesChart();
         };
 
         // =========================================================================
-        // 2. STOCK & INVENTORY VALUATION REPORT (SCREEN 12)
+        // 2. STOCK & INVENTORY VALUATION REPORT (AREA / BRANCH WISE SEPARATION)
         // =========================================================================
+
+        // Area Dropdown Populate Karna
+        window.populateStockReportBranchDropdown = function() {
+            const selectEl = document.getElementById('stock-report-branch-filter');
+            if (!selectEl) return;
+            const currentSelected = selectEl.value || 'all';
+
+            selectEl.innerHTML = `<option value="all">Main Godown / Overall (All Areas)</option>`;
+            (window.branchesList || []).forEach(branch => {
+                selectEl.innerHTML += `<option value="${branch.id}">${branch.name} - ${branch.area}</option>`;
+            });
+            selectEl.value = currentSelected;
+        };
+
         window.renderStockReport = function() {
+            window.populateStockReportBranchDropdown();
+
             const tbody = document.getElementById('report-tbody');
             const soldEl = document.getElementById('report-sold');
             const remainEl = document.getElementById('report-remaining');
             const costValEl = document.getElementById('report-cost-val');
             const saleValEl = document.getElementById('report-sale-val');
+            const selectedBranch = document.getElementById('stock-report-branch-filter')?.value || 'all';
 
             if (!tbody) return;
             tbody.innerHTML = '';
-
-            const products = window.menuItems || [];
 
             let totalSoldUnits = 0;
             let totalRemainingUnits = 0;
             let totalCostVal = 0;
             let totalSaleVal = 0;
 
-            if (products.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="empty-placeholder">Inventory mein koi products mojood nahi hain.</td></tr>`;
+            const products = window.menuItems || [];
+            let displayRows = [];
+
+            if (selectedBranch === 'all') {
+                // 1. Overall / Main Godown Stock
+                displayRows = products.map(p => {
+                    const st = Number(p.stock || 0);
+                    const sld = Number(p.sold || 0);
+                    return {
+                        id: p.id,
+                        barcode: p.barcode || 'N/A',
+                        name: p.name,
+                        category: p.category || 'General',
+                        costPrice: Number(p.costPrice || 0),
+                        price: Number(p.price || 0),
+                        stock: st,
+                        sold: sld,
+                        areaTag: 'Main Warehouse'
+                    };
+                });
             } else {
-                products.forEach(p => {
-                    const stock = Number(p.stock || 0);
-                    const sold = Number(p.sold || 0);
-                    const costPrice = Number(p.costPrice || 0);
-                    const salePrice = Number(p.price || 0);
+                // 2. Selected Area / Branch Wise Stock & Sales
+                const branchObj = (window.branchesList || []).find(b => b.id === selectedBranch);
+                const areaLabel = branchObj ? `${branchObj.name} (${branchObj.area})` : 'Selected Area';
 
-                    const lineCostVal = stock * costPrice;
-                    const lineSaleVal = stock * salePrice;
+                // Us specific branch ki sales calculate karein
+                const branchSoldMap = {};
+                (window.salesHistory || []).forEach(s => {
+                    if (s.branchId === selectedBranch) {
+                        (s.items || []).forEach(it => {
+                            branchSoldMap[it.id] = (branchSoldMap[it.id] || 0) + Number(it.qty || 0);
+                        });
+                    }
+                });
 
-                    totalSoldUnits += sold;
-                    totalRemainingUnits += stock;
+                displayRows = products.map(p => {
+                    const bStockRecord = (window.branchStockList || []).find(bs => bs.branchId === selectedBranch && bs.productId === p.id);
+                    const bQty = bStockRecord ? Number(bStockRecord.qty || 0) : 0;
+                    const bSold = branchSoldMap[p.id] || 0;
+
+                    return {
+                        id: p.id,
+                        barcode: p.barcode || 'N/A',
+                        name: p.name,
+                        category: p.category || 'General',
+                        costPrice: Number(p.costPrice || 0),
+                        price: Number(p.price || 0),
+                        stock: bQty,
+                        sold: bSold,
+                        areaTag: areaLabel
+                    };
+                });
+            }
+
+            if (displayRows.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="8" class="empty-placeholder">Chune hue area mein koi product record nahi mila.</td></tr>`;
+            } else {
+                displayRows.forEach(item => {
+                    const lineCostVal = item.stock * item.costPrice;
+                    const lineSaleVal = item.stock * item.price;
+
+                    totalSoldUnits += item.sold;
+                    totalRemainingUnits += item.stock;
                     totalCostVal += lineCostVal;
                     totalSaleVal += lineSaleVal;
 
                     tbody.innerHTML += `
                         <tr>
-                            <td><code>${p.barcode || 'N/A'}</code></td>
-                            <td><strong>${p.name}</strong></td>
-                            <td><span class="status-badge" style="background:#f1f5f9; color:#475569;">${p.category || 'General'}</span></td>
-                            <td style="text-align:right;">Rs. ${costPrice.toLocaleString()}</td>
-                            <td style="text-align:right; font-weight:700; color:var(--primary);">Rs. ${salePrice.toLocaleString()}</td>
+                            <td><code>${item.barcode}</code></td>
+                            <td>
+                                <strong>${item.name}</strong><br>
+                                <small style="color:#0284c7; font-weight:700;"><i class='bx bx-map-pin'></i> ${item.areaTag}</small>
+                            </td>
+                            <td><span class="status-badge" style="background:#f1f5f9; color:#475569;">${item.category}</span></td>
+                            <td style="text-align:right;">Rs. ${item.costPrice.toLocaleString()}</td>
+                            <td style="text-align:right; font-weight:700; color:var(--primary);">Rs. ${item.price.toLocaleString()}</td>
                             <td style="text-align:center;">
-                                <strong style="font-size:1.05rem; color:${stock <= 3 ? '#ef4444' : '#10b981'};">
-                                    ${stock} pcs
+                                <strong style="font-size:1.05rem; color:${item.stock <= 3 ? '#ef4444' : '#10b981'};">
+                                    ${item.stock} pcs
                                 </strong>
                             </td>
                             <td style="text-align:right; font-weight:800; color:#0f172a;">Rs. ${lineCostVal.toLocaleString()}</td>
-                            <td style="text-align:center; font-weight:700; color:#0284c7;">${sold} pcs</td>
+                            <td style="text-align:center; font-weight:800; color:#0284c7;">${item.sold} pcs</td>
                         </tr>
                     `;
                 });
             }
 
-            // Top KPIs Update
+            // Top Dashboard Cards Update
             if (soldEl) soldEl.textContent = `${totalSoldUnits} units`;
             if (remainEl) remainEl.textContent = `${totalRemainingUnits} units`;
             if (costValEl) costValEl.textContent = `Rs. ${totalCostVal.toLocaleString()}`;
             if (saleValEl) saleValEl.textContent = `Rs. ${totalSaleVal.toLocaleString()}`;
         };
 
+        // Area Filter ke sath PDF Export
         window.generateStockReportPDF = function() {
-            const rows = (window.menuItems || []).map((p, idx) => [
-                String(idx + 1),
-                `<code>${p.barcode || 'N/A'}</code>`,
-                `<b>${p.name}</b>`,
-                p.category || 'General',
-                `Rs. ${Number(p.costPrice || 0).toLocaleString()}`,
-                `Rs. ${Number(p.price || 0).toLocaleString()}`,
-                `<b style="color:${(p.stock || 0) <= 3 ? '#dc2626' : '#16a34a'};">${p.stock || 0} pcs</b>`,
-                `Rs. ${(Number(p.stock || 0) * Number(p.costPrice || 0)).toLocaleString()}`,
-                `${p.sold || 0} pcs`
-            ]);
+            const selectedBranch = document.getElementById('stock-report-branch-filter')?.value || 'all';
+            let branchTitle = 'Main Godown & Overall Stores';
+            if (selectedBranch !== 'all') {
+                const b = (window.branchesList || []).find(br => br.id === selectedBranch);
+                if (b) branchTitle = `${b.name} (${b.area})`;
+            }
 
-            const totalRemain = (window.menuItems || []).reduce((sum, p) => sum + Number(p.stock || 0), 0);
-            const totalCost = (window.menuItems || []).reduce((sum, p) => sum + (Number(p.stock || 0) * Number(p.costPrice || 0)), 0);
-            const totalSale = (window.menuItems || []).reduce((sum, p) => sum + (Number(p.stock || 0) * Number(p.price || 0)), 0);
+            const trs = document.querySelectorAll('#report-tbody tr');
+            const rows = [];
+
+            trs.forEach((tr, idx) => {
+                const tds = tr.querySelectorAll('td');
+                if (tds.length === 8) {
+                    rows.push([
+                        String(idx + 1),
+                        tds[0].innerText.trim(),
+                        tds[1].innerText.trim(),
+                        tds[2].innerText.trim(),
+                        tds[3].innerText.trim(),
+                        tds[4].innerText.trim(),
+                        tds[5].innerText.trim(),
+                        tds[6].innerText.trim(),
+                        tds[7].innerText.trim()
+                    ]);
+                }
+            });
+
+            const remainText = document.getElementById('report-remaining')?.textContent || '0';
+            const costText = document.getElementById('report-cost-val')?.textContent || 'Rs. 0';
+            const soldText = document.getElementById('report-sold')?.textContent || '0';
 
             window.generateProfessionalPDF({
-                reportTitle: 'INVENTORY VALUATION & AUDIT REPORT',
-                periodText: 'Live Godown & Store Stock Valuation',
-                fileName: 'Stock_Valuation_Report',
+                reportTitle: `STOCK & INVENTORY VALUATION REPORT`,
+                periodText: `Area / Location: ${branchTitle}`,
+                fileName: `Stock_Report_${branchTitle.replace(/[^a-zA-Z0-9_-]/g, '_')}`,
                 orientation: 'landscape',
                 kpis: [
-                    { label: 'Available Stock Units', value: `${totalRemain.toLocaleString()} pcs`, color: '#0066ff' },
-                    { label: 'Cost Valuation (Investment)', value: `Rs. ${totalCost.toLocaleString()}`, color: '#ea580c' },
-                    { label: 'Expected Retail Value', value: `Rs. ${totalSale.toLocaleString()}`, color: '#10b981' }
+                    { label: 'Selected Area', value: branchTitle, color: '#0066ff' },
+                    { label: 'Stock Left', value: remainText, color: '#10b981' },
+                    { label: 'Units Sold', value: soldText, color: '#0284c7' },
+                    { label: 'Inventory Cost Val', value: costText, color: '#ea580c' }
                 ],
                 headers: [
                     { title: 'Sr #', align: 'center' },
                     { title: 'Barcode', align: 'left' },
-                    { title: 'Product Description', align: 'left' },
+                    { title: 'Product & Area', align: 'left' },
                     { title: 'Category', align: 'left' },
                     { title: 'Cost Price', align: 'right' },
                     { title: 'Sale Price', align: 'right' },
                     { title: 'In Stock', align: 'center' },
                     { title: 'Total Cost Val', align: 'right' },
-                    { title: 'Sold Qty', align: 'center' }
+                    { title: 'Units Sold', align: 'center' }
                 ],
                 rows: rows,
                 totals: [
-                    'TOTAL SUMMARY',
+                    'AREA TOTAL',
                     '-',
                     '-',
                     '-',
                     '-',
                     '-',
-                    `${totalRemain.toLocaleString()} pcs`,
-                    `Rs. ${totalCost.toLocaleString()}`,
-                    '-'
+                    remainText,
+                    costText,
+                    soldText
                 ]
             });
         };
@@ -9170,6 +9355,289 @@ function updateNetworkStatus() {
 window.addEventListener('online', updateNetworkStatus);
 window.addEventListener('offline', updateNetworkStatus);
 updateNetworkStatus();
+
+// =========================================================
+        // SALES ROW ACTIONS: EDIT, RETURN, EXCHANGE, DELETE
+        // =========================================================
+
+      // 1. Direct Return From Sales Ledger (Ab is mein sirf Bill wala saaman aayega)
+        window.openSaleReturn = function(saleId) {
+            const sale = window.salesHistory.find(s => s.id === saleId);
+            if (!sale) return;
+            
+            // Return modal kholain aur is sale ke items usko bhej dein
+            window.openUniversalReturnModal(sale.items);
+            document.getElementById('return-inv-ref').value = sale.invoiceId;
+            
+            Toast.fire({ icon: 'info', title: `Invoice #${sale.invoiceId} ka Return khul gaya hai.` });
+        };
+
+        // 2. Direct Exchange From Sales Ledger (Ab is mein Purani cheez bill wali, aur Nayi cheez poori shop ki hogi)
+        window.openSaleExchange = function(saleId) {
+            const sale = window.salesHistory.find(s => s.id === saleId);
+            if (!sale) return;
+            
+            // Exchange modal kholain aur is sale ke items usko bhej dein
+            window.openUniversalExchangeModal(sale.items);
+            document.getElementById('exc-inv-ref').value = sale.invoiceId;
+            
+            if (sale.customerName && sale.customerName !== 'Walk-in' && sale.customerName !== 'Cash Customer') {
+                document.getElementById('exc-cust-name').value = sale.customerName;
+            }
+            if (sale.customerPhone) {
+                document.getElementById('exc-cust-phone').value = sale.customerPhone;
+            }
+
+            Toast.fire({ icon: 'info', title: `Invoice #${sale.invoiceId} ka Exchange khul gaya hai.` });
+        };
+
+        // 3. Delete Sale Record (Stock Wapas Aayega)
+        window.deleteSaleRecord = async function(saleId, showPrompt = true) {
+            if (showPrompt && !confirm("Kya aap waqai is Sale Invoice ko delete karna chahte hain?\n\n(Iska stock wapas inventory mein shamil ho jayega)")) {
+                return false;
+            }
+            
+            const sale = window.salesHistory.find(s => s.id === saleId);
+            if (!sale) return false;
+
+            try {
+                // 1. Stock wapas inventory mein dalein
+                for (let item of sale.items) {
+                    if (sale.branchId && sale.branchId !== 'all') {
+                        // Agar branch ka stock hai
+                        const bStockRecord = window.branchStockList.find(bs => bs.branchId === sale.branchId && bs.productId === item.id);
+                        if (bStockRecord) {
+                            await branchStockDB.doc(bStockRecord.id).update({
+                                qty: firebase.firestore.FieldValue.increment(item.qty)
+                            });
+                        }
+                    } else {
+                        // Agar main godown ka stock hai
+                        await productsDB.doc(item.id).update({
+                            stock: firebase.firestore.FieldValue.increment(item.qty),
+                            sold: firebase.firestore.FieldValue.increment(-item.qty)
+                        });
+                    }
+                }
+
+                // 2. Sale document Firebase se delete karein
+                await salesDB.doc(saleId).delete();
+
+                if (showPrompt) {
+                    alert("Sale bill successfully delete ho gaya aur stock wapas store mein add kar diya gaya hai.");
+                }
+                return true;
+            } catch (err) {
+                alert("Delete Error: " + err.message);
+                return false;
+            }
+        };
+
+        // 4. Edit Sale Invoice (Purana Delete, Naya POS Cart mein load)
+        window.editSaleInvoice = async function(saleId) {
+            if (!confirm("Bill Edit karne ke liye yeh invoice pehle cancel/delete hogi aur iska saman wapas POS Cart mein aa jayega taake aap tabdeeli kar sakein.\n\nKya aap jari rakhna chahte hain?")) {
+                return;
+            }
+
+            const sale = window.salesHistory.find(s => s.id === saleId);
+            if (!sale) return;
+
+            try {
+                // 1. Pehle purani sale delete karein aur stock wapas layein
+                const deleted = await window.deleteSaleRecord(saleId, false); // false means bina popup ke delete kare
+
+                if (deleted) {
+                    // 2. POS Cart ko clear karein aur is sale ka saman load karein
+                    cart = [];
+                    sale.items.forEach(it => {
+                        cart.push({
+                            id: it.id,
+                            name: it.name,
+                            price: it.price,
+                            originalPrice: it.originalPrice || it.price,
+                            qty: it.qty,
+                            img: it.img || ''
+                        });
+                    });
+
+                    // 3. Customer aur Branch info set karein
+                    const cNameEl = document.getElementById('pos-cust-name');
+                    const cPhoneEl = document.getElementById('pos-cust-phone');
+                    const branchSel = document.getElementById('pos-selected-branch');
+
+                    if (cNameEl) cNameEl.value = (sale.customerName !== 'Walk-in' && sale.customerName !== 'Cash Customer') ? sale.customerName : '';
+                    if (cPhoneEl) cPhoneEl.value = sale.customerPhone || '';
+                    if (branchSel && sale.branchId) branchSel.value = sale.branchId;
+
+                    // 4. Payment mode set karein
+                    let pMode = 'Cash';
+                    if ((sale.paymentMode || '').includes('Online')) pMode = 'Online';
+                    else if ((sale.paymentMode || '').includes('Card')) pMode = 'Card';
+                    else if ((sale.paymentMode || '').includes('Credit')) pMode = 'Credit';
+                    window.setPaymentMode(pMode);
+
+                    // 5. POS screen par le jayein aur cart render karein
+                    window.switchView('pos');
+                    window.renderCart();
+
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Invoice edit mode mein load ho gayi hai. Tabdeeli kar ke dobara Charge dabayein.'
+                    });
+                }
+            } catch (err) {
+                alert("Edit Error: " + err.message);
+            }
+        };
+
+        // =========================================================
+        // UNIVERSAL RETURN & EXCHANGE MODALS LOGIC
+        // =========================================================
+        window.openUniversalReturnModal = function(saleItems = null) {
+            const invRefInput = document.getElementById('return-inv-ref');
+            const prodSelect = document.getElementById('return-product-select');
+            const qtyInput = document.getElementById('return-qty');
+            const reasonInput = document.getElementById('return-reason');
+
+            if (invRefInput && !saleItems) invRefInput.value = 'DIR-' + Math.floor(1000 + Math.random() * 9000);
+            if (qtyInput) qtyInput.value = '1';
+            if (reasonInput) reasonInput.value = '';
+
+            if (prodSelect) {
+                prodSelect.innerHTML = '<option value="">-- Wapas Aane Wala Product Chuniye --</option>';
+                // Agar saleItems aaye hain (yani bill se khola hai) to wohi dikhao, warna poori inventory
+                const itemsToLoad = saleItems ? saleItems : (window.menuItems || []);
+                
+                itemsToLoad.forEach(prod => {
+                    const price = prod.price || prod.originalPrice || 0; 
+                    const maxQtyTag = prod.qty ? ` (Bikay: ${prod.qty})` : ''; 
+                    
+                    prodSelect.innerHTML += `
+                        <option value="${prod.id}" data-name="${prod.name}" data-price="${price}" data-maxqty="${prod.qty || ''}">
+                            ${prod.name} (Rs. ${Number(price).toLocaleString()})${maxQtyTag}
+                        </option>
+                    `;
+                });
+            }
+
+            window.autoFillReturnPrice();
+            document.getElementById('return-modal')?.classList.add('visible');
+        };
+
+        window.closeReturnModal = function() {
+            document.getElementById('return-modal')?.classList.remove('visible');
+        };
+
+        window.autoFillReturnPrice = function() {
+            const prodSelect = document.getElementById('return-product-select');
+            const qtyInput = document.getElementById('return-qty');
+            const refundInput = document.getElementById('return-refund-val');
+
+            if (!prodSelect || !qtyInput || !refundInput) return;
+
+            const selectedOption = prodSelect.options[prodSelect.selectedIndex];
+            const unitPrice = parseFloat(selectedOption?.dataset?.price) || 0;
+            const maxQty = parseInt(selectedOption?.dataset?.maxqty) || 0; // Bill wali quantity
+            
+            let qty = parseInt(qtyInput.value) || 1;
+            
+            // Limit check: Jitni cheezein li theen, us se zyada wapas na ho
+            if (maxQty > 0 && qty > maxQty) {
+                qty = maxQty;
+                qtyInput.value = maxQty;
+                Toast.fire({icon: 'warning', title: `Is bill mein sirf ${maxQty} units thay!`});
+            }
+
+            refundInput.value = unitPrice * qty;
+        };
+
+        window.openUniversalExchangeModal = function(saleItems = null) {
+            const invRefInput = document.getElementById('exc-inv-ref');
+            const oldSelect = document.getElementById('exc-old-product');
+            const newSelect = document.getElementById('exc-new-product');
+            const oldQtyInput = document.getElementById('exc-old-qty');
+            const newQtyInput = document.getElementById('exc-new-qty');
+            const custNameInput = document.getElementById('exc-cust-name');
+            const custPhoneInput = document.getElementById('exc-cust-phone');
+
+            if (invRefInput && !saleItems) invRefInput.value = 'EXC-' + Math.floor(1000 + Math.random() * 9000);
+            if (oldQtyInput) oldQtyInput.value = '1';
+            if (newQtyInput) newQtyInput.value = '1';
+            if (custNameInput && !saleItems) custNameInput.value = '';
+            if (custPhoneInput && !saleItems) custPhoneInput.value = '';
+
+            // Old Product (Jo Wapas Aa Raha Hai): Agar bill hai to sirf bill wale items
+            if (oldSelect) {
+                oldSelect.innerHTML = '<option value="">-- Wapas Aane Wala Product Chuniye --</option>';
+                const oldItemsToLoad = saleItems ? saleItems : (window.menuItems || []);
+                
+                oldItemsToLoad.forEach(p => {
+                    const price = p.price || p.originalPrice || 0;
+                    const maxQtyTag = p.qty ? ` (Bikay: ${p.qty})` : '';
+                    oldSelect.innerHTML += `<option value="${p.id}" data-name="${p.name}" data-price="${price}" data-maxqty="${p.qty || ''}">${p.name} (Rs. ${Number(price).toLocaleString()})${maxQtyTag}</option>`;
+                });
+            }
+
+            // New Product (Jo Naya Diya Ja Raha Hai): Poori Dukan ka Stock
+            if (newSelect) {
+                newSelect.innerHTML = '<option value="">-- Naya Diya Jane Wala Product Chuniye --</option>';
+                (window.menuItems || []).forEach(p => {
+                    newSelect.innerHTML += `<option value="${p.id}" data-name="${p.name}" data-price="${p.price || 0}" data-stock="${p.stock || 0}">${p.name} (Rs. ${Number(p.price || 0).toLocaleString()} | Stock: ${p.stock || 0})</option>`;
+                });
+            }
+
+            window.calcExchangeDifference();
+            document.getElementById('exchange-modal')?.classList.add('visible');
+        };
+
+        window.closeExchangeModal = function() {
+            document.getElementById('exchange-modal')?.classList.remove('visible');
+        };
+
+        window.calcExchangeDifference = function() {
+            const oldSelect = document.getElementById('exc-old-product');
+            const newSelect = document.getElementById('exc-new-product');
+            const oldQtyInput = document.getElementById('exc-old-qty');
+            const newQtyInput = document.getElementById('exc-new-qty');
+            
+            let oldQty = parseInt(oldQtyInput?.value) || 0;
+            let newQty = parseInt(newQtyInput?.value) || 0;
+
+            const oldOpt = oldSelect?.options[oldSelect.selectedIndex];
+            const newOpt = newSelect?.options[newSelect.selectedIndex];
+            
+            // Limit check: Purani cheez kitni wapas aa sakti hai
+            const maxOldQty = parseInt(oldOpt?.dataset?.maxqty) || 0;
+            if (maxOldQty > 0 && oldQty > maxOldQty) {
+                oldQty = maxOldQty;
+                if (oldQtyInput) oldQtyInput.value = maxOldQty;
+                Toast.fire({icon: 'warning', title: `Is bill mein purana item sirf ${maxOldQty} units tha!`});
+            }
+
+            const oldUnitPrice = parseFloat(oldOpt?.dataset?.price) || 0;
+            const newUnitPrice = parseFloat(newOpt?.dataset?.price) || 0;
+
+            const oldVal = oldUnitPrice * oldQty;
+            const newVal = newUnitPrice * newQty;
+            const diff = newVal - oldVal;
+
+            const oldValInput = document.getElementById('exc-old-val');
+            const newValInput = document.getElementById('exc-new-val');
+            const diffDisp = document.getElementById('exc-diff-display');
+
+            if (oldValInput) oldValInput.value = oldVal;
+            if (newValInput) newValInput.value = newVal;
+
+            if (diffDisp) {
+                if (diff > 0) {
+                    diffDisp.innerHTML = `<span style="color:#10b981;">Customer Dega: Rs. ${diff.toLocaleString()}</span>`;
+                } else if (diff < 0) {
+                    diffDisp.innerHTML = `<span style="color:#ef4444;">Wapas (Refund) Karein: Rs. ${Math.abs(diff).toLocaleString()}</span>`;
+                } else {
+                    diffDisp.innerHTML = `<span style="color:var(--primary);">Barabar (Rs. 0)</span>`;
+                }
+            }
+        };
 
     </script>
 </body>
