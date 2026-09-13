@@ -25,7 +25,7 @@
             --sidebar-bg: #0b1326;
             --bg-light: #f3f6fb;
             --border-color: #e2e8f0;
-            --sidebar-w: 260px;
+            --sidebar-w: 295px; /* Width 260px se barha kar 295px kardi hai */
             --sidebar-c: 80px;
             --transition: all 0.3s ease;
         }
@@ -356,7 +356,9 @@
         @media print {
             body * { visibility: hidden !important; }
             #invoice-modal .invoice-content, 
-            #invoice-modal .invoice-content * { 
+            #invoice-modal .invoice-content *,
+            #barcode-print-area,
+            #barcode-print-area * { 
                 visibility: visible !important; 
                 color: #000000 !important;
             }
@@ -380,6 +382,79 @@
                 font-weight: 600 !important;
             }
             .invoice-actions, .close-modal { display: none !important; }
+
+            /* Continuous Thermal Barcode Layout (Ek hi page par continuous flow) */
+            @page {
+                margin: 2mm;
+                size: auto;
+            }
+
+            #barcode-print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #ffffff !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+            }
+
+            .barcode-sticker-print-box {
+                width: 50mm;
+                min-height: 27mm;
+                margin: 0 auto 2.5mm auto;
+                padding: 1.5mm 2mm;
+                text-align: center;
+                border: 1px dashed #94a3b8; /* Cutting line guide */
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
+                align-items: center;
+                box-sizing: border-box;
+                
+                /* Yeh rule har barcode ko ek sath rakhega, beech se katne nahi dega */
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                page-break-after: auto !important; /* Jab page bharega tabhi agle page par jayega */
+            }
+
+            .bcp-company {
+                font-size: 8.5px;
+                font-weight: 800;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                line-height: 1;
+                margin-bottom: 1px;
+                color: #000000 !important;
+            }
+
+            .bcp-title {
+                font-size: 10px;
+                font-weight: 800;
+                line-height: 1.1;
+                max-width: 46mm;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                color: #000000 !important;
+            }
+
+            .bcp-svg {
+                width: 44mm;
+                height: 13mm;
+                margin: 1px 0;
+            }
+
+            .bcp-price {
+                font-size: 11.5px;
+                font-weight: 900;
+                letter-spacing: 0.3px;
+                line-height: 1;
+                color: #000000 !important;
+            }
         }
 
         @media (max-width: 992px) {
@@ -408,7 +483,7 @@
             .card { padding: 10px !important; }
             .card img { height: 95px !important; }
             .sidebar { position: fixed !important; left: -100% !important; top: 0; bottom: 0; height: 100vh !important; z-index: 10001 !important; transition: left 0.3s ease !important; }
-            .sidebar.mobile-open { left: 0 !important; width: 270px !important; }
+            .sidebar.mobile-open { left: 0 !important; width: 295px !important; } /* Mobile par bhi 295px width */
             .toggle-arrow { display: none !important; }
             .mobile-toggle { display: block !important; }
             .modal-content { width: 95% !important; padding: 18px !important; margin: 10px !important; }
@@ -772,14 +847,19 @@
                         </div>
                     </div>
 
-                    <div class="pur-diagram-table-card">
+                   <div class="pur-diagram-table-card">
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
                             <h3 style="font-size:1.15rem; font-weight:800; color:#0f172a;">
                                 <i class='bx bx-grid-horizontal' style="color:var(--primary);"></i> Added Products Table
                             </h3>
-                            <button type="button" class="outline-btn" style="padding:6px 14px; font-size:0.85rem;" onclick="clearDiagramTable()">
-                                <i class='bx bx-trash'></i> Clear Table
-                            </button>
+                            <div style="display:flex; gap:8px;">
+                                <button type="button" class="save-btn" style="padding:6px 14px; font-size:0.85rem; background:#0f172a; background-image:none;" onclick="printAllDiagramBarcodes()" title="Table ke sab products ke barcodes ek sath print karein">
+                                    <i class='bx bx-printer'></i> Print All Barcodes
+                                </button>
+                                <button type="button" class="outline-btn" style="padding:6px 14px; font-size:0.85rem;" onclick="clearDiagramTable()">
+                                    <i class='bx bx-trash'></i> Clear Table
+                                </button>
+                            </div>
                         </div>
 
                         <div style="overflow-x:auto;">
@@ -1209,6 +1289,72 @@
                                         </tr>
                                     </thead>
                                     <tbody id="all-rep-statement-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- 1. Sales Details Table -->
+                        <div class="pl-card-section" style="width: 100%; margin-top: 20px;">
+                            <div class="pl-card-title" style="font-size: 1.15rem; font-weight: 800; color: #0f172a;">
+                                <i class='bx bx-cart' style="color:var(--primary);"></i> Sales Details
+                            </div>
+                            <div style="overflow-x: auto; width: 100%;">
+                                <table class="pl-table" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 11%;">Date</th>
+                                            <th style="width: 8%;">Inv ID</th>
+                                            <th style="width: 13%;">Customer</th>
+                                            <th style="width: 24%;">Product</th>
+                                            <th style="width: 6%; text-align: center;">Qty</th>
+                                            <th style="width: 12%; text-align: right;">Amount</th>
+                                            <th style="width: 18%;">Paid</th>
+                                            <th style="width: 8%; text-align: right;">Bal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="all-rep-sales-details-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- 2. Expense Details Table -->
+                        <div class="pl-card-section" style="width: 100%; margin-top: 20px;">
+                            <div class="pl-card-title" style="font-size: 1.15rem; font-weight: 800; color: #0f172a;">
+                                <i class='bx bx-receipt' style="color:#ef4444;"></i> Expense Details
+                            </div>
+                            <div style="overflow-x: auto; width: 100%;">
+                                <table class="pl-table" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 15%;">Date</th>
+                                            <th style="width: 20%;">Category</th>
+                                            <th style="width: 45%;">Description</th>
+                                            <th style="width: 20%; text-align: right;">Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="all-rep-expense-details-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- 3. Sell Return Details Table -->
+                        <div class="pl-card-section" style="width: 100%; margin-top: 20px;">
+                            <div class="pl-card-title" style="font-size: 1.15rem; font-weight: 800; color: #0f172a;">
+                                <i class='bx bx-undo' style="color:#f59e0b;"></i> Sell Return Details
+                            </div>
+                            <div style="overflow-x: auto; width: 100%;">
+                                <table class="pl-table" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 14%;">Date</th>
+                                            <th style="width: 16%;">Original Invoice</th>
+                                            <th style="width: 20%;">Customer</th>
+                                            <th style="width: 26%;">Returned Item(s)</th>
+                                            <th style="width: 8%; text-align: center;">Qty</th>
+                                            <th style="width: 16%; text-align: right;">Refund Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="all-rep-returns-details-tbody"></tbody>
                                 </table>
                             </div>
                         </div>
@@ -1778,11 +1924,11 @@
                                 <div class="kpi-subtitle">Paid to vendors & suppliers</div>
                             </div>
 
-                            <!-- 3. Expenses & Refunds Outflow -->
+                           <!-- 3. Total Expenses Outflow -->
                             <div class="pl-kpi-card" style="border-top: 4px solid #ef4444;">
-                                <div class="kpi-header"><span class="kpi-title">Expenses & Refunds</span><div class="kpi-icon" style="background: #fee2e2; color: #ef4444;"><i class='bx bx-arrow-from-bottom'></i></div></div>
+                                <div class="kpi-header"><span class="kpi-title">Total Expenses</span><div class="kpi-icon" style="background: #fee2e2; color: #ef4444;"><i class='bx bx-arrow-from-bottom'></i></div></div>
                                 <div class="kpi-value" id="kpi-cb-out" style="color: #ef4444;">Rs. 0</div>
-                                <div class="kpi-subtitle">Store expenses & customer refunds</div>
+                                <div class="kpi-subtitle">Store operational costs</div>
                             </div>
 
                             <!-- 4. Remaining Balance / Net Cash in Hand -->
@@ -1793,12 +1939,46 @@
                             </div>
                         </div>
 
+                      <!-- Cash In & Handover Entries Table (With Edit & Delete Action) -->
+                        <div class="pl-card-section" style="width: 100%; margin-top: 15px; margin-bottom: 20px; background: #ffffff; border-radius: 16px; border: 1px solid var(--border-color); padding: 22px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+                                <div>
+                                    <h3 style="font-size: 1.2rem; font-weight: 800; color: #0f172a; margin-bottom: 2px;">
+                                        <i class='bx bx-transfer' style="color:var(--primary);"></i> Cash In & Cash Handover Entries
+                                    </h3>
+                                    <p style="font-size: 0.82rem; color: #64748b;">Yahan se aap kisi bhi Cash In ya Handover ki entry ko Edit ya Delete kar sakte hain.</p>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="save-btn" style="padding: 6px 12px; font-size: 0.8rem; background: #10b981; background-image: none;" onclick="openCashEntryModal('IN')">
+                                        <i class='bx bx-plus-circle'></i> Add Cash In
+                                    </button>
+                                    <button class="save-btn" style="padding: 6px 12px; font-size: 0.8rem; background: #ef4444; background-image: none;" onclick="openCashEntryModal('OUT')">
+                                        <i class='bx bx-minus-circle'></i> Cash Handover (Out)
+                                    </button>
+                                </div>
+                            </div>
+                            <div style="overflow-x: auto; width: 100%; border-radius: 10px; border: 1px solid #e2e8f0;">
+                                <table class="custom-table" style="width: 100%;">
+                                    <thead>
+                                        <tr style="background: #f8fafc;">
+                                            <th style="width: 16%;">Date & Time</th>
+                                            <th style="width: 15%;">Type</th>
+                                            <th style="width: 22%;">Person / Source</th>
+                                            <th style="width: 25%;">Note / Reason</th>
+                                            <th style="width: 12%; text-align: right;">Amount (Rs.)</th>
+                                            <th style="width: 10%; text-align: center;">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cash-handover-records-tbody"></tbody>
+                                </table>
+                            </div>
+                        </div>
+
                        <!-- High-Contrast Cash Transaction History Ledger -->
                         <div class="pl-card-section" style="width: 100%; margin-top: 10px; background: #ffffff; border-radius: 16px; border: 1px solid var(--border-color); padding: 22px;">
                             <div style="margin-bottom: 16px;">
                                 <h3 style="font-size: 1.25rem; font-weight: 800; color: #0f172a;">Cash Transaction History</h3>
-                            </div>
-                            <div style="overflow-x: auto; width: 100%; border-radius: 12px; overflow: hidden; border: 1px solid #1e293b;">
+                            </div>                            <div style="overflow-x: auto; width: 100%; border-radius: 12px; overflow: hidden; border: 1px solid #1e293b;">
                                 <table style="width: 100%; border-collapse: collapse; font-family: 'Plus Jakarta Sans', sans-serif;">
                                     <thead>
                                         <tr style="background: #0f172a; color: #ffffff; text-transform: uppercase;">
@@ -2256,6 +2436,7 @@
             <h2 id="modal-cash-entry-title" style="margin-bottom: 6px;">Cash Drawer Entry</h2>
             <p id="modal-cash-entry-subtitle" style="color:#64748b; font-size:0.85rem; margin-bottom: 16px;"></p>
             <input type="hidden" id="cash-entry-type">
+            <input type="hidden" id="cash-entry-doc-id">
             
             <div class="form-group">
                 <label id="lbl-cash-person">Person / Source Name *</label>
@@ -2343,8 +2524,7 @@
                 <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-purchaser"> Purchaser</label>
                 <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-reports"> Reports (Analytics)</label>
                 <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-sales"> Sales & Ledger</label>
-<label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-daily-sheet"> Daily Sales & Expense (Manager View)</label>
-<label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:var(--primary); font-weight:700;"><input type="checkbox" id="perm-all-reports"> All Reports (Master Financial Audit)</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:var(--primary); font-weight:700;"><input type="checkbox" id="perm-all-reports"> All Reports (Master Financial Audit)</label>
                 <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-exchanges"> Exchange Log</label>
                 <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-expenses"> Expenses</label>
                 <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-settings"> Settings</label>
@@ -2589,7 +2769,7 @@ window.alert = function(message) {
             calcRemainingDues();
         };
 
-        window.renderDiagramTable = function() {
+       window.renderDiagramTable = function() {
             const tbody = document.getElementById('dia-table-tbody');
             if (!tbody) return;
             tbody.innerHTML = '';
@@ -2617,9 +2797,14 @@ window.alert = function(message) {
                         <td style="text-align:center;">
                             <div class="barcode-cell-wrap">
                                 <canvas id="${canvasId}"></canvas>
-                                <button type="button" class="outline-btn" style="padding:3px 8px; font-size:0.75rem; border-radius:6px;" onclick="downloadSingleBarcodePNG('${canvasId}', '${item.name}_${item.barcode}')">
-                                    <i class='bx bx-download'></i> PNG
-                                </button>
+                                <div style="display:flex; gap:4px; margin-top:4px;">
+                                    <button type="button" class="save-btn" style="padding:4px 9px; font-size:0.75rem; border-radius:6px; background:#0f172a; background-image:none;" onclick="printSinglePurchasedBarcode(${idx})" title="Direct Thermal Print">
+                                        <i class='bx bx-printer'></i> Print
+                                    </button>
+                                    <button type="button" class="outline-btn" style="padding:4px 8px; font-size:0.75rem; border-radius:6px;" onclick="downloadBarcodeStickerPNG('${item.name.replace(/'/g, "\\'")}', ${item.sale}, '${item.barcode}')" title="Download PNG Sticker">
+                                        <i class='bx bx-download'></i> PNG
+                                    </button>
+                                </div>
                             </div>
                         </td>
                         <td style="text-align:center;">
@@ -2648,6 +2833,86 @@ window.alert = function(message) {
                         });
                     } catch(e) {}
                 });
+            }, 50);
+        };
+
+        // =========================================================
+        // DIRECT BARCODE PRINTING ENGINE (STICKER: SHOP, NAME, BARCODE, PRICE)
+        // =========================================================
+
+        // 1. Ek Single Product ka Barcode Print Karna (Sirf 1 Sticker)
+        window.printSinglePurchasedBarcode = function(index) {
+            const item = window.diagramPurchaseItems[index];
+            if (!item) return;
+
+            window.triggerBarcodeDirectPrint([{
+                name: item.name,
+                price: item.sale,
+                barcode: item.barcode
+            }]);
+        };
+
+        // 2. Purchaser Table ke Tamam Alag Alag Products ka Ek Sath Print Karna (Har Product ka 1 Sticker)
+        window.printAllDiagramBarcodes = function() {
+            if (window.diagramPurchaseItems.length === 0) {
+                alert("Table mein koi product mojood nahi hai!");
+                return;
+            }
+
+            // Har product ka distinct record banayein taake koi double na ho
+            window.triggerBarcodeDirectPrint(window.diagramPurchaseItems.map(item => ({
+                name: item.name,
+                price: item.sale,
+                barcode: item.barcode
+            })));
+        };
+
+        // 3. Main Thermal Printer Generator (Har Product ka Alag Alag Sticker)
+        window.triggerBarcodeDirectPrint = function(itemsList) {
+            const printArea = document.getElementById('barcode-print-area');
+            if (!printArea) return;
+
+            const companyName = localStorage.getItem('pos_biz_name') || 'KORVEXA SOFTWARE';
+            printArea.innerHTML = '';
+
+            // Loop sirf itemsList par chalega (Koi double repeat nahi hoga)
+            itemsList.forEach((item, itemIdx) => {
+                const svgId = `print-bc-svg-${itemIdx}`;
+                const stickerBox = document.createElement('div');
+                stickerBox.className = 'barcode-sticker-print-box';
+                stickerBox.innerHTML = `
+                    <div class="bcp-company">${companyName}</div>
+                    <div class="bcp-title">${item.name}</div>
+                    <svg id="${svgId}" class="bcp-svg"></svg>
+                    <div class="bcp-price">PRICE: Rs. ${Number(item.price || 0).toLocaleString()}</div>
+                `;
+                printArea.appendChild(stickerBox);
+            });
+
+            // SVG Barcodes Render karein
+            setTimeout(() => {
+                itemsList.forEach((item, itemIdx) => {
+                    const svgId = `#print-bc-svg-${itemIdx}`;
+                    try {
+                        JsBarcode(svgId, String(item.barcode), {
+                            format: "CODE128",
+                            width: 1.5,
+                            height: 35,
+                            displayValue: true,
+                            fontSize: 10,
+                            font: "Arial",
+                            textMargin: 2,
+                            margin: 0
+                        });
+                    } catch (e) {
+                        console.error("Barcode generation error:", e);
+                    }
+                });
+
+                // Direct Printer dialogue open karein
+                setTimeout(() => {
+                    window.print();
+                }, 100);
             }, 50);
         };
 
@@ -5894,15 +6159,19 @@ updateSalesChart();
             const title = document.getElementById('modal-cash-entry-title');
             const sub = document.getElementById('modal-cash-entry-subtitle');
             const lblPerson = document.getElementById('lbl-cash-person');
+            const docIdInput = document.getElementById('cash-entry-doc-id');
             const typeInput = document.getElementById('cash-entry-type');
             const personInput = document.getElementById('cash-entry-person');
             const amtInput = document.getElementById('cash-entry-amount');
             const noteInput = document.getElementById('cash-entry-note');
+            const btn = document.getElementById('save-cash-entry-btn');
 
+            if (docIdInput) docIdInput.value = ''; // Nayi entry ke liye id khali
             if (typeInput) typeInput.value = type;
             if (personInput) personInput.value = '';
             if (amtInput) amtInput.value = '';
             if (noteInput) noteInput.value = '';
+            if (btn) btn.innerHTML = `<i class='bx bx-check-circle'></i> Save Entry`;
 
             if (type === 'OUT') {
                 if (title) title.innerHTML = `<i class='bx bx-minus-circle' style="color:#ef4444;"></i> Cash Out (Handover to Owner / Bank)`;
@@ -5917,12 +6186,60 @@ updateSalesChart();
             modal?.classList.add('visible');
         };
 
+        // Edit Function: Purani Cash Entry ko Modal mein Load Karna
+        window.openEditCashEntryModal = function(docId) {
+            const entry = (window.cashEntriesList || []).find(c => c.id === docId);
+            if (!entry) { alert("Record nahi mila!"); return; }
+
+            const modal = document.getElementById('cash-entry-modal');
+            const title = document.getElementById('modal-cash-entry-title');
+            const sub = document.getElementById('modal-cash-entry-subtitle');
+            const lblPerson = document.getElementById('lbl-cash-person');
+            const docIdInput = document.getElementById('cash-entry-doc-id');
+            const typeInput = document.getElementById('cash-entry-type');
+            const personInput = document.getElementById('cash-entry-person');
+            const amtInput = document.getElementById('cash-entry-amount');
+            const noteInput = document.getElementById('cash-entry-note');
+            const btn = document.getElementById('save-cash-entry-btn');
+
+            if (docIdInput) docIdInput.value = entry.id;
+            if (typeInput) typeInput.value = entry.type || 'OUT';
+            if (personInput) personInput.value = entry.person || '';
+            if (amtInput) amtInput.value = entry.amount || '';
+            if (noteInput) noteInput.value = entry.note || '';
+
+            if (entry.type === 'OUT') {
+                if (title) title.innerHTML = `<i class='bx bx-edit' style="color:#ef4444;"></i> Edit Cash Handover (Out)`;
+                if (sub) sub.textContent = "Cash Handover ki detail ya raqam update karein.";
+                if (lblPerson) lblPerson.textContent = "Kisko Cash Diya? *";
+            } else {
+                if (title) title.innerHTML = `<i class='bx bx-edit' style="color:#10b981;"></i> Edit Cash In (Drawer Fund)`;
+                if (sub) sub.textContent = "Cash In ki detail ya raqam update karein.";
+                if (lblPerson) lblPerson.textContent = "Cash Kahan Se Aaya? *";
+            }
+
+            if (btn) btn.innerHTML = `<i class='bx bx-check-double'></i> Update Entry`;
+            modal?.classList.add('visible');
+        };
+
+        // Delete Function: Cash Entry ko Delete Karna
+        window.deleteCashEntry = async function(docId) {
+            if (!confirm("Kya aap waqai is Cash Entry ko delete karna chahte hain?")) return;
+            try {
+                await cashEntriesDB.doc(docId).delete();
+                Toast.fire({ icon: 'success', title: 'Entry kamyabi say delete hogayi!' });
+            } catch (e) {
+                alert("Delete error: " + e.message);
+            }
+        };
+
         window.closeCashEntryModal = function() {
             document.getElementById('cash-entry-modal')?.classList.remove('visible');
         };
 
-        // Save Cash In / Cash Out Handover to Firestore
+        // Save ya Update Cash In / Cash Out Handover
         window.saveCashDrawerEntry = async function() {
+            const docId = document.getElementById('cash-entry-doc-id')?.value;
             const type = document.getElementById('cash-entry-type')?.value || 'OUT';
             const person = document.getElementById('cash-entry-person')?.value.trim();
             const amount = parseFloat(document.getElementById('cash-entry-amount')?.value);
@@ -5938,23 +6255,34 @@ updateSalesChart();
                 return;
             }
 
-            const now = new Date();
-            const entryDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-
             try {
                 btn.disabled = true;
                 btn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Saving...";
 
-                await cashEntriesDB.add({
-                    type: type, // 'IN' ya 'OUT'
-                    person: person,
-                    amount: amount,
-                    note: note || (type === 'OUT' ? 'Handover to Owner' : 'Drawer Fund In'),
-                    date: entryDate,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
+                if (docId) {
+                    // Agar purani entry edit ho rahi hai
+                    await cashEntriesDB.doc(docId).update({
+                        person: person,
+                        amount: amount,
+                        note: note || '',
+                        lastEditedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    Toast.fire({ icon: 'success', title: 'Cash Entry kamyabi say update hogayi!' });
+                } else {
+                    // Agar nayi entry add ho rahi hai
+                    const now = new Date();
+                    const entryDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+                    await cashEntriesDB.add({
+                        type: type,
+                        person: person,
+                        amount: amount,
+                        note: note || (type === 'OUT' ? 'Handover to Owner' : 'Drawer Fund In'),
+                        date: entryDate,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    Toast.fire({ icon: 'success', title: `${type === 'OUT' ? 'Cash Handover' : 'Cash In'} entry save hogayi!` });
+                }
 
-                alert(`${type === 'OUT' ? 'Cash Handover / Out' : 'Cash In'} ki entry Rs. ${amount.toLocaleString()} kamyabi say save hogayi!`);
                 closeCashEntryModal();
             } catch (e) {
                 alert("Error: " + e.message);
@@ -8204,7 +8532,7 @@ updateSalesChart();
             window.setCashBookReportPreset('all');
         };
 
-     window.renderCashBookReport = function() {
+    window.renderCashBookReport = function() {
             const tbody = document.getElementById('cb-transaction-history-tbody');
             const periodText = document.getElementById('cb-report-period-text');
             if (!tbody) return;
@@ -8237,7 +8565,7 @@ updateSalesChart();
 
             const allTransactions = [];
 
-            // 1. CASH IN: Daily Sales Collections grouped by date as "Remaining Balance"
+            // 1. CASH IN: Daily Sales Collections
             const dailySalesMap = {};
             (window.salesHistory || []).forEach(s => {
                 const isCash = (s.paymentMode || 'Cash').toLowerCase().includes('cash');
@@ -8265,7 +8593,7 @@ updateSalesChart();
                 });
             });
 
-            // 2. CASH OUT: Purchaser Payments formatted as "Payment To Purchase (Vendor Name)"
+            // 2. CASH OUT: Purchaser Payments
             (window.purchasesList || []).forEach(p => {
                 const paidAmt = Number(p.paidAmount || 0);
                 if (paidAmt > 0 && isWithinPeriod(p.date)) {
@@ -8281,7 +8609,7 @@ updateSalesChart();
                 }
             });
 
-            // 3. CASH OUT: Expenses formatted as "Title (Paid To: Category)"
+            // 3. CASH OUT: Store Expenses (Sirf Expenses aayenge, Return bilkul nahi aayega)
             (window.expensesList || []).forEach(e => {
                 if (isWithinPeriod(e.date)) {
                     const title = e.title ? e.title.trim() : 'Expense';
@@ -8299,22 +8627,6 @@ updateSalesChart();
                 }
             });
 
-            // 4. CASH OUT: Customer Refunds
-            (window.returnsList || []).forEach(r => {
-                const refAmt = Number(r.refund || 0);
-                if (refAmt > 0 && isWithinPeriod(r.date)) {
-                    const prod = r.productName ? r.productName.trim() : 'Product';
-                    allTransactions.push({
-                        date: (r.date || '').substring(0, 10),
-                        desc: `Refund To Customer (${prod})`,
-                        isRemainingBalance: false,
-                        cashIn: 0,
-                        cashOut: refAmt,
-                        rawDate: new Date(r.date || now).getTime()
-                    });
-                }
-            });
-
             // Chronological sort to accurately calculate Running Ledger Balance
             allTransactions.sort((a, b) => a.rawDate - b.rawDate);
 
@@ -8324,10 +8636,10 @@ updateSalesChart();
                 item.balance = runningBalance;
             });
 
-            // Reverse to display newest transactions on top (matching screenshot layout)
+            // Reverse to display newest transactions on top
             allTransactions.reverse();
 
-            // Calculate KPI Totals
+            // Calculate KPI Totals (Without Returns)
             const totalCashIn = allTransactions.reduce((sum, t) => sum + t.cashIn, 0);
             const totalPurchaserPaid = (window.purchasesList || [])
                 .filter(p => isWithinPeriod(p.date))
@@ -8337,10 +8649,6 @@ updateSalesChart();
                 .filter(e => isWithinPeriod(e.date))
                 .reduce((sum, e) => sum + Number(e.amount || 0), 0);
 
-            const totalRefunds = (window.returnsList || [])
-                .filter(r => isWithinPeriod(r.date))
-                .reduce((sum, r) => sum + Number(r.refund || 0), 0);
-
             // Update KPI Cards
             const inEl = document.getElementById('kpi-cb-in');
             const purEl = document.getElementById('kpi-cb-purchaser');
@@ -8349,7 +8657,7 @@ updateSalesChart();
 
             if (inEl) inEl.textContent = `Rs. ${totalCashIn.toLocaleString()}`;
             if (purEl) purEl.textContent = `Rs. ${totalPurchaserPaid.toLocaleString()}`;
-            if (outEl) outEl.textContent = `Rs. ${(totalExpenses + totalRefunds).toLocaleString()}`;
+            if (outEl) outEl.textContent = `Rs. ${totalExpenses.toLocaleString()}`;
 
             if (netEl) {
                 netEl.textContent = `Rs. ${runningBalance.toLocaleString()}`;
@@ -8358,6 +8666,46 @@ updateSalesChart();
 
             if (periodText) {
                 periodText.textContent = `Duration: ${window.currentCBRepPreset.toUpperCase()} | Net Balance: Rs. ${runningBalance.toLocaleString()}`;
+            }
+
+           // Render Cash In & Handover Entries Table (With Edit & Delete Action Buttons)
+            const handoverTbody = document.getElementById('cash-handover-records-tbody');
+            if (handoverTbody) {
+                handoverTbody.innerHTML = '';
+                const filteredCashEntries = (window.cashEntriesList || []).filter(c => isWithinPeriod(c.date));
+                if (filteredCashEntries.length === 0) {
+                    handoverTbody.innerHTML = `<tr><td colspan="6" class="empty-placeholder">Is muddat ki koi Cash In ya Handover entry nahi hai.</td></tr>`;
+                } else {
+                    filteredCashEntries.forEach(c => {
+                        const isOut = (c.type === 'OUT');
+                        const typeBadge = isOut 
+                            ? `<span class="status-badge badge-credit"><i class='bx bx-up-arrow-alt'></i> Handover (Out)</span>` 
+                            : `<span class="status-badge badge-paid"><i class='bx bx-down-arrow-alt'></i> Cash In (+)</span>`;
+                        const amtColor = isOut ? '#dc2626' : '#16a34a';
+
+                        handoverTbody.innerHTML += `
+                            <tr>
+                                <td><small style="color:#64748b; font-weight:600;">${c.date || '-'}</small></td>
+                                <td>${typeBadge}</td>
+                                <td><strong>${c.person}</strong></td>
+                                <td><small style="color:#334155;">${c.note || '-'}</small></td>
+                                <td style="text-align:right; font-weight:800; color:${amtColor};">
+                                    ${isOut ? '-' : '+'} Rs. ${Number(c.amount || 0).toLocaleString()}
+                                </td>
+                                <td style="text-align:center; white-space:nowrap;">
+                                    <div class="action-btns" style="justify-content:center;">
+                                        <button class="btn-edit" onclick="openEditCashEntryModal('${c.id}')" title="Edit Entry">
+                                            <i class='bx bx-edit'></i> Edit
+                                        </button>
+                                        <button class="btn-delete" onclick="deleteCashEntry('${c.id}')" title="Delete Entry">
+                                            <i class='bx bx-trash'></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
             }
 
             // Render Table Rows
@@ -8484,8 +8832,8 @@ updateSalesChart();
                             <div style="font-size: 8px; font-weight: 800; color: #64748b; text-transform: uppercase;">Purchaser Payments</div>
                             <div style="font-size: 12.5px; font-weight: 900; color: #8b5cf6; margin-top: 2px;">${purVal}</div>
                         </div>
-                        <div style="background: #ffffff; border: 1px solid #cbd5e1; border-top: 3px solid #ef4444; border-radius: 5px; padding: 6px 10px;">
-                            <div style="font-size: 8px; font-weight: 800; color: #64748b; text-transform: uppercase;">Expenses & Refunds</div>
+                      <div style="background: #ffffff; border: 1px solid #cbd5e1; border-top: 3px solid #ef4444; border-radius: 5px; padding: 6px 10px;">
+                            <div style="font-size: 8px; font-weight: 800; color: #64748b; text-transform: uppercase;">Total Expenses</div>
                             <div style="font-size: 12.5px; font-weight: 900; color: #ef4444; margin-top: 2px;">${outVal}</div>
                         </div>
                         <div style="background: #ffffff; border: 1px solid #cbd5e1; border-top: 3px solid #059669; border-radius: 5px; padding: 6px 10px;">
@@ -8671,9 +9019,16 @@ window.resetAllReportsFilter = function() {
 // Core calculations and table rendering for All Reports
 window.renderAllReportsView = function() {
     const tbody = document.getElementById('all-rep-statement-tbody');
+    const salesDetailsTbody = document.getElementById('all-rep-sales-details-tbody');
+    const expDetailsTbody = document.getElementById('all-rep-expense-details-tbody');
+    const retDetailsTbody = document.getElementById('all-rep-returns-details-tbody');
     const periodText = document.getElementById('all-rep-period-text');
+
     if (!tbody) return;
     tbody.innerHTML = '';
+    if (salesDetailsTbody) salesDetailsTbody.innerHTML = '';
+    if (expDetailsTbody) expDetailsTbody.innerHTML = '';
+    if (retDetailsTbody) retDetailsTbody.innerHTML = '';
 
     const now = new Date();
     const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
@@ -8699,6 +9054,12 @@ window.renderAllReportsView = function() {
         }
         return true;
     }
+
+    const formatDateSlash = (dStr) => {
+        if (!dStr) return '';
+        const parts = dStr.substring(0, 10).split('-');
+        return parts.length === 3 ? `${parts[2]}/${parts[1]}/${parts[0]}` : dStr;
+    };
 
     // Filter data across models
     const filteredSales = (window.salesHistory || []).filter(s => isWithinPeriod(s.date));
@@ -8728,7 +9089,7 @@ window.renderAllReportsView = function() {
     // 5. Total Refund
     const totalRefund = filteredReturns.reduce((sum, r) => sum + Number(r.refund || 0), 0);
 
-    // 6. Net Cash in Hand (Payment Received - Expenses - Refunds)
+    // 6. Net Cash in Hand
     const netCashInHand = totalPayment - totalExpenses - totalRefund;
 
     // Update KPI Card Displays
@@ -8748,7 +9109,7 @@ window.renderAllReportsView = function() {
         periodText.textContent = `Period: ${window.currentAllReportsPreset.toUpperCase()} | Recorded Invoices: ${filteredSales.length} | Expenses: ${filteredExpenses.length}`;
     }
 
-    // Generate Date-Wise Breakdown
+    // --- A. DATE-WISE BREAKDOWN TABLE ---
     const dateMap = {};
 
     filteredSales.forEach(s => {
@@ -8777,27 +9138,119 @@ window.renderAllReportsView = function() {
 
     if (sortedDates.length === 0) {
         tbody.innerHTML = `<tr><td colspan="7" class="empty-placeholder">No financial records found for the selected duration.</td></tr>`;
-        return;
+    } else {
+        sortedDates.forEach(d => {
+            const row = dateMap[d];
+            const netDayCash = row.payment - row.expenses - row.refunds;
+
+            tbody.innerHTML += `
+                <tr>
+                    <td><strong>${d}</strong></td>
+                    <td style="text-align: right; font-weight:700;">Rs. ${row.sales.toLocaleString()}</td>
+                    <td style="text-align: right; font-weight:700; color:#10b981;">Rs. ${row.payment.toLocaleString()}</td>
+                    <td style="text-align: right; font-weight:700; color:#ea580c;">Rs. ${row.receivable.toLocaleString()}</td>
+                    <td style="text-align: right; font-weight:700; color:#ef4444;">Rs. ${row.expenses.toLocaleString()}</td>
+                    <td style="text-align: right; font-weight:700; color:#d97706;">Rs. ${row.refunds.toLocaleString()}</td>
+                    <td style="text-align: right; font-weight:900; color:${netDayCash >= 0 ? '#059669' : '#ef4444'};">
+                        Rs. ${netDayCash.toLocaleString()}
+                    </td>
+                </tr>
+            `;
+        });
     }
 
-    sortedDates.forEach(d => {
-        const row = dateMap[d];
-        const netDayCash = row.payment - row.expenses - row.refunds;
+    // --- B. SALES DETAILS TABLE (MATCHING SCREENSHOT) ---
+    if (salesDetailsTbody) {
+        if (filteredSales.length === 0) {
+            salesDetailsTbody.innerHTML = `<tr><td colspan="8" class="empty-placeholder">No sales records found.</td></tr>`;
+        } else {
+            filteredSales.forEach(sale => {
+                const items = sale.items || [];
+                const saleDate = formatDateSlash(sale.date);
+                const invId = sale.invoiceId || '-';
+                const customer = sale.customerName || 'Walk-in';
+                const total = Number(sale.total || 0);
+                const paid = sale.paidAmount !== undefined ? Number(sale.paidAmount) : (sale.paymentStatus === 'Paid' ? total : 0);
+                const balance = Math.max(0, total - paid);
+                const payMode = sale.paymentMode || 'Cash';
 
-        tbody.innerHTML += `
-            <tr>
-                <td><strong>${d}</strong></td>
-                <td style="text-align: right; font-weight:700;">Rs. ${row.sales.toLocaleString()}</td>
-                <td style="text-align: right; font-weight:700; color:#10b981;">Rs. ${row.payment.toLocaleString()}</td>
-                <td style="text-align: right; font-weight:700; color:#ea580c;">Rs. ${row.receivable.toLocaleString()}</td>
-                <td style="text-align: right; font-weight:700; color:#ef4444;">Rs. ${row.expenses.toLocaleString()}</td>
-                <td style="text-align: right; font-weight:700; color:#d97706;">Rs. ${row.refunds.toLocaleString()}</td>
-                <td style="text-align: right; font-weight:900; color:${netDayCash >= 0 ? '#059669' : '#ef4444'};">
-                    Rs. ${netDayCash.toLocaleString()}
-                </td>
-            </tr>
-        `;
-    });
+                if (items.length === 0) {
+                    salesDetailsTbody.innerHTML += `
+                        <tr>
+                            <td>${saleDate}</td>
+                            <td><strong>${invId}</strong></td>
+                            <td>${customer}</td>
+                            <td>General Sale</td>
+                            <td style="text-align: center;">1</td>
+                            <td style="text-align: right;">Rs.${total.toFixed(2)}</td>
+                            <td><small>${saleDate} [${payMode}]: Rs.${paid.toFixed(2)}</small></td>
+                            <td style="text-align: right; font-weight: 700;">Rs.${balance.toFixed(2)}</td>
+                        </tr>
+                    `;
+                } else {
+                    items.forEach((it, idx) => {
+                        const itemQty = it.qty || 1;
+                        const itemAmt = (Number(it.price || 0) * itemQty).toFixed(2);
+                        const paidCol = idx === 0 ? `<small>${saleDate} [${payMode}]: Rs.${paid.toFixed(2)}</small>` : '<span style="color:#94a3b8;">-</span>';
+                        const balCol = idx === 0 ? `Rs.${balance.toFixed(2)}` : '<span style="color:#94a3b8;">-</span>';
+
+                        salesDetailsTbody.innerHTML += `
+                            <tr>
+                                <td>${saleDate}</td>
+                                <td><strong>${invId}</strong></td>
+                                <td>${customer}</td>
+                                <td><strong>${it.name || 'Product'}</strong></td>
+                                <td style="text-align: center; font-weight: 700;">${itemQty}</td>
+                                <td style="text-align: right; font-weight: 700;">Rs.${itemAmt}</td>
+                                <td>${paidCol}</td>
+                                <td style="text-align: right; font-weight: 700; color:${balance > 0 ? '#ef4444' : '#0f172a'};">${balCol}</td>
+                            </tr>
+                        `;
+                    });
+                }
+            });
+        }
+    }
+
+    // --- C. EXPENSE DETAILS TABLE (MATCHING SCREENSHOT) ---
+    if (expDetailsTbody) {
+        if (filteredExpenses.length === 0) {
+            expDetailsTbody.innerHTML = `<tr><td colspan="4" class="empty-placeholder">No expense records found.</td></tr>`;
+        } else {
+            filteredExpenses.forEach(exp => {
+                const expDate = formatDateSlash(exp.date);
+                expDetailsTbody.innerHTML += `
+                    <tr>
+                        <td>${expDate}</td>
+                        <td><span class="status-badge" style="background:#f1f5f9; color:#475569;">${exp.category || 'General'}</span></td>
+                        <td><strong>${exp.title || '-'}</strong></td>
+                        <td style="text-align: right; font-weight: 800; color: #ef4444;">Rs.${Number(exp.amount || 0).toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+        }
+    }
+
+    // --- D. SELL RETURN DETAILS TABLE (MATCHING SCREENSHOT) ---
+    if (retDetailsTbody) {
+        if (filteredReturns.length === 0) {
+            retDetailsTbody.innerHTML = `<tr><td colspan="6" class="empty-placeholder">No return records found.</td></tr>`;
+        } else {
+            filteredReturns.forEach(ret => {
+                const retDate = formatDateSlash(ret.date);
+                retDetailsTbody.innerHTML += `
+                    <tr>
+                        <td>${retDate}</td>
+                        <td><code>${ret.invoiceRef || '-'}</code></td>
+                        <td>${ret.customerName || 'Walk-in'}</td>
+                        <td><strong>${ret.productName || '-'}</strong></td>
+                        <td style="text-align: center; font-weight: 800; color: #ef4444;">${ret.qty || 1}</td>
+                        <td style="text-align: right; font-weight: 800; color: #d97706;">Rs.${Number(ret.refund || 0).toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+        }
+    }
 };
 
 // =========================================================================
@@ -9640,5 +10093,8 @@ updateNetworkStatus();
         };
 
     </script>
+    <!-- Hidden Print Container for Barcode Labels -->
+    <div id="barcode-print-area" style="display:none;"></div>
+</body>
 </body>
 </html>
