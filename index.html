@@ -548,43 +548,92 @@
         .invoice-footer { text-align: center; font-size: 0.8rem; color: #64748b; margin-top: 10px; }
         .invoice-actions { display: flex; gap: 10px; margin-top: 15px; }
 
-        @media print {
-            body * { visibility: hidden !important; }
-            #invoice-modal .invoice-content, 
-            #invoice-modal .invoice-content *,
-            #barcode-print-area,
-            #barcode-print-area * { 
-                visibility: visible !important; 
-                color: #000000 !important;
+       @media print {
+            /* 1. Page margins ko zero karein taake extra page break na bane */
+            @page {
+                size: auto;
+                margin: 0mm;
             }
-            #invoice-modal .invoice-content { 
-                position: absolute; 
-                left: 0; 
-                top: 0; 
-                width: 100%; 
-                border: none !important;
-                box-shadow: none !important;
+
+            html, body {
+                height: auto !important;
+                min-height: 0 !important;
+                margin: 0 !important;
                 padding: 0 !important;
+                overflow: visible !important;
                 background: #ffffff !important;
             }
-            .invoice-header, .invoice-summary {
-                border-top: 2px solid #000000 !important;
-                border-bottom: 2px solid #000000 !important;
+
+            /* 2. Background ki sari cheezon ko mukammal khatam (display: none) karein */
+            .wrapper, 
+            #login-page, 
+            #mobile-backdrop,
+            .modal-overlay:not(#invoice-modal),
+            .invoice-actions, 
+            .close-modal {
+                display: none !important;
             }
+
+            /* 3. Invoice Receipt Styling for POS-80C Thermal Printer */
+            #invoice-modal.visible {
+                position: static !important;
+                inset: auto !important;
+                width: 100% !important;
+                height: auto !important;
+                background: transparent !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                display: block !important;
+                opacity: 1 !important;
+            }
+
+            #invoice-modal .invoice-content { 
+                position: relative !important;
+                left: auto !important;
+                top: auto !important;
+                width: 100% !important;
+                max-width: 78mm !important; /* 80mm thermal receipt standard printable width */
+                margin: 0 auto !important;
+                padding: 3mm 2mm !important;
+                border: none !important;
+                box-shadow: none !important;
+                background: #ffffff !important;
+                
+                /* Yeh slip ko 2 tukron / 2 sheets mein tootne nahi dega */
+                page-break-inside: avoid !important;
+                break-inside: avoid !important;
+                page-break-after: avoid !important;
+            }
+
+            #invoice-modal .invoice-content * {
+                color: #000000 !important;
+                visibility: visible !important;
+            }
+
+            .invoice-header, .invoice-summary {
+                border-top: 1.5px dashed #000000 !important;
+                border-bottom: 1.5px dashed #000000 !important;
+            }
+
             .invoice-table th, .invoice-table td {
-                border-bottom: 1px solid #000000 !important;
+                border-bottom: 1px dashed #000000 !important;
                 color: #000000 !important;
                 font-weight: 600 !important;
-            }
-            .invoice-actions, .close-modal { display: none !important; }
-
-            /* Continuous Thermal Barcode Layout (Ek hi page par continuous flow) */
-            @page {
-                margin: 2mm;
-                size: auto;
+                padding: 4px 2px !important;
             }
 
-            #barcode-print-area {
+            .qrcode-wrapper {
+                margin: 8px 0 !important;
+            }
+
+            /* 4. Invoice print hote waqt barcode area ko band rakhein */
+            #invoice-modal.visible ~ #barcode-print-area,
+            #barcode-print-area:empty {
+                display: none !important;
+            }
+
+            /* 5. Barcode Label Print Support */
+            #barcode-print-area:not(:empty) {
                 position: absolute;
                 left: 0;
                 top: 0;
@@ -603,17 +652,15 @@
                 margin: 0 auto 2.5mm auto;
                 padding: 1.5mm 2mm;
                 text-align: center;
-                border: 1px dashed #94a3b8; /* Cutting line guide */
+                border: 1px dashed #94a3b8;
                 display: flex;
                 flex-direction: column;
                 justify-content: space-between;
                 align-items: center;
                 box-sizing: border-box;
-                
-                /* Yeh rule har barcode ko ek sath rakhega, beech se katne nahi dega */
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
-                page-break-after: auto !important; /* Jab page bharega tabhi agle page par jayega */
+                page-break-after: auto !important;
             }
 
             .bcp-company {
@@ -651,7 +698,6 @@
                 color: #000000 !important;
             }
         }
-
         /* =========================================================================
            COMPLETE AUTO-ADJUSTING MOBILE RESPONSIVE SYSTEM (ZERO HORIZONTAL SCROLL)
            ========================================================================= */
@@ -6198,6 +6244,7 @@ if (discInput) discInput.value = savedDisc;
                     }
 
                     showInvoiceModal(saleRecord);
+window.print(); // Yeh bina kisi click ke foran print bhej dega
                     cart = [];
                     const discEl = document.getElementById('manual-discount-input');
                     const cNameEl = document.getElementById('pos-cust-name');
