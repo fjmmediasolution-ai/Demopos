@@ -632,69 +632,74 @@
                 display: none !important;
             }
 
-            /* 5. Barcode Label Print Support */
+          /* 5. Barcode Label Print Support (Black Copper 50mm x 25mm 2-UP Exact Fit) */
             #barcode-print-area:not(:empty) {
                 position: absolute;
                 left: 0;
                 top: 0;
-                width: 100%;
-                margin: 0 !important;
+                width: 104mm !important; /* 50mm + 50mm + 3mm gap */
+                margin: 0 auto !important;
                 padding: 0 !important;
                 background: #ffffff !important;
-                display: flex !important;
-                flex-direction: column !important;
-                align-items: center !important;
+                display: grid !important;
+                grid-template-columns: 50mm 50mm !important; /* 2 Stickers barabar mein */
+                column-gap: 3mm !important; /* Dono sticker ke darmian ka fasla */
+                row-gap: 2mm !important;    /* Ooper neeche ka fasla */
+                justify-content: center !important;
             }
 
             .barcode-sticker-print-box {
-                width: 50mm;
-                min-height: 27mm;
-                margin: 0 auto 2.5mm auto;
-                padding: 1.5mm 2mm;
+                width: 50mm !important;
+                height: 25mm !important;     /* Sticker ki exact height 25mm */
+                max-height: 25mm !important;
+                margin: 0 !important;
+                padding: 1mm 1.5mm !important;
                 text-align: center;
-                border: 1px dashed #94a3b8;
-                display: flex;
-                flex-direction: column;
-                justify-content: space-between;
-                align-items: center;
-                box-sizing: border-box;
+                border: none !important;     /* Border khatam taake sticker par line na aaye */
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                box-sizing: border-box !important;
+                overflow: hidden !important;
                 page-break-inside: avoid !important;
                 break-inside: avoid !important;
-                page-break-after: auto !important;
             }
 
             .bcp-company {
-                font-size: 8.5px;
-                font-weight: 800;
+                font-size: 7.5px !important;
+                font-weight: 800 !important;
                 text-transform: uppercase;
-                letter-spacing: 0.5px;
-                line-height: 1;
-                margin-bottom: 1px;
+                letter-spacing: 0.3px;
+                line-height: 1 !important;
+                margin: 0 !important;
                 color: #000000 !important;
             }
 
             .bcp-title {
-                font-size: 10px;
-                font-weight: 800;
-                line-height: 1.1;
-                max-width: 46mm;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
+                font-size: 8.5px !important;
+                font-weight: 800 !important;
+                line-height: 1.1 !important;
+                max-width: 48mm !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
                 color: #000000 !important;
             }
 
             .bcp-svg {
-                width: 44mm;
-                height: 13mm;
-                margin: 1px 0;
+                width: 46mm !important;
+                height: 12mm !important;    /* 25mm height ke mutabiq balanced size */
+                margin: 0.5mm 0 !important;
+                display: block !important;
             }
 
             .bcp-price {
-                font-size: 11.5px;
-                font-weight: 900;
-                letter-spacing: 0.3px;
-                line-height: 1;
+                font-size: 9.5px !important;
+                font-weight: 900 !important;
+                letter-spacing: 0.2px;
+                line-height: 1 !important;
+                margin: 0 !important;
                 color: #000000 !important;
             }
         }
@@ -2017,6 +2022,12 @@
                                 <div class="kpi-header"><span class="kpi-title">Total Expenses</span><div class="kpi-icon" style="background: #fee2e2; color: #ef4444;"><i class='bx bx-receipt'></i></div></div>
                                 <div class="kpi-value" id="kpi-expenses">Rs. 0</div>
                                 <div class="kpi-subtitle">Store & utility bills</div>
+                            </div>
+                            <!-- NEW: Return Item Loss Card -->
+                            <div class="pl-kpi-card" style="border-top: 4px solid #dc2626;">
+                                <div class="kpi-header"><span class="kpi-title">Return Item Loss</span><div class="kpi-icon" style="background: #fee2e2; color: #dc2626;"><i class='bx bx-undo'></i></div></div>
+                                <div class="kpi-value" id="kpi-return-loss" style="color: #dc2626;">Rs. 0</div>
+                                <div class="kpi-subtitle">Refunds issued to customers</div>
                             </div>
                             <div class="pl-kpi-card net-profit" id="kpi-net-card">
                                 <div class="kpi-header"><span class="kpi-title">Net Profit / Loss</span><div class="kpi-icon" id="kpi-net-icon" style="background: #dcfce7; color: #16a34a;"><i class='bx bx-check-double'></i></div></div>
@@ -3519,7 +3530,7 @@ window.alert = function(message) {
             })));
         };
 
-        // 3. Main Thermal Printer Generator (Qty ke mutabiq Exact Stickers)
+       // 3. Main Thermal Printer Generator (Black Copper 50mm x 25mm 2-UP Exact Fit)
         window.triggerBarcodeDirectPrint = function(itemsList) {
             const printArea = document.getElementById('barcode-print-area');
             if (!printArea) return;
@@ -3529,7 +3540,7 @@ window.alert = function(message) {
 
             const generatedStickers = [];
 
-            // Har item ki khareedi hui Quantity (Qty) ke barabar stickers banayein
+            // Har item ki khareedi hui Quantity (Qty) ke barabar stickers create karein
             itemsList.forEach((item, itemIdx) => {
                 const count = Math.max(1, parseInt(item.qty) || 1);
 
@@ -3545,7 +3556,7 @@ window.alert = function(message) {
                     `;
                     printArea.appendChild(stickerBox);
 
-                    // Barcode render list mein shamil karein
+                    // Barcode rendering queue mein add karein
                     generatedStickers.push({
                         svgSelector: `#${svgId}`,
                         barcodeValue: String(item.barcode)
@@ -3553,18 +3564,18 @@ window.alert = function(message) {
                 }
             });
 
-            // Tamam Barcodes ko render karein
+            // 50mm x 25mm sticker ke mutabiq exact barcode line height aur width generate karein
             setTimeout(() => {
                 generatedStickers.forEach(stk => {
                     try {
                         JsBarcode(stk.svgSelector, stk.barcodeValue, {
                             format: "CODE128",
-                            width: 1.5,
-                            height: 35,
-                            displayValue: true,
-                            fontSize: 10,
+                            width: 1.25,        // 50mm width ke andar fit rehne ke liye
+                            height: 22,         // 25mm total sticker height ke mutabiq
+                            displayValue: true, // Barcode ke neeche number show karega
+                            fontSize: 9,
                             font: "Arial",
-                            textMargin: 2,
+                            textMargin: 1,
                             margin: 0
                         });
                     } catch (e) {
@@ -3572,7 +3583,7 @@ window.alert = function(message) {
                     }
                 });
 
-                // Printer window open karein
+                // Printer Dialog Trigger
                 setTimeout(() => {
                     window.print();
                 }, 120);
@@ -3997,7 +4008,11 @@ window.alert = function(message) {
             const prevTo = toSelect.value || '';
 
             fromSelect.innerHTML = `<option value="main">Main Warehouse / Godown</option>`;
-            toSelect.innerHTML = `<option value="">-- Select Destination Store --</option>`;
+            // Destination mein Main Warehouse / Godown add kar diya gaya hai
+            toSelect.innerHTML = `
+                <option value="">-- Select Destination Store --</option>
+                <option value="main">Main Warehouse / Godown</option>
+            `;
 
             window.branchesList.forEach(branch => {
                 fromSelect.innerHTML += `<option value="${branch.id}">${branch.name} (${branch.area})</option>`;
@@ -4199,25 +4214,33 @@ window.alert = function(message) {
                         }
                     }
 
-                    const destBStock = window.branchStockList.find(bs => bs.branchId === item.toStoreId && bs.productId === item.productId);
-                    if (destBStock) {
-                        await branchStockDB.doc(destBStock.id).update({
-                            qty: firebase.firestore.FieldValue.increment(item.qty),
-                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                   // Agar maal wapas Main Godown / Warehouse ja raha ho
+                    if (item.toStoreId === 'main') {
+                        await productsDB.doc(item.productId).update({
+                            stock: firebase.firestore.FieldValue.increment(item.qty)
                         });
                     } else {
-                        const bObj = window.branchesList.find(b => b.id === item.toStoreId);
-                        await branchStockDB.add({
-                            branchId: item.toStoreId,
-                            branchName: bObj ? bObj.name : item.toStoreName,
-                            branchArea: bObj ? bObj.area : '',
-                            productId: item.productId,
-                            productName: item.productName,
-                            productPrice: item.price,
-                            productBarcode: item.barcode || '',
-                            qty: item.qty,
-                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                        });
+                        // Agar kisi doosri Branch / Store par ja raha ho
+                        const destBStock = window.branchStockList.find(bs => bs.branchId === item.toStoreId && bs.productId === item.productId);
+                        if (destBStock) {
+                            await branchStockDB.doc(destBStock.id).update({
+                                qty: firebase.firestore.FieldValue.increment(item.qty),
+                                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                        } else {
+                            const bObj = window.branchesList.find(b => b.id === item.toStoreId);
+                            await branchStockDB.add({
+                                branchId: item.toStoreId,
+                                branchName: bObj ? bObj.name : item.toStoreName,
+                                branchArea: bObj ? bObj.area : '',
+                                productId: item.productId,
+                                productName: item.productName,
+                                productPrice: item.price,
+                                productBarcode: item.barcode || '',
+                                qty: item.qty,
+                                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                        }
                     }
                 }
 
@@ -4416,8 +4439,8 @@ window.alert = function(message) {
             const fromSelect = document.getElementById('edit-trf-from-store');
             const toSelect = document.getElementById('edit-trf-to-store');
 
-            fromSelect.innerHTML = `<option value="main">Main Warehouse / Godown</option>`;
-            toSelect.innerHTML = ``;
+           fromSelect.innerHTML = `<option value="main">Main Warehouse / Godown</option>`;
+            toSelect.innerHTML = `<option value="main">Main Warehouse / Godown</option>`;
 
             window.branchesList.forEach(branch => {
                 fromSelect.innerHTML += `<option value="${branch.id}">${branch.name} (${branch.area})</option>`;
@@ -8685,6 +8708,7 @@ updateSalesChart();
             const cogsEl = document.getElementById('kpi-cogs');
             const grossEl = document.getElementById('kpi-gross');
             const expEl = document.getElementById('kpi-expenses');
+            const retLossEl = document.getElementById('kpi-return-loss');
             const netEl = document.getElementById('kpi-net');
             const netCard = document.getElementById('kpi-net-card');
             const netSub = document.getElementById('kpi-net-sub');
@@ -8693,6 +8717,7 @@ updateSalesChart();
             if (cogsEl) cogsEl.textContent = `Rs. ${totalCogs.toLocaleString()}`;
             if (grossEl) grossEl.textContent = `Rs. ${grossProfit.toLocaleString()}`;
             if (expEl) expEl.textContent = `Rs. ${totalExpenses.toLocaleString()}`;
+            if (retLossEl) retLossEl.textContent = `Rs. ${totalRefundDeduction.toLocaleString()}`;
 
             if (netEl) {
                 netEl.textContent = `Rs. ${netProfit.toLocaleString()}`;
@@ -8714,11 +8739,12 @@ updateSalesChart();
             }
         };
 
-      window.downloadCleanProfitLossPDF = function() {
+     window.downloadCleanProfitLossPDF = function() {
             const rev = document.getElementById('kpi-revenue')?.textContent || 'Rs. 0';
             const cogs = document.getElementById('kpi-cogs')?.textContent || 'Rs. 0';
             const gross = document.getElementById('kpi-gross')?.textContent || 'Rs. 0';
             const exp = document.getElementById('kpi-expenses')?.textContent || 'Rs. 0';
+            const retLoss = document.getElementById('kpi-return-loss')?.textContent || 'Rs. 0';
             const net = document.getElementById('kpi-net')?.textContent || 'Rs. 0';
 
             const rows = [];
@@ -8749,6 +8775,7 @@ updateSalesChart();
                     { label: 'COGS (Cost)', value: cogs, color: '#ea580c' },
                     { label: 'Gross Margin', value: gross, color: '#8b5cf6' },
                     { label: 'Total Expenses', value: exp, color: '#ef4444' },
+                    { label: 'Return Loss', value: retLoss, color: '#dc2626' },
                     { label: 'Net Profit / Loss', value: net, color: '#10b981' }
                 ],
                 headers: [
