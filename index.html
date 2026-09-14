@@ -39,25 +39,220 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background: var(--bg-light); overflow-x: hidden; transition: background 0.3s ease; }
         button { cursor: pointer; }
+/* =========================================================================
+           APPAREL, T-SHIRTS & GENERAL STORE RETAIL BOUTIQUE BACKGROUND ANIMATION
+           ========================================================================= */
+        #login-page { 
+            position: fixed; 
+            inset: 0; 
+            z-index: 99999; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 20px; 
+            overflow: hidden; 
+            transition: opacity 0.5s ease; 
+            background: #0b1120;
+        }
 
-        #login-page { position: fixed; inset: 0; z-index: 99999; background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(2, 6, 23, 0.95)), url('https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat; display: flex; align-items: center; justify-content: center; transition: opacity 0.5s ease; padding: 20px; }
+        /* 1. T-Shirts & Apparel Boutique Store Background */
+        #login-page::before {
+            content: '';
+            position: absolute;
+            inset: -30px;
+            /* Authentic Apparel Store with Racks of T-Shirts & General Accessories */
+            background: linear-gradient(135deg, rgba(11, 17, 32, 0.84) 0%, rgba(2, 6, 23, 0.93) 100%), 
+                        url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            animation: apparelStoreZoom 26s infinite alternate ease-in-out;
+            z-index: 0;
+        }
+        @keyframes apparelStoreZoom {
+            0% { transform: scale(1) translate(0, 0); }
+            50% { transform: scale(1.07) translate(-12px, -6px); }
+            100% { transform: scale(1.03) translate(8px, 6px); }
+        }
+
         #login-page.hidden { opacity: 0; pointer-events: none; }
-        .auth-card { background: white; padding: 38px 35px; border-radius: 24px; width: 100%; max-width: 440px; box-shadow: 0 25px 60px -12px rgba(0,0,0,0.45); text-align: center; }
-        .auth-logo-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: 22px; }
-        .auth-card input { width: 100%; padding: 13px 15px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e2e8f0; outline: none; font-size: 0.95rem; }
-        .auth-card input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.15); }
-        .auth-btn { width: 100%; padding: 14px; background: var(--primary); background-image: var(--primary-gradient); color: white; border: none; border-radius: 12px; font-weight: 700; margin-top: 10px; font-size: 1rem; transition: transform 0.2s; }
-        .auth-btn:hover { transform: translateY(-2px); }
+
+        /* 2. Warm Boutique Ambient Lighting Orbs */
+        .retail-ambient-glow {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(110px);
+            pointer-events: none;
+            z-index: 1;
+        }
+        .glow-1 {
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, rgba(0, 102, 255, 0.3) 0%, transparent 70%);
+            top: -5%;
+            left: 5%;
+            animation: floatGlow1 16s infinite alternate ease-in-out;
+        }
+        .glow-2 {
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(255, 123, 44, 0.25) 0%, transparent 70%);
+            bottom: -5%;
+            right: 5%;
+            animation: floatGlow2 18s infinite alternate ease-in-out;
+        }
+        .glow-3 {
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
+            bottom: 25%;
+            left: 20%;
+            animation: floatGlow3 14s infinite alternate ease-in-out;
+        }
+        @keyframes floatGlow1 {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(80px, 60px) scale(1.15); }
+        }
+        @keyframes floatGlow2 {
+            0% { transform: translate(0, 0) scale(1.1); }
+            100% { transform: translate(-70px, -50px) scale(0.9); }
+        }
+        @keyframes floatGlow3 {
+            0% { transform: translate(0, 0) scale(0.95); }
+            100% { transform: translate(50px, -40px) scale(1.1); }
+        }
+
+        /* 3. Floating T-Shirts, Price Tags & Retail Accessories Animation */
+        .retail-floating-elements {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .retail-particle {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.15);
+            font-size: 26px;
+            animation: floatParticleUp 14s linear infinite;
+            filter: drop-shadow(0 0 8px rgba(0, 163, 255, 0.25));
+        }
+        .p1 { left: 8%; font-size: 36px; animation-duration: 16s; animation-delay: 0s; }
+        .p2 { left: 22%; font-size: 28px; animation-duration: 13s; animation-delay: 3s; color: rgba(255, 123, 44, 0.2); }
+        .p3 { left: 35%; font-size: 32px; animation-duration: 18s; animation-delay: 1s; }
+        .p4 { left: 52%; font-size: 24px; animation-duration: 15s; animation-delay: 4s; color: rgba(16, 185, 129, 0.2); }
+        .p5 { left: 68%; font-size: 34px; animation-duration: 17s; animation-delay: 2s; }
+        .p6 { left: 80%; font-size: 28px; animation-duration: 14s; animation-delay: 5s; color: rgba(255, 123, 44, 0.22); }
+        .p7 { left: 90%; font-size: 38px; animation-duration: 19s; animation-delay: 0.5s; }
+        .p8 { left: 14%; font-size: 30px; animation-duration: 15s; animation-delay: 7s; }
+
+        @keyframes floatParticleUp {
+            0% {
+                transform: translateY(105vh) rotate(0deg) scale(0.85);
+                opacity: 0;
+            }
+            15% { opacity: 0.8; }
+            85% { opacity: 0.8; }
+            100% {
+                transform: translateY(-15vh) rotate(360deg) scale(1.15);
+                opacity: 0;
+            }
+        }
+
+        /* 4. Frosted Glassmorphism Boutique Auth Card */
+        .auth-card { 
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.95); 
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 40px 36px; 
+            border-radius: 30px; 
+            width: 100%; 
+            max-width: 440px; 
+            box-shadow: 0 30px 70px -12px rgba(0, 0, 0, 0.6), 0 0 45px rgba(0, 102, 255, 0.15); 
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            text-align: center;
+            animation: authCardEntrance 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards, authCardFloat 6s ease-in-out infinite alternate 0.85s;
+        }
+
+        @keyframes authCardEntrance {
+            0% { opacity: 0; transform: translateY(45px) scale(0.93); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes authCardFloat {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-7px); }
+        }
+
+        /* T-Shirt / Retail Animated Logo Badge */
+        .auth-icon-badge {
+            width: 62px;
+            height: 62px;
+            border-radius: 20px;
+            background: var(--primary-gradient);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 35px;
+            margin-bottom: 12px;
+            box-shadow: 0 10px 25px rgba(0, 102, 255, 0.45);
+            animation: pulseGlow 3s infinite alternate;
+        }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 15px rgba(0, 102, 255, 0.35); transform: scale(1); }
+            100% { box-shadow: 0 0 32px rgba(0, 163, 255, 0.75); transform: scale(1.06); }
+        }
+
+        .auth-logo-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
+        
+        .auth-card input { 
+            width: 100%; 
+            padding: 13px 16px; 
+            margin-bottom: 12px; 
+            border-radius: 12px; 
+            border: 1.5px solid #e2e8f0; 
+            outline: none; 
+            font-size: 0.95rem; 
+            background: #ffffff;
+            transition: all 0.25s ease;
+        }
+        .auth-card input:focus { 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 4px rgba(var(--primary-rgb), 0.16); 
+            transform: translateY(-1px);
+        }
+
+        .auth-btn { 
+            width: 100%; 
+            padding: 14px; 
+            background: var(--primary); 
+            background-image: var(--primary-gradient); 
+            color: white; 
+            border: none; 
+            border-radius: 12px; 
+            font-weight: 800; 
+            margin-top: 10px; 
+            font-size: 1rem; 
+            letter-spacing: 0.3px;
+            box-shadow: 0 8px 22px rgba(var(--primary-rgb), 0.35);
+            transition: transform 0.25s, box-shadow 0.25s; 
+        }
+        .auth-btn:hover { 
+            transform: translateY(-2.5px); 
+            box-shadow: 0 14px 30px rgba(var(--primary-rgb), 0.5);
+        }
+        .auth-btn:active { transform: translateY(0); }
+
         .auth-links { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; font-size: 0.85rem; }
-        .auth-links a, .auth-switch-text a { color: var(--primary); text-decoration: none; font-weight: 600; }
+        .auth-links a, .auth-switch-text a { color: var(--primary); text-decoration: none; font-weight: 700; transition: color 0.2s; }
+        .auth-links a:hover, .auth-switch-text a:hover { text-decoration: underline; }
         .auth-switch-text { margin-top: 18px; font-size: 0.88rem; color: #64748b; }
-        .auth-msg { height: 20px; font-size: 0.85rem; margin-bottom: 8px; font-weight: 600; }
+        .auth-msg { height: 20px; font-size: 0.85rem; margin-bottom: 8px; font-weight: 700; }
         .auth-msg.error { color: #ef4444; }
         .auth-msg.success { color: #10b981; }
+        
         .auth-box { display: none; }
-        .auth-box.active { display: block; animation: fadeInAuth 0.3s ease-in-out; }
-        @keyframes fadeInAuth { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
+        .auth-box.active { display: block; animation: fadeInAuth 0.35s ease-in-out; }
+        @keyframes fadeInAuth { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .wrapper { display: flex; height: 100vh; width: 100vw; }
         .sidebar { width: var(--sidebar-w); background: var(--sidebar-bg); color: white; transition: var(--transition); display: flex; flex-direction: column; position: relative; flex-shrink: 0; z-index: 10001; }
         .sidebar.collapsed { width: var(--sidebar-c); }
@@ -457,46 +652,327 @@
             }
         }
 
+        /* =========================================================================
+           COMPLETE AUTO-ADJUSTING MOBILE RESPONSIVE SYSTEM (ZERO HORIZONTAL SCROLL)
+           ========================================================================= */
         @media (max-width: 992px) {
-            body { overflow-y: auto !important; height: auto !important; }
-            .wrapper { height: auto !important; min-height: 100vh; overflow: visible !important; }
-            .main-container { height: auto !important; overflow: visible !important; }
-            .view { height: auto !important; min-height: calc(100vh - 70px); overflow: visible !important; }
-            .view.active { display: flex !important; flex-direction: column !important; }
-            .pos-main { padding: 14px !important; overflow: visible !important; }
-            .order-panel { width: 100% !important; border-left: none !important; border-top: 2px solid var(--border-color) !important; padding: 16px !important; position: static !important; box-shadow: 0 -4px 15px rgba(0,0,0,0.05); }
+            html, body { 
+                width: 100% !important; 
+                max-width: 100vw !important; 
+                overflow-x: hidden !important; 
+                height: auto !important; 
+            }
+            .wrapper { 
+                height: auto !important; 
+                min-height: 100vh; 
+                width: 100% !important; 
+                max-width: 100vw !important; 
+                overflow-x: hidden !important; 
+            }
+            .main-container { 
+                height: auto !important; 
+                width: 100% !important; 
+                max-width: 100vw !important; 
+                overflow-x: hidden !important; 
+            }
+            .view { 
+                height: auto !important; 
+                min-height: calc(100vh - 65px); 
+                width: 100% !important; 
+                max-width: 100vw !important; 
+                overflow-x: hidden !important; 
+            }
+            .view.active { 
+                display: flex !important; 
+                flex-direction: column !important; 
+            }
+            .content-wrapper { 
+                padding: 14px 10px !important; 
+                width: 100% !important; 
+                max-width: 100vw !important; 
+                box-sizing: border-box !important; 
+                overflow-x: hidden !important; 
+            }
+            .pos-main { 
+                padding: 12px 8px !important; 
+                width: 100% !important; 
+                box-sizing: border-box !important; 
+                overflow: visible !important; 
+            }
+            .order-panel { 
+                width: 100% !important; 
+                border-left: none !important; 
+                border-top: 2px solid var(--border-color) !important; 
+                padding: 14px 10px !important; 
+                position: static !important; 
+                box-shadow: 0 -4px 15px rgba(0,0,0,0.05); 
+                box-sizing: border-box !important; 
+            }
             #cart-items { max-height: 250px !important; }
-            .pur-top-grid { grid-template-columns: 1fr; }
+            .pur-top-grid { grid-template-columns: 1fr !important; gap: 14px !important; }
         }
 
         @media (max-width: 768px) {
-            header { padding: 0 12px !important; height: 60px !important; gap: 8px !important; }
-            #header-title { font-size: 15px !important; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px; }
+            /* 1. Header Auto-Fit */
+            header { 
+                padding: 0 10px !important; 
+                height: 58px !important; 
+                gap: 6px !important; 
+                width: 100% !important; 
+                box-sizing: border-box !important; 
+            }
+            #header-title { 
+                font-size: 14px !important; 
+                white-space: nowrap; 
+                overflow: hidden; 
+                text-overflow: ellipsis; 
+                max-width: 110px; 
+            }
             .header-theme-selector { display: none !important; }
-            .user-header-badge { padding: 4px 8px !important; font-size: 0.75rem !important; }
-            #header-user-display { max-width: 75px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-            .pos-filters { flex-direction: column !important; align-items: stretch !important; gap: 8px !important; }
-            .search-box { max-width: 100% !important; width: 100% !important; }
-            .category-filters { display: flex; overflow-x: auto; white-space: nowrap; padding-bottom: 6px; gap: 6px; }
-            .category-filters button { padding: 7px 14px !important; font-size: 0.8rem !important; }
-            .menu-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 10px !important; }
-            .card { padding: 10px !important; }
-            .card img { height: 95px !important; }
-            .sidebar { position: fixed !important; left: -100% !important; top: 0; bottom: 0; height: 100vh !important; z-index: 10001 !important; transition: left 0.3s ease !important; }
-            .sidebar.mobile-open { left: 0 !important; width: 295px !important; } /* Mobile par bhi 295px width */
+            #net-status-badge { padding: 4px 8px !important; font-size: 0.72rem !important; }
+            #admin-notif-btn { font-size: 1.4rem !important; }
+            .user-header-badge { padding: 4px 8px !important; font-size: 0.72rem !important; }
+            #header-user-display { max-width: 65px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+            /* 2. Sidebar Navigation */
+            .sidebar { 
+                position: fixed !important; 
+                left: -100% !important; 
+                top: 0; 
+                bottom: 0; 
+                height: 100vh !important; 
+                z-index: 10001 !important; 
+                transition: left 0.3s ease !important; 
+            }
+            .sidebar.mobile-open { 
+                left: 0 !important; 
+                width: 295px !important; 
+            }
             .toggle-arrow { display: none !important; }
-            .mobile-toggle { display: block !important; }
-            .modal-content { width: 95% !important; padding: 18px !important; margin: 10px !important; }
+            .mobile-toggle { display: block !important; font-size: 26px !important; }
+
+            /* 3. Top Filters & Actions Bar (All Reports, Sales, Cashbook) */
+            .pl-top-bar {
+                padding: 12px 10px !important;
+                border-radius: 12px !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 10px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .pl-pill-group {
+                width: 100% !important;
+                overflow-x: auto !important;
+                white-space: nowrap !important;
+                padding: 4px !important;
+                display: flex !important;
+                box-sizing: border-box !important;
+                -webkit-overflow-scrolling: touch;
+            }
+            .pl-pill-btn {
+                padding: 6px 12px !important;
+                font-size: 0.78rem !important;
+                white-space: nowrap !important;
+                flex-shrink: 0 !important;
+            }
+            .pl-date-picker-box {
+                width: 100% !important;
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 6px !important;
+                box-sizing: border-box !important;
+            }
+            .pl-date-picker-box input[type="date"] {
+                flex: 1 !important;
+                min-width: 110px !important;
+                font-size: 0.78rem !important;
+            }
+
+            /* 4. KPI Cards Grid (2 Clean Columns on Mobile) */
+            .dashboard-grid, .pl-kpi-grid { 
+                grid-template-columns: repeat(2, 1fr) !important; 
+                gap: 8px !important; 
+                width: 100% !important; 
+                box-sizing: border-box !important; 
+            }
+            .stat-card, .pl-kpi-card { 
+                padding: 12px 10px !important; 
+                border-radius: 12px !important; 
+                box-sizing: border-box !important; 
+            }
+            .stat-card h3, .pl-kpi-card .kpi-title { 
+                font-size: 0.72rem !important; 
+                margin-bottom: 4px !important; 
+                letter-spacing: 0px !important; 
+            }
+            .stat-card p, .pl-kpi-card .kpi-value { 
+                font-size: 1.15rem !important; 
+                letter-spacing: -0.3px !important; 
+            }
+            .pl-kpi-card .kpi-icon {
+                width: 30px !important;
+                height: 30px !important;
+                font-size: 1rem !important;
+                border-radius: 8px !important;
+            }
+            .pl-kpi-card .kpi-subtitle {
+                font-size: 0.68rem !important;
+                margin-top: 2px !important;
+            }
+
+            /* 5. POS Product Grid & Search Controls */
+            .pos-filters { 
+                flex-direction: column !important; 
+                align-items: stretch !important; 
+                gap: 8px !important; 
+                width: 100% !important; 
+                box-sizing: border-box !important; 
+            }
+            .search-box { 
+                max-width: 100% !important; 
+                width: 100% !important; 
+                box-sizing: border-box !important; 
+            }
+            .pos-branch-select-box {
+                width: 100% !important;
+                justify-content: space-between !important;
+                box-sizing: border-box !important;
+            }
+            .category-filters { 
+                display: flex !important; 
+                overflow-x: auto !important; 
+                white-space: nowrap !important; 
+                padding-bottom: 4px !important; 
+                gap: 6px !important; 
+                width: 100% !important; 
+                -webkit-overflow-scrolling: touch; 
+            }
+            .category-filters button { 
+                padding: 6px 12px !important; 
+                font-size: 0.78rem !important; 
+                flex-shrink: 0 !important; 
+            }
+            .menu-grid { 
+                grid-template-columns: repeat(2, 1fr) !important; 
+                gap: 8px !important; 
+                width: 100% !important; 
+                box-sizing: border-box !important; 
+            }
+            .card { padding: 8px !important; border-radius: 12px !important; }
+            .card img { height: 90px !important; }
+            .card h4 { font-size: 0.85rem !important; margin: 6px 0 2px !important; }
+            .card .selling-p { font-size: 0.92rem !important; }
+            .card .stock-qty { font-size: 0.68rem !important; padding: 2px 6px !important; }
+            .card .barcode-tag { font-size: 0.65rem !important; padding: 1px 5px !important; }
+
+            /* POS Order Payment Pills */
+            .payment-pill-group {
+                flex-wrap: wrap !important;
+                gap: 4px !important;
+            }
+            .pay-pill {
+                min-width: calc(50% - 4px) !important;
+                padding: 8px 4px !important;
+                font-size: 0.75rem !important;
+            }
+
+            /* 6. Purchaser Module Forms & Cards */
+            .pur-header-card, .pur-diagram-table-card, .pl-card-section {
+                padding: 12px 10px !important;
+                border-radius: 14px !important;
+                margin-bottom: 12px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .pur-top-grid {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+            .pur-col-box {
+                padding: 12px 10px !important;
+                border-radius: 12px !important;
+                box-sizing: border-box !important;
+            }
+            .pur-col-box div[style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+                gap: 8px !important;
+            }
+
+            /* 7. Tables Internal Scroll Wrapper (Page stays fixed, table scrolls smoothly) */
+            .stock-table-wrapper, 
+            .pur-diagram-table-card > div, 
+            .pl-card-section > div {
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+                display: block !important;
+                box-sizing: border-box !important;
+                padding: 0 !important;
+            }
+            .custom-table, .pl-table, .pur-diagram-table {
+                min-width: 580px !important; /* Table scrolls internally, page doesn't break */
+            }
+
+            /* 8. Modals Auto-Fit on Mobile Screen */
+            .modal-overlay {
+                padding: 10px !important;
+            }
+            .modal-content { 
+                width: 100% !important; 
+                max-width: 100% !important; 
+                padding: 16px 12px !important; 
+                margin: 0 !important; 
+                border-radius: 16px !important; 
+                max-height: 90vh !important; 
+                box-sizing: border-box !important; 
+            }
+
+            /* 9. Settings Form */
+            .settings-form {
+                padding: 16px 12px !important;
+                border-radius: 14px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .theme-selection-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 8px !important;
+            }
         }
     </style>
 </head>
 <body class="theme-korvexa">
 
-    <div id="login-page">
+   <div id="login-page">
+        <!-- 1. Warm Boutique Ambient Lighting Orbs -->
+        <div class="retail-ambient-glow glow-1"></div>
+        <div class="retail-ambient-glow glow-2"></div>
+        <div class="retail-ambient-glow glow-3"></div>
+
+        <!-- 2. Floating T-Shirts, Price Tags & Retail Accessories Particles -->
+        <div class="retail-floating-elements">
+            <span class="retail-particle p1" title="T-Shirt"><i class='bx bxs-t-shirt'></i></span>
+            <span class="retail-particle p2" title="Price Tag"><i class='bx bx-purchase-tag-alt'></i></span>
+            <span class="retail-particle p3" title="Shopping Bag"><i class='bx bx-shopping-bag'></i></span>
+            <span class="retail-particle p4" title="Clothes Hanger"><i class='bx bx-closet'></i></span>
+            <span class="retail-particle p5" title="Barcode Tag"><i class='bx bx-barcode'></i></span>
+            <span class="retail-particle p6" title="Retail Item"><i class='bx bx-gift'></i></span>
+            <span class="retail-particle p7" title="T-Shirt"><i class='bx bxs-t-shirt'></i></span>
+            <span class="retail-particle p8" title="Retail Store"><i class='bx bx-store-alt'></i></span>
+        </div>
+
+        <!-- 3. Glassmorphism Floating Boutique Card -->
         <div class="auth-card">
+            <!-- T-Shirt & Apparel Animated Badge -->
+            <div class="auth-icon-badge">
+                <i class='bx bxs-t-shirt'></i>
+            </div>
+
             <div class="auth-logo-wrap">
-                <h2 style="font-size: 22px; font-weight: 800; color: #070b14; letter-spacing: 0.5px;">KORVEXA SOFTWARE</h2>
-                <span style="font-size: 9px; font-weight: 700; color: #0066ff; letter-spacing: 2px;">YOUR WORK OUR IDENTITY</span>
+                <h2 style="font-size: 23px; font-weight: 900; color: #070b14; letter-spacing: 0.5px;">KORVEXA SOFTWARE</h2>
+                <span style="font-size: 9.5px; font-weight: 800; color: #0066ff; letter-spacing: 2px;">APPAREL, GARMENTS & RETAIL POS</span>
             </div>
             
             <div id="login-box" class="auth-box active">
@@ -1557,10 +2033,8 @@
                             </div>
                         </div>
 
-                        <div class="dashboard-grid" style="margin-bottom: 10px;">
-                            <div class="stat-card" style="border-left: 5px solid #0066ff;"><h3>Total Sold Units</h3><p id="report-sold">0</p></div>
+                    <div class="dashboard-grid" style="margin-bottom: 10px;">
                             <div class="stat-card" style="border-left: 5px solid #10b981;"><h3>Total Stock Left</h3><p id="report-remaining">0</p></div>
-                            <div class="stat-card" style="border-left: 5px solid #8b5cf6;"><h3>Total Inventory Cost Val</h3><p id="report-cost-val">Rs. 0</p></div>
                             <div class="stat-card" style="border-left: 5px solid #0284c7;"><h3>Expected Sale Val</h3><p id="report-sale-val">Rs. 0</p></div>
                         </div>
 
@@ -1568,14 +2042,11 @@
                             <table class="custom-table" style="width: 100%;">
                                 <thead>
                                     <tr>
-                                        <th>Barcode</th>
-                                        <th>Product</th>
-                                        <th>Category</th>
-                                        <th>Cost Price</th>
-                                        <th>Selling Price</th>
-                                        <th>Total Stock</th>
-                                        <th>Inventory Cost</th>
-                                        <th>Sold</th>
+                                        <th style="text-align: left; width: 18%;">Barcode</th>
+                                        <th style="text-align: left; width: 34%;">Product</th>
+                                        <th style="text-align: right; width: 16%;">Cost Price</th>
+                                        <th style="text-align: right; width: 16%;">Selling Price</th>
+                                        <th style="text-align: center; width: 16%;">Total Stock</th>
                                     </tr>
                                 </thead>
                                 <tbody id="report-tbody"></tbody>
@@ -1904,7 +2375,7 @@
                             </div>
                         </div>
 
-                        <!-- Cash Book 4 Core KPI Cards -->
+                       <!-- Cash Book 3 Core KPI Cards (Expenses Removed) -->
                         <div class="pl-kpi-grid">
                             <!-- 1. Cash Inflow -->
                             <div class="pl-kpi-card" style="border-top: 4px solid #10b981;">
@@ -1920,14 +2391,7 @@
                                 <div class="kpi-subtitle">Paid to vendors & suppliers</div>
                             </div>
 
-                           <!-- 3. Total Expenses Outflow -->
-                            <div class="pl-kpi-card" style="border-top: 4px solid #ef4444;">
-                                <div class="kpi-header"><span class="kpi-title">Total Expenses</span><div class="kpi-icon" style="background: #fee2e2; color: #ef4444;"><i class='bx bx-arrow-from-bottom'></i></div></div>
-                                <div class="kpi-value" id="kpi-cb-out" style="color: #ef4444;">Rs. 0</div>
-                                <div class="kpi-subtitle">Store operational costs</div>
-                            </div>
-
-                            <!-- 4. Remaining Balance / Net Cash in Hand -->
+                            <!-- 3. Remaining Balance / Net Cash in Hand -->
                             <div class="pl-kpi-card net-profit" id="kpi-cb-net-card" style="border-top: 4px solid #059669;">
                                 <div class="kpi-header"><span class="kpi-title">Net Cash in Hand</span><div class="kpi-icon" style="background: #d1fae5; color: #059669;"><i class='bx bx-wallet'></i></div></div>
                                 <div class="kpi-value" id="kpi-cb-net" style="color: #059669;">Rs. 0</div>
@@ -1993,40 +2457,133 @@
                 </div>
             </div>
 
-            <!-- 18. SELL & LEDGER -->
+            <!-- 18. SELL & LEDGER (WITH DATE FILTER & SALES KPIs) -->
             <div id="sell-view" class="view">
-                <div class="content-wrapper">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-                        <div>
-                            <h2>Sales & Customer Ledger</h2>
-                            <p style="color: #64748b; font-size: 0.88rem;">Search invoice to process Return, Exchange, or Add Credit Payment.</p>
-                        </div>
-                    </div>
+                <div class="content-wrapper" style="width: 100%; max-width: 100%; padding: 22px 30px;">
+                    <div class="fullscreen-report-wrapper">
+                        <!-- Top Bar: Date Filter & Presets -->
+                        <div class="pl-top-bar">
+                            <div>
+                                <h2 style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin-bottom: 2px;">
+                                    <i class='bx bx-dollar-circle' style="color:var(--primary);"></i> Sales & Customer Ledger
+                                </h2>
+                                <p style="color: #64748b; font-size: 0.88rem;" id="sales-period-info-text">
+                                    Displaying sales activity & financial collection.
+                                </p>
+                            </div>
+                            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                <!-- Quick Presets: Aaj, Kal, Hafta, All -->
+                                <div class="pl-pill-group">
+                                    <button class="pl-pill-btn active" id="sales-preset-today" onclick="setSalesDatePreset('today')">
+                                        <i class='bx bx-calendar-event'></i> Today 
+                                    </button>
+                                    <button class="pl-pill-btn" id="sales-preset-yesterday" onclick="setSalesDatePreset('yesterday')">
+                                        <i class='bx bx-time'></i> Yesterday 
+                                    </button>
+                                    <button class="pl-pill-btn" id="sales-preset-weekly" onclick="setSalesDatePreset('weekly')">
+                                        <i class='bx bx-calendar-week'></i> 7 Days
+                                    </button>
+                                    <button class="pl-pill-btn" id="sales-preset-all" onclick="setSalesDatePreset('all')">
+                                        <i class='bx bx-infinite'></i> All Time
+                                    </button>
+                                </div>
 
-                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 15px;">
-                        <div class="tab-btn-group">
-                            <button class="tab-btn active" id="tab-sales-all" onclick="filterSalesStatus('all')">All Invoices</button>
-                            <button class="tab-btn" id="tab-sales-paid" onclick="filterSalesStatus('Paid')">Paid Sales</button>
-                            <button class="tab-btn" id="tab-sales-unpaid" onclick="filterSalesStatus('Unpaid')">Unpaid (Credit)</button>
+                                <!-- Custom Date Picker -->
+                                <div class="pl-date-picker-box">
+                                    <input type="date" id="sales-date-from" title="From Date">
+                                    <span style="color:#94a3b8; font-weight:700;">→</span>
+                                    <input type="date" id="sales-date-to" title="To Date">
+                                    <button class="save-btn" style="padding: 6px 12px; font-size: 0.8rem;" onclick="applySalesCustomDateFilter()" title="Filter Date">
+                                        <i class='bx bx-filter-alt'></i>
+                                    </button>
+                                    <button class="outline-btn" style="padding: 6px 10px; font-size: 0.8rem;" onclick="resetSalesDateFilter()" title="Reset to Today">
+                                        <i class='bx bx-reset'></i>
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-<div class="search-box"><i class='bx bx-search'></i><input type="text" id="sales-search" placeholder="Search invoice, customer or phone..." oninput="renderSellView()"></div>
-                    </div>
 
-                    <div class="stock-table-wrapper">
-                        <table class="custom-table">
-                            <thead>
-                                <tr>
-                                    <th>Invoice #</th>
-                                    <th>Date</th>
-                                    <th>Customer & Contact</th>
-                                    <th>Items</th>
-                                    <th>Status</th>
-                                    <th>Total Bill</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody id="sell-tbody"></tbody>
-                        </table>
+                        <!-- 4 Core Sales KPI Cards -->
+                        <div class="pl-kpi-grid">
+                            <!-- 1. Total Invoices Count -->
+                            <div class="pl-kpi-card" style="border-top: 4px solid var(--primary);">
+                                <div class="kpi-header">
+                                    <span class="kpi-title">Total Invoices</span>
+                                    <div class="kpi-icon" style="background: rgba(var(--primary-rgb),0.1); color: var(--primary);">
+                                        <i class='bx bx-receipt'></i>
+                                    </div>
+                                </div>
+                                <div class="kpi-value" id="sales-kpi-invoices-count">0</div>
+                                <div class="kpi-subtitle">Number of Invoices Generated</div>
+                            </div>
+
+                            <!-- 2. Total Sold Items / Units -->
+                            <div class="pl-kpi-card" style="border-top: 4px solid #8b5cf6;">
+                                <div class="kpi-header">
+                                    <span class="kpi-title">Sold Items (Qty)</span>
+                                    <div class="kpi-icon" style="background: #f3e8ff; color: #8b5cf6;">
+                                        <i class='bx bx-package'></i>
+                                    </div>
+                                </div>
+                                <div class="kpi-value" id="sales-kpi-sold-qty" style="color: #8b5cf6;">0 pcs</div>
+                                <div class="kpi-subtitle">Total Units & Pieces Sold</div>
+                            </div>
+
+                            <!-- 3. Total Sales Billed Amount -->
+                            <div class="pl-kpi-card" style="border-top: 4px solid #0066ff;">
+                                <div class="kpi-header">
+                                    <span class="kpi-title">Total Billed Amount</span>
+                                    <div class="kpi-icon" style="background: #e0f2fe; color: #0284c7;">
+                                        <i class='bx bx-dollar'></i>
+                                    </div>
+                                </div>
+                                <div class="kpi-value" id="sales-kpi-total-amount" style="color: #0284c7;">Rs. 0</div>
+                                <div class="kpi-subtitle">Gross Billed Value of Sales</div>
+                            </div>
+
+                            <!-- 4. Total Cash / Payment Received -->
+                            <div class="pl-kpi-card net-profit" style="border-top: 4px solid #10b981;">
+                                <div class="kpi-header">
+                                    <span class="kpi-title">Payment Collected</span>
+                                    <div class="kpi-icon" style="background: #dcfce7; color: #16a34a;">
+                                        <i class='bx bx-check-shield'></i>
+                                    </div>
+                                </div>
+                                <div class="kpi-value" id="sales-kpi-paid-amount" style="color: #16a34a;">Rs. 0</div>
+                                <div class="kpi-subtitle" id="sales-kpi-due-sub">Cash / Bank Received</div>
+                            </div>
+                        </div>
+
+                        <!-- Secondary Filters: Status Tabs (All / Paid / Unpaid) + Search Box -->
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                            <div class="tab-btn-group">
+                                <button class="tab-btn active" id="tab-sales-all" onclick="filterSalesStatus('all')">All Invoices</button>
+                                <button class="tab-btn" id="tab-sales-paid" onclick="filterSalesStatus('Paid')">Paid Sales</button>
+                                <button class="tab-btn" id="tab-sales-unpaid" onclick="filterSalesStatus('Unpaid')">Unpaid (Credit)</button>
+                            </div>
+                            <div class="search-box" style="max-width: 380px;">
+                                <i class='bx bx-search'></i>
+                                <input type="text" id="sales-search" placeholder="Search invoice #, customer or mobile..." oninput="renderSellView()">
+                            </div>
+                        </div>
+
+                        <!-- Invoices Table -->
+                        <div class="stock-table-wrapper" style="width: 100%;">
+                            <table class="custom-table" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Invoice #</th>
+                                        <th>Date & Time</th>
+                                        <th>Customer & Contact</th>
+                                        <th>Items & Quantities</th>
+                                        <th>Status</th>
+                                        <th style="text-align: right;">Total Bill</th>
+                                        <th style="text-align: center; width: 140px;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="sell-tbody"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -2329,19 +2886,55 @@
         </div>
     </div>
 
-    <!-- MODAL: RETURN -->
+    <!-- MODAL: RETURN (SMART INVOICE-DRIVEN RETURN) -->
     <div id="return-modal" class="modal-overlay">
-        <div class="modal-content">
+        <div class="modal-content" style="max-width: 520px;">
             <span class="close-modal" onclick="closeReturnModal()">&times;</span>
-            <h2 style="margin-bottom: 20px;"><i class='bx bx-undo' style="color:#ef4444;"></i> Process Return</h2>
-            <div class="form-group"><label>Invoice Ref</label><input type="text" id="return-inv-ref" readonly style="background:#f1f5f9; font-weight:700;"></div>
-            <div class="form-group"><label>Product to Return</label><select id="return-product-select" onchange="autoFillReturnPrice()"></select></div>
-            <div style="display:flex; gap:15px;">
-                <div class="form-group" style="flex:1;"><label>Qty Returned</label><input type="number" id="return-qty" min="1" value="1" oninput="autoFillReturnPrice()"></div>
-                <div class="form-group" style="flex:1;"><label>Refund (Rs.)</label><input type="number" id="return-refund-val"></div>
+            <h2 style="margin-bottom: 12px;"><i class='bx bx-undo' style="color:#ef4444;"></i> Process Product Return</h2>
+            
+            <!-- 1. Invoice Number Search & Fetch Section -->
+            <div class="form-group" style="margin-bottom: 10px;">
+                <label><i class='bx bx-receipt' style="color:var(--primary);"></i> Invoice / Bill Number *</label>
+                <div style="display: flex; gap: 8px;">
+                    <input type="text" id="return-inv-ref" placeholder="Invoice # likhein (e.g. 449)..." style="font-weight: 800; color: var(--primary);">
+                    <button type="button" class="save-btn" style="padding: 8px 14px; font-size: 0.85rem; white-space: nowrap; background: #0f172a; background-image: none;" onclick="fetchInvoiceItemsForReturn()" title="Is bill ka saaman load karein">
+                        <i class='bx bx-search'></i> Fetch Bill
+                    </button>
+                </div>
+                <!-- Customer aur Bill ki Detail ka Green Box -->
+                <div id="return-invoice-info-box" style="display: none; margin-top: 8px; padding: 8px 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; font-size: 0.83rem; color: #166534; font-weight: 600;"></div>
             </div>
-            <div class="form-group"><label>Reason</label><input type="text" id="return-reason" placeholder="Reason for return"></div>
-            <button class="save-btn" style="width: 100%; justify-content: center;" onclick="saveReturn()">Confirm & Restore Stock</button>
+
+            <!-- 2. Product Selector (Sirf is invoice ke items aayenge) -->
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label><i class='bx bx-package' style="color:#10b981;"></i> Select Item Sold in this Bill to Return *</label>
+                <select id="return-product-select" onchange="autoFillReturnPrice()">
+                    <option value="">-- Pehle Invoice Number Fetch Karein --</option>
+                </select>
+                <small id="return-item-sold-hint" style="color: #64748b; font-size: 0.8rem; display: block; margin-top: 4px; font-weight: 600;"></small>
+            </div>
+
+            <!-- 3. Quantity & Refund Amount -->
+            <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                    <label>Qty Returned *</label>
+                    <input type="number" id="return-qty" min="1" value="1" style="font-weight: 800; text-align: center; color: #ef4444;" oninput="autoFillReturnPrice()">
+                </div>
+                <div class="form-group" style="flex: 1; margin-bottom: 0;">
+                    <label>Refund Amount (Rs.) *</label>
+                    <input type="number" id="return-refund-val" min="0" style="font-weight: 800; text-align: right; color: #0f172a;">
+                </div>
+            </div>
+
+            <!-- 4. Reason -->
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label>Reason for Return</label>
+                <input type="text" id="return-reason" placeholder="e.g. Size masla, defect, customer changed mind">
+            </div>
+
+            <button class="save-btn" id="confirm-return-btn" style="width: 100%; justify-content: center; padding: 13px;" onclick="saveReturn()">
+                <i class='bx bx-check-circle'></i> Confirm Return & Restore Stock
+            </button>
         </div>
     </div>
 
@@ -2520,11 +3113,25 @@
                 <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-purchaser"> Purchaser</label>
                 <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-reports"> Reports (Analytics)</label>
                 <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-sales"> Sales & Ledger</label>
+                
+                <!-- Daily Sheet Checkbox Added Here -->
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-daily-sheet"> Daily Sheet</label>
+                
                 <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:var(--primary); font-weight:700;"><input type="checkbox" id="perm-all-reports"> All Reports (Master Financial Audit)</label>
                 <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-exchanges"> Exchange Log</label>
                 <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-expenses"> Expenses</label>
                 <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-settings"> Settings</label>
                 <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:var(--primary); font-weight:700;"><input type="checkbox" id="perm-users"> Users & Access</label>
+            </div>
+
+            <!-- STOCK REPORT COLUMNS CONTROL -->
+            <label style="font-weight: 700; margin-bottom: 8px; display: block; color: var(--primary);"><i class='bx bx-table'></i> Stock Report Columns Access:</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #e0f2fe; padding: 14px; border-radius: 12px; border: 1px solid #bae6fd; margin-bottom: 16px;">
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:#0f172a; font-weight:600;"><input type="checkbox" id="perm-col-barcode"> Barcode</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:#0f172a; font-weight:600;"><input type="checkbox" id="perm-col-product"> Product</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:#0f172a; font-weight:600;"><input type="checkbox" id="perm-col-cost"> Cost Price</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:#0f172a; font-weight:600;"><input type="checkbox" id="perm-col-sale"> Selling Price</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:#0f172a; font-weight:600;"><input type="checkbox" id="perm-col-stock"> Total Stock</label>
             </div>
 
             <button class="save-btn" style="width: 100%; justify-content: center;" onclick="saveUserPermissions()"><i class='bx bx-check-shield'></i> Save Permissions</button>
@@ -2836,34 +3443,37 @@ window.alert = function(message) {
         // DIRECT BARCODE PRINTING ENGINE (STICKER: SHOP, NAME, BARCODE, PRICE)
         // =========================================================
 
-        // 1. Ek Single Product ka Barcode Print Karna (Sirf 1 Sticker)
+        // 1. Ek Single Product ka Barcode Print Karna (Jitni Qty khareedi hai utne hi Stickers aayenge)
         window.printSinglePurchasedBarcode = function(index) {
             const item = window.diagramPurchaseItems[index];
             if (!item) return;
 
+            // Agar Qty 3 hai to 3 stickers print honge
             window.triggerBarcodeDirectPrint([{
                 name: item.name,
                 price: item.sale,
-                barcode: item.barcode
+                barcode: item.barcode,
+                qty: parseInt(item.qty) || 1
             }]);
         };
 
-        // 2. Purchaser Table ke Tamam Alag Alag Products ka Ek Sath Print Karna (Har Product ka 1 Sticker)
+        // 2. Purchaser Table ke Tamam Products ka Print (Har Product ki Qty ke mutabiq Stickers)
         window.printAllDiagramBarcodes = function() {
             if (window.diagramPurchaseItems.length === 0) {
                 alert("Table mein koi product mojood nahi hai!");
                 return;
             }
 
-            // Har product ka distinct record banayein taake koi double na ho
+            // Har product ki khareedi hui quantity ke mutabiq list banegi
             window.triggerBarcodeDirectPrint(window.diagramPurchaseItems.map(item => ({
                 name: item.name,
                 price: item.sale,
-                barcode: item.barcode
+                barcode: item.barcode,
+                qty: parseInt(item.qty) || 1
             })));
         };
 
-        // 3. Main Thermal Printer Generator (Har Product ka Alag Alag Sticker)
+        // 3. Main Thermal Printer Generator (Qty ke mutabiq Exact Stickers)
         window.triggerBarcodeDirectPrint = function(itemsList) {
             const printArea = document.getElementById('barcode-print-area');
             if (!printArea) return;
@@ -2871,26 +3481,37 @@ window.alert = function(message) {
             const companyName = localStorage.getItem('pos_biz_name') || 'KORVEXA SOFTWARE';
             printArea.innerHTML = '';
 
-            // Loop sirf itemsList par chalega (Koi double repeat nahi hoga)
+            const generatedStickers = [];
+
+            // Har item ki khareedi hui Quantity (Qty) ke barabar stickers banayein
             itemsList.forEach((item, itemIdx) => {
-                const svgId = `print-bc-svg-${itemIdx}`;
-                const stickerBox = document.createElement('div');
-                stickerBox.className = 'barcode-sticker-print-box';
-                stickerBox.innerHTML = `
-                    <div class="bcp-company">${companyName}</div>
-                    <div class="bcp-title">${item.name}</div>
-                    <svg id="${svgId}" class="bcp-svg"></svg>
-                    <div class="bcp-price">PRICE: Rs. ${Number(item.price || 0).toLocaleString()}</div>
-                `;
-                printArea.appendChild(stickerBox);
+                const count = Math.max(1, parseInt(item.qty) || 1);
+
+                for (let q = 0; q < count; q++) {
+                    const svgId = `print-bc-svg-${itemIdx}-${q}`;
+                    const stickerBox = document.createElement('div');
+                    stickerBox.className = 'barcode-sticker-print-box';
+                    stickerBox.innerHTML = `
+                        <div class="bcp-company">${companyName}</div>
+                        <div class="bcp-title">${item.name}</div>
+                        <svg id="${svgId}" class="bcp-svg"></svg>
+                        <div class="bcp-price">PRICE: Rs. ${Number(item.price || 0).toLocaleString()}</div>
+                    `;
+                    printArea.appendChild(stickerBox);
+
+                    // Barcode render list mein shamil karein
+                    generatedStickers.push({
+                        svgSelector: `#${svgId}`,
+                        barcodeValue: String(item.barcode)
+                    });
+                }
             });
 
-            // SVG Barcodes Render karein
+            // Tamam Barcodes ko render karein
             setTimeout(() => {
-                itemsList.forEach((item, itemIdx) => {
-                    const svgId = `#print-bc-svg-${itemIdx}`;
+                generatedStickers.forEach(stk => {
                     try {
-                        JsBarcode(svgId, String(item.barcode), {
+                        JsBarcode(stk.svgSelector, stk.barcodeValue, {
                             format: "CODE128",
                             width: 1.5,
                             height: 35,
@@ -2905,11 +3526,11 @@ window.alert = function(message) {
                     }
                 });
 
-                // Direct Printer dialogue open karein
+                // Printer window open karein
                 setTimeout(() => {
                     window.print();
-                }, 100);
-            }, 50);
+                }, 120);
+            }, 60);
         };
 
        // Clean Standard Barcode Sticker (Only Product Name, Barcode & Price)
@@ -5230,9 +5851,9 @@ window.openUserAccessModal = function(userId) {
     if (!user) return;
 
     // User details show karein
-    document.getElementById('perm-user-id').value = user.id;
-    document.getElementById('perm-user-name').textContent = `${user.username} (${user.email || ''})`;
-    document.getElementById('perm-user-status').value = user.status || 'active';
+    if(document.getElementById('perm-user-id')) document.getElementById('perm-user-id').value = user.id;
+    if(document.getElementById('perm-user-name')) document.getElementById('perm-user-name').textContent = `${user.username} (${user.email || ''})`;
+    if(document.getElementById('perm-user-status')) document.getElementById('perm-user-status').value = user.status || 'active';
 
     // Store / Branch dropdown populate karein
     const branchSelect = document.getElementById('perm-user-branch');
@@ -5245,19 +5866,29 @@ window.openUserAccessModal = function(userId) {
         branchSelect.value = user.assignedBranch || 'all';
     }
 
-    // Checkboxes ko set karein
+    // Checkboxes ko safely set karein (Crash-Proof)
     const p = user.permissions || {};
-    document.getElementById('perm-dashboard').checked = !!p.dashboard;
-    document.getElementById('perm-pos').checked = !!p.pos;
-    document.getElementById('perm-purchaser').checked = !!p.purchaser;
-    document.getElementById('perm-reports').checked = !!p.reports;
-    document.getElementById('perm-sales').checked = !!p.sales;
-    document.getElementById('perm-daily-sheet').checked = !!p.dailySheet;
-    document.getElementById('perm-all-reports').checked = !!p.allReports;
-    document.getElementById('perm-exchanges').checked = !!p.exchanges;
-    document.getElementById('perm-expenses').checked = !!p.expenses;
-    document.getElementById('perm-settings').checked = !!p.settings;
-    document.getElementById('perm-users').checked = !!p.users;
+    const setCheck = (id, val) => { const el = document.getElementById(id); if (el) el.checked = !!val; };
+    
+    setCheck('perm-dashboard', p.dashboard);
+    setCheck('perm-pos', p.pos);
+    setCheck('perm-purchaser', p.purchaser);
+    setCheck('perm-reports', p.reports);
+    setCheck('perm-sales', p.sales);
+    setCheck('perm-daily-sheet', p.dailySheet);
+    setCheck('perm-all-reports', p.allReports);
+    setCheck('perm-exchanges', p.exchanges);
+    setCheck('perm-expenses', p.expenses);
+    setCheck('perm-settings', p.settings);
+    setCheck('perm-users', p.users);
+
+    // Stock Report Columns Checkboxes
+    const cols = p.stockCols || { barcode: true, product: true, costPrice: true, sellingPrice: true, totalStock: true };
+    setCheck('perm-col-barcode', cols.barcode);
+    setCheck('perm-col-product', cols.product);
+    setCheck('perm-col-cost', cols.costPrice);
+    setCheck('perm-col-sale', cols.sellingPrice);
+    setCheck('perm-col-stock', cols.totalStock);
 
     // Modal show karein
     document.getElementById('user-access-modal')?.classList.add('visible');
@@ -5284,7 +5915,14 @@ window.saveUserPermissions = async function() {
         exchanges: document.getElementById('perm-exchanges').checked,
         expenses: document.getElementById('perm-expenses').checked,
         settings: document.getElementById('perm-settings').checked,
-        users: document.getElementById('perm-users').checked
+        users: document.getElementById('perm-users').checked,
+        stockCols: {
+            barcode: document.getElementById('perm-col-barcode').checked,
+            product: document.getElementById('perm-col-product').checked,
+            costPrice: document.getElementById('perm-col-cost').checked,
+            sellingPrice: document.getElementById('perm-col-sale').checked,
+            totalStock: document.getElementById('perm-col-stock').checked
+        }
     };
 
     try {
@@ -5954,12 +6592,49 @@ updateSalesChart();
             }
         });
 
-        // =========================================================
-        // SALES & CUSTOMER LEDGER FUNCTIONS (FIXED)
+       // =========================================================
+        // SALES & CUSTOMER LEDGER FUNCTIONS (WITH DATE RANGE & KPIs)
         // =========================================================
         window.currentSalesFilter = 'all';
+        window.currentSalesDatePreset = 'today'; // Default: Aaj ki date par set rahega
 
-        // 1. Status filter tabs (All, Paid, Unpaid)
+        // 1. Date Preset Handler (Today, Yesterday, Weekly, All Time)
+        window.setSalesDatePreset = function(type) {
+            window.currentSalesDatePreset = type;
+            document.querySelectorAll('.pl-pill-group button').forEach(b => {
+                if (b.id && b.id.startsWith('sales-preset-')) b.classList.remove('active');
+            });
+            document.getElementById(`sales-preset-${type}`)?.classList.add('active');
+
+            const fromInput = document.getElementById('sales-date-from');
+            const toInput = document.getElementById('sales-date-to');
+            if (fromInput) fromInput.value = '';
+            if (toInput) toInput.value = '';
+
+            window.renderSellView();
+        };
+
+        // 2. Custom Date Filter (From -> To)
+        window.applySalesCustomDateFilter = function() {
+            const from = document.getElementById('sales-date-from')?.value;
+            const to = document.getElementById('sales-date-to')?.value;
+            if (!from || !to) {
+                alert("Baraye meherbani From aur To dono tareekhein chunein!");
+                return;
+            }
+            window.currentSalesDatePreset = 'custom';
+            document.querySelectorAll('.pl-pill-group button').forEach(b => {
+                if (b.id && b.id.startsWith('sales-preset-')) b.classList.remove('active');
+            });
+            window.renderSellView();
+        };
+
+        // 3. Reset Filter to Today
+        window.resetSalesDateFilter = function() {
+            window.setSalesDatePreset('today');
+        };
+
+        // 4. Status Filter Tabs (All, Paid, Unpaid)
         window.filterSalesStatus = function(status) {
             window.currentSalesFilter = status;
             document.querySelectorAll('.tab-btn-group .tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -5969,21 +6644,52 @@ updateSalesChart();
             window.renderSellView();
         };
 
-        // 2. Sales Table ko Screen Par Dikhana
+        // 5. Main Render Function (Calculates KPIs & Fills Table)
         window.renderSellView = function() {
             const tbody = document.getElementById('sell-tbody');
             if (!tbody) return;
             tbody.innerHTML = '';
 
             const searchTerm = (document.getElementById('sales-search')?.value || '').toLowerCase().trim();
+            const fromDate = document.getElementById('sales-date-from')?.value;
+            const toDate = document.getElementById('sales-date-to')?.value;
 
+            // Dates preparation
+            const now = new Date();
+            const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+            const yst = new Date();
+            yst.setDate(now.getDate() - 1);
+            const ystStr = `${yst.getFullYear()}-${String(yst.getMonth() + 1).padStart(2, '0')}-${String(yst.getDate()).padStart(2, '0')}`;
+
+            // Date Matching Helper
+            function isWithinSalesDate(dateStr) {
+                if (!dateStr) return false;
+                const d = dateStr.substring(0, 10);
+                if (window.currentSalesDatePreset === 'today') return d === todayStr;
+                if (window.currentSalesDatePreset === 'yesterday') return d === ystStr;
+                if (window.currentSalesDatePreset === 'weekly') {
+                    const oneWeekAgo = new Date();
+                    oneWeekAgo.setDate(now.getDate() - 7);
+                    return new Date(d) >= oneWeekAgo;
+                }
+                if (window.currentSalesDatePreset === 'custom' && fromDate && toDate) {
+                    return d >= fromDate && d <= toDate;
+                }
+                return true; // 'all'
+            }
+
+            // Filter Sales List
             const filtered = (window.salesHistory || []).filter(sale => {
-                // Tab filter check
+                // 1. Date Filter
+                if (!isWithinSalesDate(sale.date)) return false;
+
+                // 2. Status Tab Filter (Paid / Unpaid)
                 const status = (sale.paymentStatus || 'Paid').toLowerCase();
                 if (window.currentSalesFilter === 'Paid' && status !== 'paid') return false;
                 if (window.currentSalesFilter === 'Unpaid' && status === 'paid') return false;
 
-                // Search query check (Invoice #, Customer Name, Mobile #, Product Name)
+                // 3. Search query check
                 const inv = String(sale.invoiceId || '').toLowerCase();
                 const cust = String(sale.customerName || '').toLowerCase();
                 const phone = String(sale.customerPhone || '').toLowerCase();
@@ -5992,8 +6698,53 @@ updateSalesChart();
                 return inv.includes(searchTerm) || cust.includes(searchTerm) || phone.includes(searchTerm) || itemsStr.includes(searchTerm);
             });
 
+            // Calculate 4 Core Sales Metrics
+            let totalInvoicesCount = filtered.length;
+            let totalSoldPieces = 0;
+            let totalBilledAmount = 0;
+            let totalCollectedPayment = 0;
+
+            filtered.forEach(sale => {
+                const total = Number(sale.total || 0);
+                const paid = sale.paidAmount !== undefined ? Number(sale.paidAmount) : (sale.paymentStatus === 'Paid' ? total : 0);
+                const qtySum = (sale.items || []).reduce((sum, it) => sum + Number(it.qty || 1), 0);
+
+                totalSoldPieces += qtySum;
+                totalBilledAmount += total;
+                totalCollectedPayment += paid;
+            });
+
+            const totalDueAmount = Math.max(0, totalBilledAmount - totalCollectedPayment);
+
+            // Update Top 4 KPI Cards on Screen
+            const kpiInvEl = document.getElementById('sales-kpi-invoices-count');
+            const kpiQtyEl = document.getElementById('sales-kpi-sold-qty');
+            const kpiTotEl = document.getElementById('sales-kpi-total-amount');
+            const kpiPaidEl = document.getElementById('sales-kpi-paid-amount');
+            const kpiDueSubEl = document.getElementById('sales-kpi-due-sub');
+            const infoTextEl = document.getElementById('sales-period-info-text');
+
+            if (kpiInvEl) kpiInvEl.textContent = totalInvoicesCount;
+            if (kpiQtyEl) kpiQtyEl.textContent = `${totalSoldPieces} pcs`;
+            if (kpiTotEl) kpiTotEl.textContent = `Rs. ${totalBilledAmount.toLocaleString()}`;
+            if (kpiPaidEl) kpiPaidEl.textContent = `Rs. ${totalCollectedPayment.toLocaleString()}`;
+            if (kpiDueSubEl) {
+                kpiDueSubEl.textContent = totalDueAmount > 0 
+                    ? `Pending Udhar: Rs. ${totalDueAmount.toLocaleString()}` 
+                    : `Full Payment Cleared`;
+            }
+
+            if (infoTextEl) {
+                const pLabel = window.currentSalesDatePreset === 'today' ? 'TODAY ' :
+                               window.currentSalesDatePreset === 'yesterday' ? 'YESTERDAY ' :
+                               window.currentSalesDatePreset === 'weekly' ? 'LAST 7 DAYS' :
+                               window.currentSalesDatePreset === 'custom' ? `${fromDate} to ${toDate}` : 'ALL RECORDED INVOICES';
+                infoTextEl.textContent = `Showing ${totalInvoicesCount} invoices for: ${pLabel}`;
+            }
+
+            // Render Table Rows
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="empty-placeholder">Koi sales record nahi mila.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="7" class="empty-placeholder">Chuni hui tareekh ka koi sales record nahi mila.</td></tr>`;
                 return;
             }
 
@@ -6015,10 +6766,10 @@ updateSalesChart();
                 const itemsCount = (sale.items || []).reduce((sum, it) => sum + Number(it.qty || 1), 0);
                 const itemsSummary = (sale.items || []).map(it => `${it.name} (x${it.qty})`).join(', ');
 
-              // Agar Udhar baqi hai to "Pay" button show karein
+                // Agar Udhar baqi ho to Pay button
                 let payDueBtn = '';
                 if (due > 0 || sale.paymentStatus === 'Unpaid') {
-                    payDueBtn = `<button class="btn-pay" onclick="openAddPaymentModal('${sale.id}')" title="Khata / Udhar Clear Karein"><i class='bx bx-money'></i> Pay</button>`;
+                    payDueBtn = `<button class="btn-pay" onclick="openAddPaymentModal('${sale.id}')" title="Clear Credit / Udhar"><i class='bx bx-money'></i> Pay</button>`;
                 }
 
                 tbody.innerHTML += `
@@ -6041,12 +6792,12 @@ updateSalesChart();
                             </small>
                         </td>
                         <td>${statusBadge}</td>
-                        <td>
+                        <td style="text-align: right;">
                             <strong style="color:#0f172a; font-size:1rem;">Rs. ${total.toLocaleString()}</strong><br>
-                            <small style="color:#64748b;">Zariya: <b>${sale.paymentMode || 'Cash'}</b></small>
+                            <small style="color:#64748b;">Paid: <b style="color:#10b981;">Rs. ${paid.toLocaleString()}</b></small>
                         </td>
-                        <td class="action-btns" style="display:flex; flex-wrap:wrap; gap:4px;">
-                            <button class="btn-view" onclick="reprintSaleInvoice('${sale.id}')" title="Print Invoice / View"><i class='bx bx-printer'></i></button>
+                        <td class="action-btns" style="display:flex; flex-wrap:wrap; gap:4px; justify-content:center;">
+                            <button class="btn-view" onclick="reprintSaleInvoice('${sale.id}')" title="Print Invoice"><i class='bx bx-printer'></i></button>
                             <button class="btn-edit" onclick="editSaleInvoice('${sale.id}')" title="Edit Bill"><i class='bx bx-edit'></i></button>
                             <button class="btn-return" onclick="openSaleReturn('${sale.id}')" title="Return Product"><i class='bx bx-undo'></i></button>
                             <button class="btn-exchange" onclick="openSaleExchange('${sale.id}')" title="Exchange Product"><i class='bx bx-transfer'></i></button>
@@ -6288,7 +7039,7 @@ updateSalesChart();
             }
         };
 
-        // Render Live Cash Book Flow & Global Drawer Balance
+      // Render Live Cash Book Flow & Global Drawer Balance (Expenses Removed)
         window.renderCashBookFlow = function() {
             let dateInput = document.getElementById('cashbook-date');
             if (!dateInput) return;
@@ -6303,27 +7054,20 @@ updateSalesChart();
             // =========================================================
             // 1. DUKAN KA KUL LIVE CASH IN HAND (All-Time Cumulative)
             // =========================================================
-            // Tamam Cash Sales (Sirf Cash mode, Online/Bank/Card galle mein nahi gina jata)
             const allTimeCashSales = (window.salesHistory || [])
                 .filter(s => s.paymentStatus === 'Paid' && (s.paymentMode || '').toLowerCase().startsWith('cash'))
                 .reduce((sum, s) => sum + Number(s.total || 0), 0);
 
-            // Tamam Manual Cash In (Drawer Funds)
             const allTimeManualCashIn = (window.cashEntriesList || [])
                 .filter(c => c.type === 'IN')
                 .reduce((sum, c) => sum + Number(c.amount || 0), 0);
 
-            // Tamam Expenses (Cash out)
-            const allTimeExpenses = (window.expensesList || [])
-                .reduce((sum, e) => sum + Number(e.amount || 0), 0);
-
-            // Tamam Cash Handovers to Owner (Cash Out)
             const allTimeHandover = (window.cashEntriesList || [])
                 .filter(c => c.type === 'OUT')
                 .reduce((sum, c) => sum + Number(c.amount || 0), 0);
 
-            // Kul Dukan Ka Live Bacha Hua Cash (Galla Balance)
-            const liveStoreGallaCash = (allTimeCashSales + allTimeManualCashIn) - (allTimeExpenses + allTimeHandover);
+            // Expense ab yahan minus nahi ho raha
+            const liveStoreGallaCash = (allTimeCashSales + allTimeManualCashIn) - allTimeHandover;
 
             const liveTotalEl = document.getElementById('cb-live-drawer-total');
             const totalHandoverDisp = document.getElementById('cb-total-handover-disp');
@@ -6350,21 +7094,16 @@ updateSalesChart();
                 return (c.date || '').substring(0, 10) === selectedDate && c.type === 'IN';
             });
 
-            const todayExpenses = (window.expensesList || []).filter(exp => {
-                return (exp.date || '').substring(0, 10) === selectedDate;
-            });
-
             const todayHandover = (window.cashEntriesList || []).filter(c => {
                 return (c.date || '').substring(0, 10) === selectedDate && c.type === 'OUT';
             });
 
             const dailyCashSaleTotal = todaySales.reduce((sum, s) => sum + Number(s.total || 0), 0);
             const dailyManualInTotal = todayManualIn.reduce((sum, c) => sum + Number(c.amount || 0), 0);
-            const dailyExpTotal = todayExpenses.reduce((sum, e) => sum + Number(e.amount || 0), 0);
             const dailyHandoverTotal = todayHandover.reduce((sum, c) => sum + Number(c.amount || 0), 0);
 
             const dailyCashIn = dailyCashSaleTotal + dailyManualInTotal;
-            const dailyCashOut = dailyExpTotal + dailyHandoverTotal;
+            const dailyCashOut = dailyHandoverTotal; // Expenses Khatam
             const dailyNetBacha = dailyCashIn - dailyCashOut;
 
             // Update Daily Cards
@@ -6388,7 +7127,6 @@ updateSalesChart();
                 if (todaySales.length === 0 && todayManualIn.length === 0) {
                     salesTbody.innerHTML = `<tr><td colspan="3" class="empty-placeholder">Is tareekh ki koi cash aamad nahi hai.</td></tr>`;
                 } else {
-                    // Cash sales rows
                     todaySales.forEach(s => {
                         salesTbody.innerHTML += `
                             <tr>
@@ -6398,7 +7136,6 @@ updateSalesChart();
                             </tr>
                         `;
                     });
-                    // Manual Cash In rows
                     todayManualIn.forEach(c => {
                         salesTbody.innerHTML += `
                             <tr style="background:#f0fdf4;">
@@ -6411,24 +7148,13 @@ updateSalesChart();
                 }
             }
 
-            // Fill Cash Out Table
+            // Fill Cash Out Table (Sirf Handover Show Hoga)
             const expTbody = document.getElementById('cb-expenses-tbody');
             if (expTbody) {
                 expTbody.innerHTML = '';
-                if (todayExpenses.length === 0 && todayHandover.length === 0) {
-                    expTbody.innerHTML = `<tr><td colspan="3" class="empty-placeholder">Is tareekh ka koi kharcha ya handover nahi hai.</td></tr>`;
+                if (todayHandover.length === 0) {
+                    expTbody.innerHTML = `<tr><td colspan="3" class="empty-placeholder">Is tareekh ka koi cash handover nahi hai.</td></tr>`;
                 } else {
-                    // Store Expenses
-                    todayExpenses.forEach(e => {
-                        expTbody.innerHTML += `
-                            <tr>
-                                <td><strong>${e.title}</strong></td>
-                                <td><span class="status-badge" style="background:#f1f5f9; color:#475569;">${e.category || 'Kharcha'}</span></td>
-                                <td style="text-align:right; font-weight:800; color:#dc2626;">- Rs. ${Number(e.amount || 0).toLocaleString()}</td>
-                            </tr>
-                        `;
-                    });
-                    // Handover to Owner (Special Red Row)
                     todayHandover.forEach(h => {
                         expTbody.innerHTML += `
                             <tr style="background:#fff1f2; border-left:4px solid #ef4444;">
@@ -6515,20 +7241,175 @@ updateSalesChart();
             }
         };
 
-        // 4. Return Save Karna aur Stock Wapas Add Karna
+       // 1. Sales Ledger se Direct Return Button Dabana (Sirf is Invoice ke items aayenge)
+        window.openSaleReturn = function(saleId) {
+            const sale = window.salesHistory.find(s => s.id === saleId);
+            if (!sale) return;
+
+            // Modal reset karein
+            document.getElementById('return-inv-ref').value = sale.invoiceId;
+            document.getElementById('return-qty').value = '1';
+            document.getElementById('return-reason').value = '';
+
+            // Sirf is invoice ke items load karein
+            window.loadInvoiceItemsIntoReturnModal(sale);
+
+            document.getElementById('return-modal')?.classList.add('visible');
+            Toast.fire({ icon: 'info', title: `Invoice #${sale.invoiceId} ke items load hogaye!` });
+        };
+
+        // 2. Return Management Screen se Return Modal Kholna
+        window.openUniversalReturnModal = function() {
+            const invInput = document.getElementById('return-inv-ref');
+            const prodSelect = document.getElementById('return-product-select');
+            const infoBox = document.getElementById('return-invoice-info-box');
+            const hint = document.getElementById('return-item-sold-hint');
+
+            if (invInput) invInput.value = '';
+            if (infoBox) infoBox.style.display = 'none';
+            if (hint) hint.textContent = '';
+            document.getElementById('return-qty').value = '1';
+            document.getElementById('return-refund-val').value = '';
+            document.getElementById('return-reason').value = '';
+
+            if (prodSelect) {
+                prodSelect.innerHTML = '<option value="">-- Pehle Invoice Number Fetch Karein --</option>';
+            }
+
+            document.getElementById('return-modal')?.classList.add('visible');
+            setTimeout(() => invInput?.focus(), 150);
+        };
+
+        // 3. Invoice Number Type karke Bill ke Items Dhoondna (Fetch Karna)
+        window.fetchInvoiceItemsForReturn = function() {
+            const rawRef = (document.getElementById('return-inv-ref')?.value || '').trim();
+            const cleanRef = rawRef.replace('#', '').trim().toLowerCase();
+
+            if (!cleanRef) {
+                alert("Baraye meherbani Invoice / Bill number likhein (e.g. 449)!");
+                return;
+            }
+
+            const matchedSale = (window.salesHistory || []).find(s => 
+                String(s.invoiceId).trim().toLowerCase() === cleanRef
+            );
+
+            if (!matchedSale) {
+                alert(`Invoice #${rawRef} system mein nahi mili!\nBaraye meherbani durust bill number check karein.`);
+                return;
+            }
+
+            // Sirf is invoice ke bikay hue items load karein
+            window.loadInvoiceItemsIntoReturnModal(matchedSale);
+            Toast.fire({ icon: 'success', title: `Invoice #${matchedSale.invoiceId} mil gayi!` });
+        };
+
+        // 4. Sirf Chuni Hui Invoice ke Items Dropdown mein Bharna
+        window.loadInvoiceItemsIntoReturnModal = function(sale) {
+            const prodSelect = document.getElementById('return-product-select');
+            const infoBox = document.getElementById('return-invoice-info-box');
+            const hint = document.getElementById('return-item-sold-hint');
+
+            // Bill info green box show karein
+            if (infoBox) {
+                infoBox.style.display = 'block';
+                infoBox.innerHTML = `
+                    <i class='bx bx-check-circle'></i> <b>Bill Found:</b> Customer: <b>${sale.customerName || 'Walk-in'}</b> | Date: <b>${sale.date || '-'}</b> | Total Bill: <b>Rs. ${Number(sale.total || 0).toLocaleString()}</b>
+                `;
+            }
+
+            if (!prodSelect) return;
+            prodSelect.innerHTML = '<option value="">-- Wapas Aane Wala Item Chuniye --</option>';
+
+            const soldItems = sale.items || [];
+            if (soldItems.length === 0) {
+                prodSelect.innerHTML = '<option value="">Is invoice mein koi item record nahi mila</option>';
+                return;
+            }
+
+            // SIRF IS INVOICE KE BIKAY HUE ITEMS LOAD HONGE (Bina kisi 1,500 inventory ke kachray ke)
+            soldItems.forEach(item => {
+                const itemPrice = Number(item.price || item.originalPrice || 0);
+                const itemQty = Number(item.qty || 1);
+
+                prodSelect.innerHTML += `
+                    <option value="${item.id}" data-name="${item.name}" data-price="${itemPrice}" data-maxqty="${itemQty}">
+                        ${item.name} (Bikay: ${itemQty} pcs | Rs. ${itemPrice.toLocaleString()} each)
+                    </option>
+                `;
+            });
+
+            // Agar sirf 1 item ho to khud hi select kar le
+            if (soldItems.length === 1) {
+                prodSelect.selectedIndex = 1;
+            }
+
+            if (hint) {
+                hint.textContent = `Is bill mein kul ${soldItems.length} product(s) biki theen. Upar se chunein ke konsi wapas karni hai.`;
+            }
+
+            window.autoFillReturnPrice();
+        };
+
+        window.closeReturnModal = function() {
+            document.getElementById('return-modal')?.classList.remove('visible');
+        };
+
+        // 5. Price aur Qty Limit Auto-Calculate Karna
+        window.autoFillReturnPrice = function() {
+            const prodSelect = document.getElementById('return-product-select');
+            const qtyInput = document.getElementById('return-qty');
+            const refundInput = document.getElementById('return-refund-val');
+            const hint = document.getElementById('return-item-sold-hint');
+
+            if (!prodSelect || !qtyInput || !refundInput) return;
+
+            const selectedOption = prodSelect.options[prodSelect.selectedIndex];
+            if (!selectedOption || !selectedOption.value) {
+                refundInput.value = '';
+                return;
+            }
+
+            const unitPrice = parseFloat(selectedOption.dataset.price) || 0;
+            const maxQty = parseInt(selectedOption.dataset.maxqty) || 1; // Bill mein jitne bikay thay
+            
+            let qty = parseInt(qtyInput.value) || 1;
+            
+            // Limit check: Customer ne jitne piece khareeday thay us se zyada wapas nahi le sakte
+            if (qty > maxQty) {
+                qty = maxQty;
+                qtyInput.value = maxQty;
+                Toast.fire({ icon: 'warning', title: `Is bill mein customer ne sirf ${maxQty} piece liye thay!` });
+            }
+
+            if (qty <= 0) {
+                qty = 1;
+                qtyInput.value = 1;
+            }
+
+            refundInput.value = unitPrice * qty;
+
+            if (hint) {
+                hint.innerHTML = `<span style="color:#16a34a; font-weight:700;">✓ Unit Price: Rs. ${unitPrice.toLocaleString()} | Maximum ${maxQty} piece wapas ho sakte hain.</span>`;
+            }
+        };
+
+        // 6. Return Save Karna aur Store Stock Wapas Barhana
         window.saveReturn = async function() {
-            const invRef = document.getElementById('return-inv-ref')?.value || 'Direct Return';
+            const rawRef = (document.getElementById('return-inv-ref')?.value || '').trim();
+            const cleanRef = rawRef.replace('#', '').trim().toLowerCase();
             const prodSelect = document.getElementById('return-product-select');
             const qty = parseInt(document.getElementById('return-qty')?.value) || 1;
             const refundVal = parseFloat(document.getElementById('return-refund-val')?.value) || 0;
             const reason = document.getElementById('return-reason')?.value.trim() || 'Customer Return';
+            const confirmBtn = document.getElementById('confirm-return-btn');
 
             const selectedOption = prodSelect?.options[prodSelect.selectedIndex];
             const productId = selectedOption?.value;
             const productName = selectedOption?.dataset?.name;
 
             if (!productId) {
-                alert("Baraye meherbani wapas karne ke liye Product select karein!");
+                alert("Baraye meherbani wapas aane wala Item select karein!");
                 return;
             }
 
@@ -6537,20 +7418,19 @@ updateSalesChart();
                 return;
             }
 
+            // Bill dhoondein
+            const matchedSale = (window.salesHistory || []).find(s => 
+                String(s.invoiceId).trim().toLowerCase() === cleanRef
+            );
+
             const returnId = "RET-" + Math.floor(100000 + Math.random() * 900000);
             const now = new Date();
             const returnDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
-
-            // Customer dhoondein agar invoice reference mojud ho
-            let customerName = 'Walk-in Customer';
-            const matchedSale = (window.salesHistory || []).find(s => String(s.invoiceId) === String(invRef.replace('#', '')));
-            if (matchedSale && matchedSale.customerName) {
-                customerName = matchedSale.customerName;
-            }
+            const customerName = matchedSale ? (matchedSale.customerName || 'Walk-in') : 'Customer';
 
             const returnRecord = {
                 returnId: returnId,
-                invoiceRef: invRef,
+                invoiceRef: rawRef || (matchedSale ? matchedSale.invoiceId : 'Direct'),
                 date: returnDate,
                 customerName: customerName,
                 productId: productId,
@@ -6562,21 +7442,51 @@ updateSalesChart();
             };
 
             try {
-                // Return record save karein
+                confirmBtn.disabled = true;
+                confirmBtn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Restoring Stock...";
+
+                // Return Record Firestore mein save karein
                 await returnsDB.add(returnRecord);
 
-                // Stock wapas inventory mein jama (+Increment) karein
-                await productsDB.doc(productId).update({
-                    stock: firebase.firestore.FieldValue.increment(qty),
-                    sold: firebase.firestore.FieldValue.increment(-qty)
-                });
+                // Stock usi dukan/branch mein wapas shamil karein jahan se bika tha
+                if (matchedSale && matchedSale.branchId && matchedSale.branchId !== 'all') {
+                    const bStockRecord = (window.branchStockList || []).find(bs => 
+                        bs.branchId === matchedSale.branchId && bs.productId === productId
+                    );
+                    if (bStockRecord) {
+                        await branchStockDB.doc(bStockRecord.id).update({
+                            qty: firebase.firestore.FieldValue.increment(qty),
+                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
+                    await productsDB.doc(productId).update({
+                        sold: firebase.firestore.FieldValue.increment(-qty)
+                    });
+                } else {
+                    await productsDB.doc(productId).update({
+                        stock: firebase.firestore.FieldValue.increment(qty),
+                        sold: firebase.firestore.FieldValue.increment(-qty)
+                    });
+                }
 
-                alert(`Product return kamyabi say darj hogaya!\nStock mein +${qty} units wapas shamil kardiye gaye.`);
+                alert(`Product return kamyabi say darj hogaya!\n"${productName}" ke +${qty} units stock mein wapas shamil kardiye gaye.`);
                 window.closeReturnModal();
+
             } catch (err) {
                 alert("Return save karne mein masla aaya: " + err.message);
+            } finally {
+                confirmBtn.disabled = false;
+                confirmBtn.innerHTML = "<i class='bx bx-check-circle'></i> Confirm Return & Restore Stock";
             }
         };
+
+        // Invoice Number Enter dabane par bhi Fetch ho jaye
+        document.getElementById('return-inv-ref')?.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                window.fetchInvoiceItemsForReturn();
+            }
+        });
 
         // 5. Return History Table aur Dashboard Cards ko Render Karna
         window.renderReturnView = function() {
@@ -7823,116 +8733,88 @@ updateSalesChart();
             selectEl.value = currentSelected;
         };
 
-        window.renderStockReport = function() {
+      window.renderStockReport = function() {
             window.populateStockReportBranchDropdown();
 
             const tbody = document.getElementById('report-tbody');
-            const soldEl = document.getElementById('report-sold');
+            const theadTr = document.querySelector('#report-tbody').previousElementSibling.querySelector('tr');
             const remainEl = document.getElementById('report-remaining');
-            const costValEl = document.getElementById('report-cost-val');
             const saleValEl = document.getElementById('report-sale-val');
             const selectedBranch = document.getElementById('stock-report-branch-filter')?.value || 'all';
 
-            if (!tbody) return;
-            tbody.innerHTML = '';
+            if (!tbody || !theadTr) return;
 
-            let totalSoldUnits = 0;
+            // --- 1. USER PERMISSION COLUMNS CHECK ---
+            const currentUserStr = sessionStorage.getItem('pos_current_user');
+            let cols = { barcode: true, product: true, costPrice: true, sellingPrice: true, totalStock: true };
+            if (currentUserStr) {
+                const user = JSON.parse(currentUserStr);
+                if (user.role !== 'superadmin' && user.permissions && user.permissions.stockCols) {
+                    cols = user.permissions.stockCols;
+                }
+            }
+
+            // DYNAMIC HEADER RENDER
+            theadTr.innerHTML = `
+                ${cols.barcode ? `<th style="text-align: left; width: 18%;">Barcode</th>` : ''}
+                ${cols.product ? `<th style="text-align: left; width: 34%;">Product</th>` : ''}
+                ${cols.costPrice ? `<th style="text-align: right; width: 16%;">Cost Price</th>` : ''}
+                ${cols.sellingPrice ? `<th style="text-align: right; width: 16%;">Selling Price</th>` : ''}
+                ${cols.totalStock ? `<th style="text-align: center; width: 16%;">Total Stock</th>` : ''}
+            `;
+
+            tbody.innerHTML = '';
             let totalRemainingUnits = 0;
-            let totalCostVal = 0;
             let totalSaleVal = 0;
 
             const products = window.menuItems || [];
             let displayRows = [];
 
             if (selectedBranch === 'all') {
-                // 1. Overall / Main Godown Stock
                 displayRows = products.map(p => {
-                    const st = Number(p.stock || 0);
-                    const sld = Number(p.sold || 0);
                     return {
-                        id: p.id,
-                        barcode: p.barcode || 'N/A',
-                        name: p.name,
-                        category: p.category || 'General',
-                        costPrice: Number(p.costPrice || 0),
-                        price: Number(p.price || 0),
-                        stock: st,
-                        sold: sld,
-                        areaTag: 'Main Warehouse'
+                        id: p.id, barcode: p.barcode || 'N/A', name: p.name,
+                        costPrice: Number(p.costPrice || 0), price: Number(p.price || 0),
+                        stock: Number(p.stock || 0), areaTag: 'Main Warehouse'
                     };
                 });
             } else {
-                // 2. Selected Area / Branch Wise Stock & Sales
                 const branchObj = (window.branchesList || []).find(b => b.id === selectedBranch);
                 const areaLabel = branchObj ? `${branchObj.name} (${branchObj.area})` : 'Selected Area';
 
-                // Us specific branch ki sales calculate karein
-                const branchSoldMap = {};
-                (window.salesHistory || []).forEach(s => {
-                    if (s.branchId === selectedBranch) {
-                        (s.items || []).forEach(it => {
-                            branchSoldMap[it.id] = (branchSoldMap[it.id] || 0) + Number(it.qty || 0);
-                        });
-                    }
-                });
-
                 displayRows = products.map(p => {
                     const bStockRecord = (window.branchStockList || []).find(bs => bs.branchId === selectedBranch && bs.productId === p.id);
-                    const bQty = bStockRecord ? Number(bStockRecord.qty || 0) : 0;
-                    const bSold = branchSoldMap[p.id] || 0;
-
                     return {
-                        id: p.id,
-                        barcode: p.barcode || 'N/A',
-                        name: p.name,
-                        category: p.category || 'General',
-                        costPrice: Number(p.costPrice || 0),
-                        price: Number(p.price || 0),
-                        stock: bQty,
-                        sold: bSold,
-                        areaTag: areaLabel
+                        id: p.id, barcode: p.barcode || 'N/A', name: p.name,
+                        costPrice: Number(p.costPrice || 0), price: Number(p.price || 0),
+                        stock: bStockRecord ? Number(bStockRecord.qty || 0) : 0, areaTag: areaLabel
                     };
                 });
             }
 
+            displayRows = displayRows.filter(item => Number(item.stock) > 0);
+
             if (displayRows.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="8" class="empty-placeholder">Chune hue area mein koi product record nahi mila.</td></tr>`;
+                const visibleColCount = Object.values(cols).filter(v => v).length;
+                tbody.innerHTML = `<tr><td colspan="${visibleColCount}" class="empty-placeholder">Chune hue area mein koi mojood (Available) stock nahi mila.</td></tr>`;
             } else {
                 displayRows.forEach(item => {
-                    const lineCostVal = item.stock * item.costPrice;
-                    const lineSaleVal = item.stock * item.price;
-
-                    totalSoldUnits += item.sold;
                     totalRemainingUnits += item.stock;
-                    totalCostVal += lineCostVal;
-                    totalSaleVal += lineSaleVal;
+                    totalSaleVal += (item.stock * item.price);
 
                     tbody.innerHTML += `
                         <tr>
-                            <td><code>${item.barcode}</code></td>
-                            <td>
-                                <strong>${item.name}</strong><br>
-                                <small style="color:#0284c7; font-weight:700;"><i class='bx bx-map-pin'></i> ${item.areaTag}</small>
-                            </td>
-                            <td><span class="status-badge" style="background:#f1f5f9; color:#475569;">${item.category}</span></td>
-                            <td style="text-align:right;">Rs. ${item.costPrice.toLocaleString()}</td>
-                            <td style="text-align:right; font-weight:700; color:var(--primary);">Rs. ${item.price.toLocaleString()}</td>
-                            <td style="text-align:center;">
-                                <strong style="font-size:1.05rem; color:${item.stock <= 3 ? '#ef4444' : '#10b981'};">
-                                    ${item.stock} pcs
-                                </strong>
-                            </td>
-                            <td style="text-align:right; font-weight:800; color:#0f172a;">Rs. ${lineCostVal.toLocaleString()}</td>
-                            <td style="text-align:center; font-weight:800; color:#0284c7;">${item.sold} pcs</td>
+                            ${cols.barcode ? `<td style="text-align:left;"><code>${item.barcode}</code></td>` : ''}
+                            ${cols.product ? `<td style="text-align:left;"><strong>${item.name}</strong><br><small style="color:#0284c7; font-weight:700;"><i class='bx bx-map-pin'></i> ${item.areaTag}</small></td>` : ''}
+                            ${cols.costPrice ? `<td style="text-align:right; font-weight:600; color:#0f172a;">Rs. ${item.costPrice.toLocaleString()}</td>` : ''}
+                            ${cols.sellingPrice ? `<td style="text-align:right; font-weight:700; color:var(--primary);">Rs. ${item.price.toLocaleString()}</td>` : ''}
+                            ${cols.totalStock ? `<td style="text-align:center;"><strong style="font-size:1.02rem; color:#10b981;">${item.stock} pcs</strong></td>` : ''}
                         </tr>
                     `;
                 });
             }
 
-            // Top Dashboard Cards Update
-            if (soldEl) soldEl.textContent = `${totalSoldUnits} units`;
             if (remainEl) remainEl.textContent = `${totalRemainingUnits} units`;
-            if (costValEl) costValEl.textContent = `Rs. ${totalCostVal.toLocaleString()}`;
             if (saleValEl) saleValEl.textContent = `Rs. ${totalSaleVal.toLocaleString()}`;
         };
 
@@ -7945,29 +8827,41 @@ updateSalesChart();
                 if (b) branchTitle = `${b.name} (${b.area})`;
             }
 
+            // --- PERMISSION CHECK FOR PDF ---
+            const currentUserStr = sessionStorage.getItem('pos_current_user');
+            let cols = { barcode: true, product: true, costPrice: true, sellingPrice: true, totalStock: true };
+            if (currentUserStr) {
+                const user = JSON.parse(currentUserStr);
+                if (user.role !== 'superadmin' && user.permissions && user.permissions.stockCols) {
+                    cols = user.permissions.stockCols;
+                }
+            }
+
             const trs = document.querySelectorAll('#report-tbody tr');
             const rows = [];
+            const visibleColCount = Object.values(cols).filter(v => v).length;
 
             trs.forEach((tr, idx) => {
                 const tds = tr.querySelectorAll('td');
-                if (tds.length === 8) {
-                    rows.push([
-                        String(idx + 1),
-                        tds[0].innerText.trim(),
-                        tds[1].innerText.trim(),
-                        tds[2].innerText.trim(),
-                        tds[3].innerText.trim(),
-                        tds[4].innerText.trim(),
-                        tds[5].innerText.trim(),
-                        tds[6].innerText.trim(),
-                        tds[7].innerText.trim()
-                    ]);
+                if (tds.length === visibleColCount && !tds[0].classList.contains('empty-placeholder')) {
+                    let cellData = [String(idx + 1)]; // Sr #
+                    tds.forEach(td => cellData.push(td.innerText.trim()));
+                    rows.push(cellData);
                 }
             });
 
-            const remainText = document.getElementById('report-remaining')?.textContent || '0';
-            const costText = document.getElementById('report-cost-val')?.textContent || 'Rs. 0';
-            const soldText = document.getElementById('report-sold')?.textContent || '0';
+            const remainText = document.getElementById('report-remaining')?.textContent || '0 units';
+            const saleText = document.getElementById('report-sale-val')?.textContent || 'Rs. 0';
+
+            // DYNAMIC PDF HEADERS & TOTALS
+            let pdfHeaders = [{ title: 'Sr #', align: 'center' }];
+            let pdfTotals = ['AREA TOTAL'];
+
+            if (cols.barcode) { pdfHeaders.push({ title: 'Barcode', align: 'left' }); pdfTotals.push('-'); }
+            if (cols.product) { pdfHeaders.push({ title: 'Product & Area', align: 'left' }); pdfTotals.push('-'); }
+            if (cols.costPrice) { pdfHeaders.push({ title: 'Cost Price', align: 'right' }); pdfTotals.push('-'); }
+            if (cols.sellingPrice) { pdfHeaders.push({ title: 'Selling Price', align: 'right' }); pdfTotals.push(saleText); }
+            if (cols.totalStock) { pdfHeaders.push({ title: 'Total Stock', align: 'center' }); pdfTotals.push(remainText); }
 
             window.generateProfessionalPDF({
                 reportTitle: `STOCK & INVENTORY VALUATION REPORT`,
@@ -7977,32 +8871,11 @@ updateSalesChart();
                 kpis: [
                     { label: 'Selected Area', value: branchTitle, color: '#0066ff' },
                     { label: 'Stock Left', value: remainText, color: '#10b981' },
-                    { label: 'Units Sold', value: soldText, color: '#0284c7' },
-                    { label: 'Inventory Cost Val', value: costText, color: '#ea580c' }
+                    { label: 'Expected Sale Val', value: saleText, color: '#0284c7' }
                 ],
-                headers: [
-                    { title: 'Sr #', align: 'center' },
-                    { title: 'Barcode', align: 'left' },
-                    { title: 'Product & Area', align: 'left' },
-                    { title: 'Category', align: 'left' },
-                    { title: 'Cost Price', align: 'right' },
-                    { title: 'Sale Price', align: 'right' },
-                    { title: 'In Stock', align: 'center' },
-                    { title: 'Total Cost Val', align: 'right' },
-                    { title: 'Units Sold', align: 'center' }
-                ],
+                headers: pdfHeaders,
                 rows: rows,
-                totals: [
-                    'AREA TOTAL',
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    '-',
-                    remainText,
-                    costText,
-                    soldText
-                ]
+                totals: pdfTotals
             });
         };
 
@@ -8605,23 +9478,7 @@ updateSalesChart();
                 }
             });
 
-            // 3. CASH OUT: Store Expenses (Sirf Expenses aayenge, Return bilkul nahi aayega)
-            (window.expensesList || []).forEach(e => {
-                if (isWithinPeriod(e.date)) {
-                    const title = e.title ? e.title.trim() : 'Expense';
-                    const category = e.category ? e.category.trim() : '';
-                    const descText = category ? `${title} (Paid To: ${category})` : title;
-
-                    allTransactions.push({
-                        date: (e.date || '').substring(0, 10),
-                        desc: descText,
-                        isRemainingBalance: false,
-                        cashIn: 0,
-                        cashOut: Number(e.amount || 0),
-                        rawDate: new Date(e.date || now).getTime()
-                    });
-                }
-            });
+            // EXPENSES KO TRANSACTION HISTORY (LEDGER) SE NIKAL DIYA GAYA HAI.
 
             // Chronological sort to accurately calculate Running Ledger Balance
             allTransactions.sort((a, b) => a.rawDate - b.rawDate);
@@ -8635,25 +9492,19 @@ updateSalesChart();
             // Reverse to display newest transactions on top
             allTransactions.reverse();
 
-            // Calculate KPI Totals (Without Returns)
+            // Calculate KPI Totals
             const totalCashIn = allTransactions.reduce((sum, t) => sum + t.cashIn, 0);
             const totalPurchaserPaid = (window.purchasesList || [])
                 .filter(p => isWithinPeriod(p.date))
                 .reduce((sum, p) => sum + Number(p.paidAmount || 0), 0);
 
-            const totalExpenses = (window.expensesList || [])
-                .filter(e => isWithinPeriod(e.date))
-                .reduce((sum, e) => sum + Number(e.amount || 0), 0);
-
             // Update KPI Cards
             const inEl = document.getElementById('kpi-cb-in');
             const purEl = document.getElementById('kpi-cb-purchaser');
-            const outEl = document.getElementById('kpi-cb-out');
             const netEl = document.getElementById('kpi-cb-net');
 
             if (inEl) inEl.textContent = `Rs. ${totalCashIn.toLocaleString()}`;
             if (purEl) purEl.textContent = `Rs. ${totalPurchaserPaid.toLocaleString()}`;
-            if (outEl) outEl.textContent = `Rs. ${totalExpenses.toLocaleString()}`;
 
             if (netEl) {
                 netEl.textContent = `Rs. ${runningBalance.toLocaleString()}`;
@@ -8664,7 +9515,7 @@ updateSalesChart();
                 periodText.textContent = `Duration: ${window.currentCBRepPreset.toUpperCase()} | Net Balance: Rs. ${runningBalance.toLocaleString()}`;
             }
 
-           // Render Cash In & Handover Entries Table (With Edit & Delete Action Buttons)
+           // Render Cash In & Handover Entries Table
             const handoverTbody = document.getElementById('cash-handover-records-tbody');
             if (handoverTbody) {
                 handoverTbody.innerHTML = '';
@@ -8754,7 +9605,6 @@ updateSalesChart();
             // KPI Values
             const inVal = document.getElementById('kpi-cb-in')?.textContent || 'Rs. 0';
             const purVal = document.getElementById('kpi-cb-purchaser')?.textContent || 'Rs. 0';
-            const outVal = document.getElementById('kpi-cb-out')?.textContent || 'Rs. 0';
             const netVal = document.getElementById('kpi-cb-net')?.textContent || 'Rs. 0';
 
             // Gather rows from active on-screen ledger
@@ -8818,8 +9668,8 @@ updateSalesChart();
                         </div>
                     </div>
 
-                    <!-- 4 Summary KPI Boxes (Fitted in A4 Width) -->
-                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px;">
+                    <!-- 3 Summary KPI Boxes (Expenses Removed, Fitted in A4 Width) -->
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px;">
                         <div style="background: #ffffff; border: 1px solid #cbd5e1; border-top: 3px solid #10b981; border-radius: 5px; padding: 6px 10px;">
                             <div style="font-size: 8px; font-weight: 800; color: #64748b; text-transform: uppercase;">Total Cash In</div>
                             <div style="font-size: 12.5px; font-weight: 900; color: #10b981; margin-top: 2px;">${inVal}</div>
@@ -8828,17 +9678,13 @@ updateSalesChart();
                             <div style="font-size: 8px; font-weight: 800; color: #64748b; text-transform: uppercase;">Purchaser Payments</div>
                             <div style="font-size: 12.5px; font-weight: 900; color: #8b5cf6; margin-top: 2px;">${purVal}</div>
                         </div>
-                      <div style="background: #ffffff; border: 1px solid #cbd5e1; border-top: 3px solid #ef4444; border-radius: 5px; padding: 6px 10px;">
-                            <div style="font-size: 8px; font-weight: 800; color: #64748b; text-transform: uppercase;">Total Expenses</div>
-                            <div style="font-size: 12.5px; font-weight: 900; color: #ef4444; margin-top: 2px;">${outVal}</div>
-                        </div>
                         <div style="background: #ffffff; border: 1px solid #cbd5e1; border-top: 3px solid #059669; border-radius: 5px; padding: 6px 10px;">
                             <div style="font-size: 8px; font-weight: 800; color: #64748b; text-transform: uppercase;">Net Running Balance</div>
                             <div style="font-size: 12.5px; font-weight: 900; color: #059669; margin-top: 2px;">${netVal}</div>
                         </div>
                     </div>
 
-                    <!-- Main A4 Ledger Table (Exact Match to Reference Image) -->
+                    <!-- Main A4 Ledger Table -->
                     <table style="width: 100%; border: 1.5px solid #0f172a; margin-bottom: 20px;">
                         <thead>
                             <tr style="background: #0f172a; color: #ffffff;">
@@ -9809,35 +10655,65 @@ updateNetworkStatus();
         // SALES ROW ACTIONS: EDIT, RETURN, EXCHANGE, DELETE
         // =========================================================
 
-      // 1. Direct Return From Sales Ledger (Ab is mein sirf Bill wala saaman aayega)
-        window.openSaleReturn = function(saleId) {
-            const sale = window.salesHistory.find(s => s.id === saleId);
-            if (!sale) return;
-            
-            // Return modal kholain aur is sale ke items usko bhej dein
-            window.openUniversalReturnModal(sale.items);
-            document.getElementById('return-inv-ref').value = sale.invoiceId;
-            
-            Toast.fire({ icon: 'info', title: `Invoice #${sale.invoiceId} ka Return khul gaya hai.` });
+      // =========================================================
+        // UNIVERSAL RETURN & EXCHANGE MODALS LOGIC
+        // =========================================================
+        window.openUniversalReturnModal = function(saleItems = null) {
+            const invRefInput = document.getElementById('return-inv-ref');
+            const prodSelect = document.getElementById('return-product-select');
+            const qtyInput = document.getElementById('return-qty');
+            const reasonInput = document.getElementById('return-reason');
+
+            if (invRefInput && !saleItems) invRefInput.value = 'DIR-' + Math.floor(1000 + Math.random() * 9000);
+            if (qtyInput) qtyInput.value = '1';
+            if (reasonInput) reasonInput.value = '';
+
+            if (prodSelect) {
+                prodSelect.innerHTML = '<option value="">-- Wapas Aane Wala Product Chuniye --</option>';
+                // Agar saleItems aaye hain (yani bill se khola hai) to wohi dikhao, warna poori inventory
+                const itemsToLoad = saleItems ? saleItems : (window.menuItems || []);
+                
+                itemsToLoad.forEach(prod => {
+                    const price = prod.price || prod.originalPrice || 0; 
+                    const maxQtyTag = prod.qty ? ` (Bikay: ${prod.qty})` : ''; 
+                    
+                    prodSelect.innerHTML += `
+                        <option value="${prod.id}" data-name="${prod.name}" data-price="${price}" data-maxqty="${prod.qty || ''}">
+                            ${prod.name} (Rs. ${Number(price).toLocaleString()})${maxQtyTag}
+                        </option>
+                    `;
+                });
+            }
+
+            window.autoFillReturnPrice();
+            document.getElementById('return-modal')?.classList.add('visible');
         };
 
-        // 2. Direct Exchange From Sales Ledger (Ab is mein Purani cheez bill wali, aur Nayi cheez poori shop ki hogi)
-        window.openSaleExchange = function(saleId) {
-            const sale = window.salesHistory.find(s => s.id === saleId);
-            if (!sale) return;
+        window.closeReturnModal = function() {
+            document.getElementById('return-modal')?.classList.remove('visible');
+        };
+
+        window.autoFillReturnPrice = function() {
+            const prodSelect = document.getElementById('return-product-select');
+            const qtyInput = document.getElementById('return-qty');
+            const refundInput = document.getElementById('return-refund-val');
+
+            if (!prodSelect || !qtyInput || !refundInput) return;
+
+            const selectedOption = prodSelect.options[prodSelect.selectedIndex];
+            const unitPrice = parseFloat(selectedOption?.dataset?.price) || 0;
+            const maxQty = parseInt(selectedOption?.dataset?.maxqty) || 0; // Bill wali quantity
             
-            // Exchange modal kholain aur is sale ke items usko bhej dein
-            window.openUniversalExchangeModal(sale.items);
-            document.getElementById('exc-inv-ref').value = sale.invoiceId;
+            let qty = parseInt(qtyInput.value) || 1;
             
-            if (sale.customerName && sale.customerName !== 'Walk-in' && sale.customerName !== 'Cash Customer') {
-                document.getElementById('exc-cust-name').value = sale.customerName;
-            }
-            if (sale.customerPhone) {
-                document.getElementById('exc-cust-phone').value = sale.customerPhone;
+            // Limit check: Jitni cheezein li theen, us se zyada wapas na ho
+            if (maxQty > 0 && qty > maxQty) {
+                qty = maxQty;
+                qtyInput.value = maxQty;
+                Toast.fire({icon: 'warning', title: `Is bill mein sirf ${maxQty} units thay!`});
             }
 
-            Toast.fire({ icon: 'info', title: `Invoice #${sale.invoiceId} ka Exchange khul gaya hai.` });
+            refundInput.value = unitPrice * qty;
         };
 
         // 3. Delete Sale Record (Stock Wapas Aayega)
