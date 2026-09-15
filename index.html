@@ -751,7 +751,86 @@
                 margin: 0 !important;
                 padding-top: 0.2mm !important;
                 color: #000000 !important;
-            }
+            }/* 5. XP-80 Single Continuous Roll Print Support (Clean Spacing & Large Bold Text) */
+        #barcode-print-area:not(:empty) {
+            position: relative !important;
+            width: 100% !important;
+            max-width: 78mm !important;
+            margin: 0 auto !important;
+            padding: var(--bc-top-offset, 0mm) 0 0 var(--bc-left-offset, 0mm) !important;
+            background: #ffffff !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            page-break-inside: auto !important;
+            break-inside: auto !important;
+        }
+
+        .barcode-sticker-print-box {
+            width: var(--bc-width, 50mm) !important;
+            min-height: var(--bc-height, 25mm) !important;
+            height: auto !important;
+            margin: 0 auto 3mm auto !important;
+            padding: 1.5mm 1mm !important;
+            text-align: center;
+            border: 1px dashed #000000 !important;
+            border-radius: 4px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            box-sizing: border-box !important;
+            background: #ffffff !important;
+            overflow: visible !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+
+        .bcp-company {
+            font-size: 9px !important;
+            font-weight: 800 !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            line-height: 1.2 !important;
+            margin: 0 0 1px 0 !important;
+            padding: 0 !important;
+            color: #000000 !important;
+        }
+
+        .bcp-title {
+            font-size: 11px !important;
+            font-weight: 900 !important;
+            line-height: 1.2 !important;
+            max-width: 95% !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            margin: 1px 0 2px 0 !important;
+            padding: 0 !important;
+            color: #000000 !important;
+            text-transform: uppercase;
+        }
+
+        .bcp-svg {
+            width: 92% !important;
+            height: auto !important;
+            max-height: 12mm !important;
+            margin: 1px auto !important;
+            padding: 0 !important;
+            display: block !important;
+        }
+
+        .bcp-price {
+            font-size: 12px !important;
+            font-weight: 900 !important;
+            letter-spacing: 0.3px;
+            line-height: 1.2 !important;
+            margin-top: 3px !important;
+            padding: 2px 0 0 0 !important;
+            color: #000000 !important;
+            border-top: 1px dashed #000000 !important;
+            width: 92% !important;
+        }
         }
         /* =========================================================================
            COMPLETE AUTO-ADJUSTING MOBILE RESPONSIVE SYSTEM (ZERO HORIZONTAL SCROLL)
@@ -1687,11 +1766,16 @@
                     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
                         <div>
                             <h2>Product Barcodes</h2>
-                            <p style="color:#64748b; font-size:0.88rem;">View and download high-resolution PNG barcode labels for every product in inventory.</p>
+                            <p style="color:#64748b; font-size:0.88rem;">Inventory ke har product ka barcode label thermal print karein ya PNG download karein.</p>
                         </div>
-                        <div class="search-box" style="max-width:360px;">
-                            <i class='bx bx-search'></i>
-                            <input type="text" id="barcode-search-input" placeholder="Search barcode or product name..." oninput="renderAllProductBarcodesView()">
+                        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                            <div class="search-box" style="max-width:300px;">
+                                <i class='bx bx-search'></i>
+                                <input type="text" id="barcode-search-input" placeholder="Search barcode or product name..." oninput="renderAllProductBarcodesView()">
+                            </div>
+                            <button type="button" class="save-btn" style="padding:9px 16px; font-size:0.85rem; background:#0f172a; background-image:none;" onclick="printAllInventoryBarcodes()" title="Tamam dastyab products ke barcodes ek sath print karein">
+                                <i class='bx bx-printer'></i> Print All Barcodes
+                            </button>
                         </div>
                     </div>
 
@@ -3584,7 +3668,7 @@ window.alert = function(message) {
             })));
         };
 
-       // 3. XP-80 Continuous Thermal Roll Printer Generator
+       // 3. XP-80 Continuous Thermal Roll Printer Generator (Spaced & High Clarity)
         window.triggerBarcodeDirectPrint = function(itemsList) {
             const printArea = document.getElementById('barcode-print-area');
             if (!printArea) return;
@@ -3594,7 +3678,7 @@ window.alert = function(message) {
 
             const generatedStickers = [];
 
-            // Tamam items aur unki quantity ke mutabiq stickers aik hi list mein add karein
+            // Tamam items aur unki quantity ke mutabiq stickers render karein
             itemsList.forEach((item, itemIdx) => {
                 const count = Math.max(1, parseInt(item.qty) || 1);
 
@@ -3617,18 +3701,18 @@ window.alert = function(message) {
                 }
             });
 
-            // Compact Barcode Line Rendering (Wohi size jo preview mein top par hai)
+            // Clean, Spaced Barcode Rendering (Digits aur Price alag alag rahengi)
             setTimeout(() => {
                 generatedStickers.forEach(stk => {
                     try {
                         JsBarcode(stk.svgSelector, stk.barcodeValue, {
                             format: "CODE128",
-                            width: 1.25,
-                            height: 20,
-                            displayValue: true,
-                            fontSize: 8.5,
+                            width: 1.35,
+                            height: 22,         // Barcode lines ki height
+                            displayValue: true, // Numbers barcode ke neeche aayenge
+                            fontSize: 9.5,      // Barcode number saaf aur bold
                             font: "Arial",
-                            textMargin: 1,
+                            textMargin: 2,      // Lines aur number ke darmiyan space
                             margin: 0
                         });
                     } catch (e) {
@@ -5502,8 +5586,110 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
         });
 
        // =========================================================
-        // BARCODES VIEW (SIRF AVAILABLE/IN-STOCK PRODUCTS KE LIYE)
+        // BARCODES VIEW (DIRECT PRINT & DOWNLOAD BUTTONS ADDED)
         // =========================================================
+
+        // 1. Ek Single Product ka Barcode Thermal Print Karna (Professional Modal)
+        window.printSingleProductBarcodeFromCard = async function(productName, price, barcodeVal, currentStock) {
+            if (!barcodeVal) {
+                Toast.fire({ icon: 'error', title: 'Barcode mojood nahi hai!' });
+                return;
+            }
+
+            // Professional Modern SweetAlert Modal
+            const { value: quantity, isConfirmed } = await Swal.fire({
+                title: `<div style="display:flex; align-items:center; justify-content:center; gap:8px; font-size:1.25rem; font-weight:800; color:#0f172a;">
+                    <i class='bx bx-printer' style="color:var(--primary); font-size:1.6rem;"></i> Print Barcode Sticker
+                </div>`,
+                html: `
+                    <div style="text-align:center; margin-top:6px; margin-bottom:12px;">
+                        <p style="font-size:1rem; color:#334155; margin-bottom:4px;">
+                            Product: <strong style="color:#0f172a;">"${productName}"</strong>
+                        </p>
+                        <p style="font-size:0.83rem; color:#64748b; margin-top:2px;">
+                            Kitne barcode stickers print karne hain?
+                        </p>
+                    </div>
+                `,
+                input: 'number',
+                inputValue: 1,
+                inputAttributes: {
+                    min: '1',
+                    step: '1',
+                    style: 'text-align: center; font-size: 1.25rem; font-weight: 800; color: var(--primary); border: 2px solid #cbd5e1; border-radius: 12px; padding: 10px; width: 140px; margin: 0 auto; outline: none;'
+                },
+                showCancelButton: true,
+                confirmButtonText: "<i class='bx bx-check'></i> Print Karein",
+                cancelButtonText: "Cancel",
+                confirmButtonColor: '#0066ff',
+                cancelButtonColor: '#94a3b8',
+                focusConfirm: true,
+                inputValidator: (value) => {
+                    if (!value || parseInt(value) <= 0) {
+                        return 'Baraye meherbani kam az kam 1 quantity darj karein!';
+                    }
+                }
+            });
+
+            // Agar user ne Confirm (Print) dabaya ho
+            if (isConfirmed && quantity) {
+                const qty = parseInt(quantity);
+                window.triggerBarcodeDirectPrint([{
+                    name: productName,
+                    price: Number(price || 0),
+                    barcode: String(barcodeVal),
+                    qty: qty
+                }]);
+            }
+        };
+
+       // 2. Tamam Dastyab Products ke Barcodes Ek Sath Print Karna (Professional Dialog)
+        window.printAllInventoryBarcodes = async function() {
+            const searchTerm = (document.getElementById('barcode-search-input')?.value || '').toLowerCase().trim();
+
+            const itemsToPrint = window.menuItems.filter(item => {
+                const inStock = Number(item.stock || 0) > 0;
+                const nameMatch = item.name && item.name.toLowerCase().includes(searchTerm);
+                const codeMatch = item.barcode && String(item.barcode).toLowerCase().includes(searchTerm);
+                return inStock && (nameMatch || codeMatch);
+            });
+
+            if (itemsToPrint.length === 0) {
+                Toast.fire({ icon: 'warning', title: 'Print karne ke liye koi product mojood nahi hai!' });
+                return;
+            }
+
+            const result = await Swal.fire({
+                title: `<div style="display:flex; align-items:center; justify-content:center; gap:8px; font-size:1.25rem; font-weight:800; color:#0f172a;">
+                    <i class='bx bx-printer' style="color:#0f172a;"></i> Print All Barcodes
+                </div>`,
+                html: `
+                    <p style="font-size:0.95rem; color:#475569; margin-top:8px;">
+                        Kya aap screen par mojood tamam <strong style="color:var(--primary); font-size:1.1rem;">${itemsToPrint.length}</strong> products ke stickers print karna chahte hain?
+                    </p>
+                    <small style="color:#64748b;">(Har product ka 1 sticker thermal roll par print hoga)</small>
+                `,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#0f172a',
+                cancelButtonColor: '#94a3b8',
+                confirmButtonText: "<i class='bx bx-check-double'></i> Yes, Print All",
+                cancelButtonText: "Cancel"
+            });
+
+            if (!result.isConfirmed) return;
+
+            const printList = itemsToPrint.map(item => ({
+                name: item.name,
+                price: Number(item.price || 0),
+                barcode: String(item.barcode || ('890' + Math.floor(10000000 + Math.random() * 90000000))),
+                qty: 1
+            }));
+
+            window.triggerBarcodeDirectPrint(printList);
+        };
+
+        // 3. Main Grid Render Function with Print Button
         window.renderAllProductBarcodesView = function() {
             const container = document.getElementById('all-barcode-cards-container');
             if (!container) return;
@@ -5511,9 +5697,9 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
 
             const searchTerm = (document.getElementById('barcode-search-input')?.value || '').toLowerCase().trim();
 
-            // 1. Filter: Sirf wahi products ayengi jinka Stock > 0 hoga (Khatam hone par barcode khud ba khud gayab ho jayega)
+            // Filter: Sirf in-stock items
             const filtered = window.menuItems.filter(item => {
-                const inStock = Number(item.stock || 0) > 0; // Stock check condition
+                const inStock = Number(item.stock || 0) > 0;
                 const nameMatch = item.name && item.name.toLowerCase().includes(searchTerm);
                 const codeMatch = item.barcode && String(item.barcode).toLowerCase().includes(searchTerm);
                 return inStock && (nameMatch || codeMatch);
@@ -5531,6 +5717,7 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
                 const safeBarcode = item.barcode || ('890' + Math.floor(10000000 + Math.random() * 90000000));
                 const itemPrice = Number(item.price || 0);
                 const itemStock = Number(item.stock || 0);
+                const escapedName = item.name.replace(/'/g, "\\'");
 
                 card.innerHTML = `
                     <div style="width:100%;">
@@ -5548,9 +5735,15 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
                         <canvas id="${canvasId}"></canvas>
                     </div>
 
-                    <button class="save-btn" style="width:100%; justify-content:center; padding:10px 14px; font-size:0.88rem; gap:6px;" onclick="downloadBarcodeStickerPNG('${item.name.replace(/'/g, "\\'")}', ${itemPrice}, '${safeBarcode}')" title="Download Full Sticker (Name, Barcode, Price)">
-                        <i class='bx bx-purchase-tag'></i> Download Sticker PNG
-                    </button>
+                    <!-- Do Buttons: 1. Direct Print  2. Download PNG -->
+                    <div style="display:flex; gap:8px; width:100%; margin-top:4px;">
+                        <button type="button" class="save-btn" style="flex:1; justify-content:center; padding:9px 10px; font-size:0.85rem; gap:5px; background:#0f172a; background-image:none;" onclick="printSingleProductBarcodeFromCard('${escapedName}', ${itemPrice}, '${safeBarcode}', ${itemStock})" title="Thermal Printer par sticker print karein">
+                            <i class='bx bx-printer'></i> Print
+                        </button>
+                        <button type="button" class="outline-btn" style="flex:1; justify-content:center; padding:9px 10px; font-size:0.85rem; gap:5px;" onclick="downloadBarcodeStickerPNG('${escapedName}', ${itemPrice}, '${safeBarcode}')" title="PNG Sticker Download karein">
+                            <i class='bx bx-download'></i> PNG
+                        </button>
+                    </div>
                 `;
 
                 container.appendChild(card);
