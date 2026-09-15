@@ -632,40 +632,84 @@
                 display: none !important;
             }
 
-         /* 5. Barcode Label Print Support (Shifted Upwards & Tightened for 100mm Thermal Labels) */
-            #barcode-print-area:not(:empty) {
-                position: absolute;
-                left: 0;
-                top: -1mm !important; /* Alignment ko halka sa ooper utha diya */
-                width: 104mm !important;
-                margin: 0 auto !important;
-                padding: 0 !important;
-                background: #ffffff !important;
-                display: grid !important;
-                grid-template-columns: 50mm 50mm !important;
-                column-gap: 3mm !important;
-                row-gap: 1.5mm !important;
-                justify-content: center !important;
-            }
+       /* 5. XP-80 Single Continuous Roll Print Support (Connected Directly with Settings) */
+        #barcode-print-area:not(:empty) {
+            position: relative !important;
+            width: 100% !important;
+            max-width: 78mm !important;
+            margin: 0 auto !important;
+            padding: var(--bc-top-offset, 0mm) 0 0 var(--bc-left-offset, 0mm) !important;
+            background: #ffffff !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            page-break-inside: auto !important;
+            break-inside: auto !important;
+        }
 
-            .barcode-sticker-print-box {
-                width: 50mm !important;
-                height: 24mm !important;     /* 24mm taake neeche agle sticker par bilkul na jaye */
-                max-height: 24mm !important;
-                margin: 0 !important;
-                padding: 0.2mm 1.5mm 0.5mm 1.5mm !important; /* Top padding bilkul kam kar di */
-                text-align: center;
-                border: none !important;
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: flex-start !important; /* Content neeche girne ke bajaye ooper set rahega */
-                gap: 0.4mm !important;                 /* Darmiyan ka fasla tight kiya */
-                align-items: center !important;
-                box-sizing: border-box !important;
-                overflow: hidden !important;
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-            }
+        .barcode-sticker-print-box {
+            width: var(--bc-width, 50mm) !important;
+            height: var(--bc-height, 24mm) !important;
+            min-height: var(--bc-height, 24mm) !important;
+            margin: 0 auto 2.5mm auto !important;
+            padding: 1mm !important;
+            text-align: center;
+            border: 1px dashed #000000 !important;
+            border-radius: 4px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            justify-content: center !important;
+            align-items: center !important;
+            box-sizing: border-box !important;
+            background: #ffffff !important;
+            overflow: hidden !important;
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+            page-break-after: auto !important;
+            break-after: auto !important;
+        }
+
+        .bcp-company {
+            font-size: var(--bc-font-title, 7px) !important;
+            font-weight: 800 !important;
+            text-transform: uppercase;
+            letter-spacing: 0.2px;
+            line-height: 1.1 !important;
+            margin: 0 0 1px 0 !important;
+            padding: 0 !important;
+            color: #000000 !important;
+        }
+
+        .bcp-title {
+            font-size: var(--bc-font-name, 8px) !important;
+            font-weight: 800 !important;
+            line-height: 1.1 !important;
+            max-width: 95% !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            margin: 0 0 1px 0 !important;
+            padding: 0 !important;
+            color: #000000 !important;
+        }
+
+        .bcp-svg {
+            width: 90% !important;
+            height: var(--bc-barcode-h, 11mm) !important;
+            margin: 0 auto !important;
+            padding: 0 !important;
+            display: block !important;
+        }
+
+        .bcp-price {
+            font-size: var(--bc-font-price, 9px) !important;
+            font-weight: 900 !important;
+            letter-spacing: 0.2px;
+            line-height: 1.1 !important;
+            margin: 1px 0 0 0 !important;
+            padding: 0 !important;
+            color: #000000 !important;
+        }
 
             .bcp-company {
                 font-size: 7px !important;
@@ -1381,14 +1425,18 @@
                             <h3 style="font-size:1.15rem; font-weight:800; color:#0f172a;">
                                 <i class='bx bx-grid-horizontal' style="color:var(--primary);"></i> Added Products Table
                             </h3>
-                            <div style="display:flex; gap:8px;">
-                                <button type="button" class="save-btn" style="padding:6px 14px; font-size:0.85rem; background:#0f172a; background-image:none;" onclick="printAllDiagramBarcodes()" title="Table ke sab products ke barcodes ek sath print karein">
-                                    <i class='bx bx-printer'></i> Print All Barcodes
-                                </button>
-                                <button type="button" class="outline-btn" style="padding:6px 14px; font-size:0.85rem;" onclick="clearDiagramTable()">
-                                    <i class='bx bx-trash'></i> Clear Table
-                                </button>
-                            </div>
+                           <div style="display:flex; gap:8px; flex-wrap:wrap;">
+    <button type="button" class="save-btn" style="padding:6px 14px; font-size:0.85rem; background:#0f172a; background-image:none;" onclick="printAllDiagramBarcodes()" title="Table ke sab products ke barcodes ek sath print karein">
+        <i class='bx bx-printer'></i> Print All Barcodes
+    </button>
+    <!-- NAYA BUTTON: Print View Setting -->
+    <button type="button" class="save-btn" style="padding:6px 12px; font-size:0.85rem; background:#0284c7; background-image:none;" onclick="openBarcodeSettingsModal()" title="Barcode ka size aur position adjust karein">
+        <i class='bx bx-slider-alt'></i> Print View Setting
+    </button>
+    <button type="button" class="outline-btn" style="padding:6px 14px; font-size:0.85rem;" onclick="clearDiagramTable()">
+        <i class='bx bx-trash'></i> Clear Table
+    </button>
+</div>
                         </div>
 
                         <div style="overflow-x:auto;">
@@ -3536,7 +3584,7 @@ window.alert = function(message) {
             })));
         };
 
-       // 3. Main Thermal Printer Generator (Black Copper 50mm x 25mm 2-UP Exact Fit)
+       // 3. XP-80 Continuous Thermal Roll Printer Generator
         window.triggerBarcodeDirectPrint = function(itemsList) {
             const printArea = document.getElementById('barcode-print-area');
             if (!printArea) return;
@@ -3546,7 +3594,7 @@ window.alert = function(message) {
 
             const generatedStickers = [];
 
-            // Har item ki khareedi hui Quantity (Qty) ke barabar stickers create karein
+            // Tamam items aur unki quantity ke mutabiq stickers aik hi list mein add karein
             itemsList.forEach((item, itemIdx) => {
                 const count = Math.max(1, parseInt(item.qty) || 1);
 
@@ -3562,7 +3610,6 @@ window.alert = function(message) {
                     `;
                     printArea.appendChild(stickerBox);
 
-                    // Barcode rendering queue mein add karein
                     generatedStickers.push({
                         svgSelector: `#${svgId}`,
                         barcodeValue: String(item.barcode)
@@ -3570,18 +3617,18 @@ window.alert = function(message) {
                 }
             });
 
-           // 50mm x 24mm sticker ke mutabiq shifted-up barcode rendering
+            // Compact Barcode Line Rendering (Wohi size jo preview mein top par hai)
             setTimeout(() => {
                 generatedStickers.forEach(stk => {
                     try {
                         JsBarcode(stk.svgSelector, stk.barcodeValue, {
                             format: "CODE128",
                             width: 1.25,
-                            height: 17,         // 22 se kam karke 17 ki taake sticker ooper shift ho jaye
+                            height: 20,
                             displayValue: true,
-                            fontSize: 8,        // Font size halka sa compact kiya
+                            fontSize: 8.5,
                             font: "Arial",
-                            textMargin: 0,      // Barcode lines aur number ke darmian ka gap kam kiya
+                            textMargin: 1,
                             margin: 0
                         });
                     } catch (e) {
@@ -3589,7 +3636,7 @@ window.alert = function(message) {
                     }
                 });
 
-                // Printer Dialog Trigger
+                // Direct Print Dialog Trigger
                 setTimeout(() => {
                     window.print();
                 }, 120);
@@ -5454,8 +5501,8 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
             }
         });
 
-        // =========================================================
-        // BARCODES VIEW (FULL STICKER DOWNLOAD: NAME + BARCODE + PRICE)
+       // =========================================================
+        // BARCODES VIEW (SIRF AVAILABLE/IN-STOCK PRODUCTS KE LIYE)
         // =========================================================
         window.renderAllProductBarcodesView = function() {
             const container = document.getElementById('all-barcode-cards-container');
@@ -5464,14 +5511,16 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
 
             const searchTerm = (document.getElementById('barcode-search-input')?.value || '').toLowerCase().trim();
 
+            // 1. Filter: Sirf wahi products ayengi jinka Stock > 0 hoga (Khatam hone par barcode khud ba khud gayab ho jayega)
             const filtered = window.menuItems.filter(item => {
+                const inStock = Number(item.stock || 0) > 0; // Stock check condition
                 const nameMatch = item.name && item.name.toLowerCase().includes(searchTerm);
                 const codeMatch = item.barcode && String(item.barcode).toLowerCase().includes(searchTerm);
-                return nameMatch || codeMatch;
+                return inStock && (nameMatch || codeMatch);
             });
 
             if (filtered.length === 0) {
-                container.innerHTML = `<div class="empty-placeholder" style="grid-column: 1/-1;"><i class='bx bx-barcode' style="font-size:3rem; display:block; margin-bottom:8px;"></i>No products or barcodes found. Use "Purchase & Product" to generate barcodes.</div>`;
+                container.innerHTML = `<div class="empty-placeholder" style="grid-column: 1/-1;"><i class='bx bx-barcode' style="font-size:3rem; display:block; margin-bottom:8px;"></i>Koi In-Stock product mojood nahi hai. Stock khatam hone par barcodes automatic yahan se hat jate hain.</div>`;
                 return;
             }
 
@@ -5481,10 +5530,16 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
                 const canvasId = `all-bc-canvas-${index}`;
                 const safeBarcode = item.barcode || ('890' + Math.floor(10000000 + Math.random() * 90000000));
                 const itemPrice = Number(item.price || 0);
+                const itemStock = Number(item.stock || 0);
 
                 card.innerHTML = `
                     <div style="width:100%;">
-                        <img src="${item.img || DEFAULT_PROD_IMG}" style="width:50px; height:50px; border-radius:8px; object-fit:cover; margin-bottom:4px;">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
+                            <img src="${item.img || DEFAULT_PROD_IMG}" style="width:50px; height:50px; border-radius:8px; object-fit:cover;">
+                            <span style="background:#dcfce7; color:#15803d; font-size:0.75rem; font-weight:800; padding:3px 8px; border-radius:6px; border:1px solid #bbf7d0;">
+                                In Stock: ${itemStock} pcs
+                            </span>
+                        </div>
                         <h4 style="font-size:1.05rem; font-weight:800; margin:4px 0; color:#0f172a;">${item.name}</h4>
                         <div style="font-size:0.95rem; font-weight:800; color:var(--primary);">Rs. ${itemPrice.toLocaleString()}</div>
                     </div>
@@ -11116,7 +11171,246 @@ updateNetworkStatus();
             }
         };
 
+// =========================================================================
+        // BARCODE PRINT VIEW & ALIGNMENT SETTINGS CONTROLLER
+        // =========================================================================
+        const DEFAULT_BC_SETTINGS = {
+            width: 50,      // mm
+            height: 24,     // mm
+            leftOffset: 0,  // mm
+            topOffset: 0,   // mm
+            barcodeH: 11,   // mm
+            fontSize: 8     // px
+        };
+
+        // 1. Current Settings Load Karna
+        window.getStoredBarcodeSettings = function() {
+            try {
+                const data = localStorage.getItem('pos_barcode_custom_config');
+                return data ? { ...DEFAULT_BC_SETTINGS, ...JSON.parse(data) } : { ...DEFAULT_BC_SETTINGS };
+            } catch(e) {
+                return { ...DEFAULT_BC_SETTINGS };
+            }
+        };
+
+        // 2. CSS Variables Apply Karna (Taake Print aur Screen dono par chale)
+        window.applyBarcodePrintVariables = function(cfg) {
+            const root = document.documentElement;
+            root.style.setProperty('--bc-width', `${cfg.width}mm`);
+            root.style.setProperty('--bc-height', `${cfg.height}mm`);
+            root.style.setProperty('--bc-left-offset', `${cfg.leftOffset}mm`);
+            root.style.setProperty('--bc-top-offset', `${cfg.topOffset}mm`);
+            root.style.setProperty('--bc-barcode-h', `${cfg.barcodeH}mm`);
+            root.style.setProperty('--bc-font-name', `${cfg.fontSize}px`);
+            root.style.setProperty('--bc-font-title', `${Math.max(6, cfg.fontSize - 1)}px`);
+            root.style.setProperty('--bc-font-price', `${cfg.fontSize + 1}px`);
+        };
+
+        // 3. Modal Kholna aur Sliders mein saved values bharna
+        window.openBarcodeSettingsModal = function() {
+            const cfg = window.getStoredBarcodeSettings();
+
+            document.getElementById('cfg-bc-w').value = cfg.width;
+            document.getElementById('cfg-bc-h').value = cfg.height;
+            document.getElementById('cfg-bc-left').value = cfg.leftOffset;
+            document.getElementById('cfg-bc-top').value = cfg.topOffset;
+            document.getElementById('cfg-bc-bar-h').value = cfg.barcodeH;
+            document.getElementById('cfg-bc-font').value = cfg.fontSize;
+
+            document.getElementById('barcode-settings-modal')?.classList.add('visible');
+            window.updateLiveStickerPreview();
+        };
+
+        window.closeBarcodeSettingsModal = function() {
+            document.getElementById('barcode-settings-modal')?.classList.remove('visible');
+        };
+
+        // 4. Mouse Sliders Hilane par Live Sticker Update Karna
+        window.updateLiveStickerPreview = function() {
+            const w = parseFloat(document.getElementById('cfg-bc-w').value) || 50;
+            const h = parseFloat(document.getElementById('cfg-bc-h').value) || 24;
+            const left = parseFloat(document.getElementById('cfg-bc-left').value) || 0;
+            const top = parseFloat(document.getElementById('cfg-bc-top').value) || 0;
+            const barH = parseFloat(document.getElementById('cfg-bc-bar-h').value) || 11;
+            const fSize = parseFloat(document.getElementById('cfg-bc-font').value) || 8;
+
+            // Labels update
+            document.getElementById('lbl-bc-w').textContent = `${w} mm`;
+            document.getElementById('lbl-bc-h').textContent = `${h} mm`;
+            document.getElementById('lbl-bc-left').textContent = `${left} mm`;
+            document.getElementById('lbl-bc-top').textContent = `${top} mm`;
+            document.getElementById('lbl-bc-bar-h').textContent = `${barH} mm`;
+            document.getElementById('lbl-bc-font').textContent = `${fSize} px`;
+
+            // Live Sample Container Style
+            const sticker = document.getElementById('live-sticker-sample');
+            if (sticker) {
+                sticker.style.width = `${w * 3.78}px`;   // mm to screen px conversion
+                sticker.style.height = `${h * 3.78}px`;
+                sticker.style.transform = `translate(${left * 2}px, ${top * 2}px)`;
+
+                document.getElementById('sample-comp-name').style.fontSize = `${Math.max(7, fSize * 0.9)}px`;
+                document.getElementById('sample-prod-name').style.fontSize = `${fSize}px`;
+                document.getElementById('sample-price-tag').style.fontSize = `${fSize * 1.1}px`;
+
+                // Render Barcode in Sample
+                try {
+                    JsBarcode("#sample-barcode-svg", "890336968190", {
+                        format: "CODE128",
+                        width: 1.2,
+                        height: barH * 2.2,
+                        displayValue: true,
+                        fontSize: fSize * 0.95,
+                        margin: 0
+                    });
+                } catch(e) {}
+            }
+        };
+
+        // 5. Setting ko Save Karna (Aik Baar Hamesha ke Liye)
+        window.saveBarcodePrintSettings = function() {
+            const cfg = {
+                width: parseFloat(document.getElementById('cfg-bc-w').value) || 50,
+                height: parseFloat(document.getElementById('cfg-bc-h').value) || 24,
+                leftOffset: parseFloat(document.getElementById('cfg-bc-left').value) || 0,
+                topOffset: parseFloat(document.getElementById('cfg-bc-top').value) || 0,
+                barcodeH: parseFloat(document.getElementById('cfg-bc-bar-h').value) || 11,
+                fontSize: parseFloat(document.getElementById('cfg-bc-font').value) || 8
+            };
+
+            localStorage.setItem('pos_barcode_custom_config', JSON.stringify(cfg));
+            window.applyBarcodePrintVariables(cfg);
+            window.closeBarcodeSettingsModal();
+
+            Toast.fire({
+                icon: 'success',
+                title: 'Barcode Print Settings kamyabi say save ho gayin!'
+            });
+        };
+
+        // 6. Reset Defaults
+        window.resetBarcodeSettingsToDefault = function() {
+            if (confirm("Kya aap waqai settings ko original defaults (50mm x 24mm) par wapas lana chahte hain?")) {
+                localStorage.removeItem('pos_barcode_custom_config');
+                window.applyBarcodePrintVariables(DEFAULT_BC_SETTINGS);
+                window.openBarcodeSettingsModal();
+            }
+        };
+
+        // Page load hote hi saved settings foran activate ho jayein
+        document.addEventListener('DOMContentLoaded', () => {
+            const saved = window.getStoredBarcodeSettings();
+            window.applyBarcodePrintVariables(saved);
+        });
+
    </script>
+
+<!-- MODAL: BARCODE PRINT VIEW & ALIGNMENT SETTINGS -->
+    <div id="barcode-settings-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 680px;">
+            <span class="close-modal" onclick="closeBarcodeSettingsModal()">&times;</span>
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom: 4px;">
+                <i class='bx bx-slider-alt' style="font-size: 1.5rem; color: var(--primary);"></i>
+                <h2 style="font-size: 1.25rem;">Barcode Print View & Size Setting</h2>
+            </div>
+            <p style="color:#64748b; font-size:0.83rem; margin-bottom: 15px;">
+                Mouse se sliders hilakar size chota/bada karein aur left/right align karein. Live preview sath sath update hoga.
+            </p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start;">
+                <!-- Left: Mouse Controls / Sliders -->
+                <div style="background:#f8fafc; border:1px solid var(--border-color); border-radius:12px; padding:14px;">
+                    <!-- 1. Width -->
+                    <div style="margin-bottom: 12px;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700;">
+                            <span>Chorai (Width):</span>
+                            <span id="lbl-bc-w" style="color:var(--primary);">50 mm</span>
+                        </div>
+                        <input type="range" id="cfg-bc-w" min="30" max="100" step="1" value="50" style="width:100%; cursor:pointer;" oninput="updateLiveStickerPreview()">
+                    </div>
+
+                    <!-- 2. Height -->
+                    <div style="margin-bottom: 12px;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700;">
+                            <span>Lambai (Height):</span>
+                            <span id="lbl-bc-h" style="color:var(--primary);">24 mm</span>
+                        </div>
+                        <input type="range" id="cfg-bc-h" min="15" max="60" step="1" value="24" style="width:100%; cursor:pointer;" oninput="updateLiveStickerPreview()">
+                    </div>
+
+                    <!-- 3. Left / Right Alignment -->
+                    <div style="margin-bottom: 12px;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700;">
+                            <span>Left / Right Shift:</span>
+                            <span id="lbl-bc-left" style="color:var(--primary);">0 mm</span>
+                        </div>
+                        <input type="range" id="cfg-bc-left" min="-10" max="25" step="0.5" value="0" style="width:100%; cursor:pointer;" oninput="updateLiveStickerPreview()">
+                    </div>
+
+                    <!-- 4. Up / Down Alignment -->
+                    <div style="margin-bottom: 12px;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700;">
+                            <span>Up / Down Shift:</span>
+                            <span id="lbl-bc-top" style="color:var(--primary);">0 mm</span>
+                        </div>
+                        <input type="range" id="cfg-bc-top" min="-10" max="25" step="0.5" value="0" style="width:100%; cursor:pointer;" oninput="updateLiveStickerPreview()">
+                    </div>
+
+                    <!-- 5. Barcode Line Height -->
+                    <div style="margin-bottom: 12px;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700;">
+                            <span>Barcode Lines Size:</span>
+                            <span id="lbl-bc-bar-h" style="color:var(--primary);">11 mm</span>
+                        </div>
+                        <input type="range" id="cfg-bc-bar-h" min="6" max="25" step="0.5" value="11" style="width:100%; cursor:pointer;" oninput="updateLiveStickerPreview()">
+                    </div>
+
+                    <!-- 6. Font Zoom -->
+                    <div style="margin-bottom: 4px;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.82rem; font-weight:700;">
+                            <span>Text / Font Size:</span>
+                            <span id="lbl-bc-font" style="color:var(--primary);">8 px</span>
+                        </div>
+                        <input type="range" id="cfg-bc-font" min="6" max="14" step="0.5" value="8" style="width:100%; cursor:pointer;" oninput="updateLiveStickerPreview()">
+                    </div>
+                </div>
+
+                <!-- Right: Real-time Live Sticker Preview -->
+                <div style="display:flex; flex-direction:column; align-items:center; justify-content:center;">
+                    <span style="font-size:0.8rem; font-weight:800; color:#64748b; margin-bottom:8px; text-transform:uppercase;">
+                        Live Sticker Preview
+                    </span>
+                    
+                    <div id="preview-paper-stage" style="width: 100%; min-height: 220px; background: #e2e8f0; border-radius: 12px; display: flex; align-items: center; justify-content: center; padding: 15px; overflow: auto;">
+                        <div id="live-sticker-sample" style="background: white; border: 1.5px dashed #0284c7; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border-radius: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; box-sizing: border-box; transition: all 0.1s ease;">
+                            <div id="sample-comp-name" style="font-weight: 800; text-transform: uppercase;">KORVEXA SOFTWARE</div>
+                            <div id="sample-prod-name" style="font-weight: 800;">SAMPLE COTTON SHIRT</div>
+                            <svg id="sample-barcode-svg"></svg>
+                            <div id="sample-price-tag" style="font-weight: 900;">PRICE: Rs. 1,600</div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 10px; font-size: 0.76rem; color: #64748b; text-align: center;">
+                        <i class='bx bx-info-circle'></i> Settings save hone ke baad har print automatic isi format par aayega.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Action Buttons -->
+            <div style="display: flex; gap: 10px; justify-content: space-between; margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 14px;">
+                <button type="button" class="outline-btn" onclick="resetBarcodeSettingsToDefault()" style="color:#ef4444; border-color:#ef4444;">
+                    <i class='bx bx-reset'></i> Reset Defaults
+                </button>
+                <div style="display: flex; gap: 8px;">
+                    <button type="button" class="outline-btn" onclick="closeBarcodeSettingsModal()">Cancel</button>
+                    <button type="button" class="save-btn" onclick="saveBarcodePrintSettings()">
+                        <i class='bx bx-save'></i> Save Setting (Aik Bar)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Hidden Print Container for Barcode Labels -->
     <div id="barcode-print-area" style="display:none;"></div>
 </body>
