@@ -632,33 +632,34 @@
                 display: none !important;
             }
 
-          /* 5. Barcode Label Print Support (Black Copper 50mm x 25mm 2-UP Exact Fit) */
+         /* 5. Barcode Label Print Support (Shifted Upwards & Tightened for 100mm Thermal Labels) */
             #barcode-print-area:not(:empty) {
                 position: absolute;
                 left: 0;
-                top: 0;
-                width: 104mm !important; /* 50mm + 50mm + 3mm gap */
+                top: -1mm !important; /* Alignment ko halka sa ooper utha diya */
+                width: 104mm !important;
                 margin: 0 auto !important;
                 padding: 0 !important;
                 background: #ffffff !important;
                 display: grid !important;
-                grid-template-columns: 50mm 50mm !important; /* 2 Stickers barabar mein */
-                column-gap: 3mm !important; /* Dono sticker ke darmian ka fasla */
-                row-gap: 2mm !important;    /* Ooper neeche ka fasla */
+                grid-template-columns: 50mm 50mm !important;
+                column-gap: 3mm !important;
+                row-gap: 1.5mm !important;
                 justify-content: center !important;
             }
 
             .barcode-sticker-print-box {
                 width: 50mm !important;
-                height: 25mm !important;     /* Sticker ki exact height 25mm */
-                max-height: 25mm !important;
+                height: 24mm !important;     /* 24mm taake neeche agle sticker par bilkul na jaye */
+                max-height: 24mm !important;
                 margin: 0 !important;
-                padding: 1mm 1.5mm !important;
+                padding: 0.2mm 1.5mm 0.5mm 1.5mm !important; /* Top padding bilkul kam kar di */
                 text-align: center;
-                border: none !important;     /* Border khatam taake sticker par line na aaye */
+                border: none !important;
                 display: flex !important;
                 flex-direction: column !important;
-                justify-content: space-between !important;
+                justify-content: flex-start !important; /* Content neeche girne ke bajaye ooper set rahega */
+                gap: 0.4mm !important;                 /* Darmiyan ka fasla tight kiya */
                 align-items: center !important;
                 box-sizing: border-box !important;
                 overflow: hidden !important;
@@ -667,39 +668,44 @@
             }
 
             .bcp-company {
-                font-size: 7.5px !important;
+                font-size: 7px !important;
                 font-weight: 800 !important;
                 text-transform: uppercase;
-                letter-spacing: 0.3px;
+                letter-spacing: 0.2px;
                 line-height: 1 !important;
                 margin: 0 !important;
+                padding: 0 !important;
                 color: #000000 !important;
             }
 
             .bcp-title {
-                font-size: 8.5px !important;
+                font-size: 8px !important;
                 font-weight: 800 !important;
-                line-height: 1.1 !important;
+                line-height: 1 !important;
                 max-width: 48mm !important;
                 white-space: nowrap !important;
                 overflow: hidden !important;
                 text-overflow: ellipsis !important;
+                margin: 0 !important;
+                padding: 0 !important;
                 color: #000000 !important;
             }
 
             .bcp-svg {
                 width: 46mm !important;
-                height: 12mm !important;    /* 25mm height ke mutabiq balanced size */
-                margin: 0.5mm 0 !important;
+                height: 10.5mm !important;    /* Barcode line height thodi ooper uthayi */
+                margin: 0 !important;
+                padding: 0 !important;
                 display: block !important;
             }
 
             .bcp-price {
-                font-size: 9.5px !important;
+                font-size: 9px !important;
                 font-weight: 900 !important;
                 letter-spacing: 0.2px;
                 line-height: 1 !important;
                 margin: 0 !important;
+                padding-top: 0.2mm !important;
                 color: #000000 !important;
             }
         }
@@ -3564,18 +3570,18 @@ window.alert = function(message) {
                 }
             });
 
-            // 50mm x 25mm sticker ke mutabiq exact barcode line height aur width generate karein
+           // 50mm x 24mm sticker ke mutabiq shifted-up barcode rendering
             setTimeout(() => {
                 generatedStickers.forEach(stk => {
                     try {
                         JsBarcode(stk.svgSelector, stk.barcodeValue, {
                             format: "CODE128",
-                            width: 1.25,        // 50mm width ke andar fit rehne ke liye
-                            height: 22,         // 25mm total sticker height ke mutabiq
-                            displayValue: true, // Barcode ke neeche number show karega
-                            fontSize: 9,
+                            width: 1.25,
+                            height: 17,         // 22 se kam karke 17 ki taake sticker ooper shift ho jaye
+                            displayValue: true,
+                            fontSize: 8,        // Font size halka sa compact kiya
                             font: "Arial",
-                            textMargin: 1,
+                            textMargin: 0,      // Barcode lines aur number ke darmian ka gap kam kiya
                             margin: 0
                         });
                     } catch (e) {
@@ -5193,90 +5199,114 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
        // =========================================================
         // CAMERA SCANNER & SOUND (100% FIXED FOR 1D & 2D BARCODES)
         // =========================================================
+        // =========================================================
+        // CAMERA SCANNER & BARCODE GUN ENGINE (100% FIXED & SAFE)
+        // =========================================================
         let cameraScanner = null;
         let isScanThrottled = false;
         window.currentScannerTarget = 'pos';
 
-        // 1. Barcode Formats Config (Code-128, EAN-13, UPC, QR Code)
         // 1. Safe Barcode Formats Config
-function getScannerSupportedFormats() {
-    if (window.Html5QrcodeSupportedFormats) {
-        return [
-            Html5QrcodeSupportedFormats.CODE_128,
-            Html5QrcodeSupportedFormats.EAN_13,
-            Html5QrcodeSupportedFormats.EAN_8,
-            Html5QrcodeSupportedFormats.UPC_A,
-            Html5QrcodeSupportedFormats.UPC_E,
-            Html5QrcodeSupportedFormats.CODE_39,
-            Html5QrcodeSupportedFormats.QR_CODE
-        ];
-    }
-    return undefined;
-}
-
-// 2. 100% Working Camera Start Function (Fallback Support ke sath)
-window.startCameraScanner = async function() {
-    // Check karein agar browser camera support karta hai
-    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-        alert("Aapka browser camera access allow nahi kar raha. Website ko HTTPS (Secure) par chalayein ya Localhost use karein!");
-        return;
-    }
-
-    const modal = document.getElementById('camera-scanner-modal');
-    if (modal) modal.classList.add('visible');
-
-    // Pehle se chal rahe scanner ko safely close karein
-    if (cameraScanner) {
-        try {
-            if (cameraScanner.isScanning) {
-                await cameraScanner.stop();
+        function getScannerSupportedFormats() {
+            if (window.Html5QrcodeSupportedFormats) {
+                return [
+                    Html5QrcodeSupportedFormats.CODE_128,
+                    Html5QrcodeSupportedFormats.EAN_13,
+                    Html5QrcodeSupportedFormats.EAN_8,
+                    Html5QrcodeSupportedFormats.UPC_A,
+                    Html5QrcodeSupportedFormats.UPC_E,
+                    Html5QrcodeSupportedFormats.CODE_39,
+                    Html5QrcodeSupportedFormats.QR_CODE
+                ];
             }
-            cameraScanner.clear();
-        } catch(e) {
-            console.warn("Scanner cleanup:", e);
+            return undefined;
         }
-    }
 
-    try {
-        const formats = getScannerSupportedFormats();
-        cameraScanner = new Html5Qrcode("camera-preview-box", {
-            formatsToSupport: formats,
-            verbose: false
-        });
+        // 2. Camera Start Function (Webcam Check & NotFoundError Guard)
+        window.startCameraScanner = async function() {
+            if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                Toast.fire({
+                    icon: 'warning',
+                    title: "Aapke browser mein Camera permission allow nahi hai. Barcode Gun Machine direct use karein!"
+                });
+                return;
+            }
 
-        // 1D Barcodes ke liye box size
-        const config = {
-            fps: 15,
-            qrbox: { width: 260, height: 160 },
-            aspectRatio: 1.333333
+            // Check karein computer par physically camera attach hai ya nahi
+            try {
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                const hasCamera = devices.some(device => device.kind === 'videoinput');
+                if (!hasCamera) {
+                    Toast.fire({
+                        icon: 'info',
+                        title: "Computer ke sath koi Webcam attach nahi hai. Barcode Gun se direct scan karein!"
+                    });
+                    return;
+                }
+            } catch (enumErr) {
+                console.warn("Device enumeration check:", enumErr);
+            }
+
+            const modal = document.getElementById('camera-scanner-modal');
+            if (modal) modal.classList.add('visible');
+
+            if (cameraScanner) {
+                try {
+                    if (cameraScanner.isScanning) {
+                        await cameraScanner.stop();
+                    }
+                    cameraScanner.clear();
+                } catch(e) {
+                    console.warn("Scanner cleanup:", e);
+                }
+            }
+
+            try {
+                const formats = getScannerSupportedFormats();
+                cameraScanner = new Html5Qrcode("camera-preview-box", {
+                    formatsToSupport: formats,
+                    verbose: false
+                });
+
+                const config = {
+                    fps: 15,
+                    qrbox: { width: 260, height: 160 },
+                    aspectRatio: 1.333333
+                };
+
+                try {
+                    await cameraScanner.start(
+                        { facingMode: "environment" },
+                        config,
+                        onBarcodeDetected,
+                        (errorMessage) => {}
+                    );
+                } catch (firstErr) {
+                    await cameraScanner.start(
+                        { facingMode: "user" },
+                        config,
+                        onBarcodeDetected,
+                        (errorMessage) => {}
+                    );
+                }
+
+            } catch (err) {
+                console.warn("Camera init warning:", err);
+                window.stopCameraScanner();
+
+                if (String(err).includes("NotFoundError") || (err.name && err.name === "NotFoundError")) {
+                    Toast.fire({
+                        icon: 'info',
+                        title: "Webcam detect nahi hua. Barcode Gun Machine direct kaam karegi, Camera ki zaroorat nahi!"
+                    });
+                } else {
+                    Toast.fire({
+                        icon: 'warning',
+                        title: "Camera open nahi ho saka: " + (err.message || err)
+                    });
+                }
+            }
         };
-
-        // Flexible Camera Config (Taake OverconstrainedError na aaye)
-        // Pehle mobile ka back (environment) camera try karega
-        try {
-            await cameraScanner.start(
-                { facingMode: "environment" },
-                config,
-                onBarcodeDetected,
-                (errorMessage) => {}
-            );
-        } catch (firstErr) {
-            console.warn("Back camera fail, default camera try kar rahe hain...", firstErr);
-            // Agar facingMode fail ho (jaise Laptop/PC par), to default camera chalayein
-            await cameraScanner.start(
-                { facingMode: "user" },
-                config,
-                onBarcodeDetected,
-                (errorMessage) => {}
-            );
-        }
-
-    } catch (err) {
-        console.error("Camera start error:", err);
-        alert("Camera open nahi ho saka!\n\nWajah: " + (err.message || err) + "\n\nHal: Check karein ke browser ko Camera permission mili hai aur page HTTPS ya Localhost par chal raha hai.");
-        window.stopCameraScanner();
-    }
-};
 
         // 3. Scan Capture Handler
         function onBarcodeDetected(decodedText) {
@@ -5284,18 +5314,14 @@ window.startCameraScanner = async function() {
             isScanThrottled = true;
 
             const scannedCode = String(decodedText).trim();
-
-            // Beep sound bajayein
             playBeepSound();
 
-            // Check karein scan POS se hua ya Move Store se
             if (window.currentScannerTarget === 'transfer') {
                 window.handleTransferScannedBarcode(scannedCode);
             } else {
                 processScannedCode(scannedCode);
             }
 
-            // Scanner close karein
             window.stopCameraScanner();
 
             setTimeout(() => {
@@ -5326,12 +5352,11 @@ window.startCameraScanner = async function() {
             window.startCameraScanner();
         };
 
-        // 6. Barcode se Product Search & Cart Add
+        // 6. Barcode se Product Find aur Cart Add Karna
         function processScannedCode(rawCode) {
             if (!rawCode) return;
             const code = String(rawCode).trim().toLowerCase();
 
-            // Product find karein (Barcode ya Name dono check honge)
             const matchedItem = window.menuItems.find(item => {
                 const itemBc = item.barcode != null ? String(item.barcode).trim().toLowerCase() : '';
                 const itemNm = item.name != null ? String(item.name).trim().toLowerCase() : '';
@@ -5348,19 +5373,26 @@ window.startCameraScanner = async function() {
                 }
 
                 if (availableStock <= 0) {
-                    alert(`"${matchedItem.name}" ka stock khatam (OUT OF STOCK) hai!`);
+                    Toast.fire({
+                        icon: 'error',
+                        title: `"${matchedItem.name}" ka stock khatam (OUT OF STOCK) hai!`
+                    });
                     return;
                 }
 
-                // POS Cart mein add karein
+                playBeepSound();
                 if (typeof window.addToCart === 'function') {
                     window.addToCart(matchedItem.id);
                 }
             } else {
-                alert(`Barcode [${rawCode}] ka koi product inventory mein nahi mila!`);
+                Toast.fire({
+                    icon: 'error',
+                    title: `Barcode [${rawCode}] ka koi product inventory mein nahi mila!`
+                });
             }
         }
 
+        // 7. Beep Sound Generator
         function playBeepSound() {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -5375,6 +5407,52 @@ window.startCameraScanner = async function() {
                 osc.stop(audioCtx.currentTime + 0.15);
             } catch(e) {}
         }
+
+        // 8. GLOBAL BARCODE GUN SCANNER LISTENER (Screen par kahin se bhi direct scan pakdega)
+        let barcodeGunBuffer = "";
+        let lastKeyTime = Date.now();
+
+        window.addEventListener('keydown', function(e) {
+            const currentTime = Date.now();
+            const timeDiff = currentTime - lastKeyTime;
+            lastKeyTime = currentTime;
+
+            const activeEl = document.activeElement;
+            const isTypingInOtherBox = activeEl && (
+                activeEl.tagName === 'TEXTAREA' || 
+                (activeEl.tagName === 'INPUT' && activeEl.id !== 'menu-search' && activeEl.id !== 'transfer-barcode-scan')
+            );
+
+            if (isTypingInOtherBox && !activeEl.classList.contains('pos-mini-input')) {
+                return;
+            }
+
+            // Gun scanner typing speed 120ms se bohat tez hoti hai
+            if (timeDiff > 120) {
+                barcodeGunBuffer = "";
+            }
+
+            if (e.key === 'Enter') {
+                if (barcodeGunBuffer.length >= 3) {
+                    e.preventDefault();
+                    const scannedCode = barcodeGunBuffer.trim();
+                    barcodeGunBuffer = "";
+
+                    const isTransferActive = document.getElementById('branch-transfer-view')?.classList.contains('active');
+                    
+                    if (isTransferActive && typeof window.handleTransferScannedBarcode === 'function') {
+                        window.handleTransferScannedBarcode(scannedCode);
+                    } else {
+                        processScannedCode(scannedCode);
+                        const searchBox = document.getElementById('menu-search');
+                        if (searchBox) searchBox.value = '';
+                        if (typeof window.filterMenu === 'function') window.filterMenu();
+                    }
+                }
+            } else if (e.key.length === 1) {
+                barcodeGunBuffer += e.key;
+            }
+        });
 
         // =========================================================
         // BARCODES VIEW (FULL STICKER DOWNLOAD: NAME + BARCODE + PRICE)
