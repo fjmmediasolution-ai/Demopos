@@ -2183,28 +2183,7 @@
                 </div>
             </div>
 
-                    <div class="dashboard-grid" style="margin-bottom: 10px;">
-                            <div class="stat-card" style="border-left: 5px solid #10b981;"><h3>Total Stock Left</h3><p id="report-remaining">0</p></div>
-                            <div class="stat-card" style="border-left: 5px solid #0284c7;"><h3>Expected Sale Val</h3><p id="report-sale-val">Rs. 0</p></div>
-                        </div>
-
-                        <div class="stock-table-wrapper" style="width: 100%;">
-                            <table class="custom-table" style="width: 100%;">
-                                <thead>
-                                    <tr>
-                                        <th style="text-align: left; width: 18%;">Barcode</th>
-                                        <th style="text-align: left; width: 34%;">Product</th>
-                                        <th style="text-align: right; width: 16%;">Cost Price</th>
-                                        <th style="text-align: right; width: 16%;">Selling Price</th>
-                                        <th style="text-align: center; width: 16%;">Total Stock</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="report-tbody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                   
 
             <!-- 13. PURCHASER REPORT VIEW -->
             <div id="purchaser-report-view" class="view">
@@ -3961,19 +3940,6 @@ const auth = firebase.auth();
                 link.click();
                 document.body.removeChild(link);
             }
-        };
-
-        window.clearDiagramTable = function() {
-            window.diagramPurchaseItems = [];
-            window.editingPurchaseDocId = null;
-            window.editingOriginalPurchaseItems = [];
-            
-            const saveBtn = document.getElementById('save-purchases-btn');
-            if (saveBtn) {
-                saveBtn.innerHTML = "<i class='bx bx-check-double'></i> Save Purchase & Stock Inventory";
-                saveBtn.style.background = "";
-            }
-            renderDiagramTable();
         };
 
         // SUBMIT OR UPDATE COMPLETE DIAGRAM PURCHASE
@@ -6652,15 +6618,34 @@ setTimeout(cleanupDeletedProductsFromShopStock, 2500);
             if(v === 'users') renderUsersManagementTable();
             if(v === 'stock-audit') window.initStockAuditView(); // <--- YAHAN YEH NAYI LINE ADD KARNI HAI
             
-            document.querySelectorAll('.nav-list a').forEach(a => { 
+           document.querySelectorAll('.nav-list a').forEach(a => { 
                 a.classList.remove('active'); 
-                if(a.getAttribute('onclick')?.includes(`switchView('${v}')`)) a.classList.add('active'); 
+                if(a.getAttribute('onclick')?.includes(`switchView('${v}')`)) {
+                    a.classList.add('active'); 
+                    
+                    // Agar click hone wala module simple hai (arrow wala nahi hai), 
+                    // to baki tamam khule hue arrow wale modules band kar do
+                    if (!a.closest('.has-submenu')) {
+                        document.querySelectorAll('.has-submenu').forEach(menu => menu.classList.remove('open'));
+                    }
+                }
             });
         };
 
-        function toggleSubmenu(event, element) {
+       function toggleSubmenu(event, element) {
             event.preventDefault(); 
-            element.parentElement.classList.toggle('open');
+            
+            let parentLi = element.parentElement;
+            
+            // 1. Baki tamam open dropdowns ko dhoond kar khud band (close) kar dega
+            document.querySelectorAll('.has-submenu').forEach(menu => {
+                if (menu !== parentLi) {
+                    menu.classList.remove('open');
+                }
+            });
+
+            // 2. Sirf usi ko open ya close karega jis par click kiya gaya hai
+            parentLi.classList.toggle('open');
             document.getElementById('sidebar')?.classList.remove('collapsed');
         }
 
