@@ -31,6 +31,37 @@
             --transition: all 0.3s ease;
         }
 
+.header-theme-selector { 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+    background: #f8fafc; 
+    padding: 6px 12px; 
+    border-radius: 30px; 
+    border: 1px solid var(--border-color); 
+}
+
+.theme-dot { 
+    width: 20px; 
+    height: 20px; 
+    border-radius: 50%; 
+    cursor: pointer; 
+    border: 2px solid white; 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15); 
+    transition: transform 0.2s ease, box-shadow 0.2s ease; 
+}
+
+.theme-dot:hover { 
+    transform: scale(1.25); 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+}
+
+.theme-dot.dot-korvexa { background: linear-gradient(135deg, #0052cc, #00d2ff); }
+.theme-dot.dot-orange { background: #ff7b2c; }
+.theme-dot.dot-emerald { background: #10b981; }
+.theme-dot.dot-indigo { background: #6366f1; }
+.theme-dot.dot-crimson { background: #e11d48; }
+
         body.theme-korvexa { --primary: #0066ff; --primary-rgb: 0, 102, 255; --primary-gradient: linear-gradient(135deg, #0047ba 0%, #0099ff 100%); --sidebar-bg: #091024; --dark: #060a17; --bg-light: #f1f5fa; }
         body.theme-orange { --primary: #ff7b2c; --primary-rgb: 255, 123, 44; --primary-gradient: linear-gradient(135deg, #e06014 0%, #ff944d 100%); --sidebar-bg: #1e293b; --dark: #0f172a; --bg-light: #f8fafc; }
         body.theme-emerald { --primary: #10b981; --primary-rgb: 16, 185, 129; --primary-gradient: linear-gradient(135deg, #059669 0%, #34d399 100%); --sidebar-bg: #064e3b; --dark: #022c22; --bg-light: #f0fdf4; }
@@ -75,88 +106,7 @@
 
         #login-page.hidden { opacity: 0; pointer-events: none; }
 
-        /* 2. Warm Boutique Ambient Lighting Orbs */
-        .retail-ambient-glow {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(110px);
-            pointer-events: none;
-            z-index: 1;
-        }
-        .glow-1 {
-            width: 480px;
-            height: 480px;
-            background: radial-gradient(circle, rgba(0, 102, 255, 0.3) 0%, transparent 70%);
-            top: -5%;
-            left: 5%;
-            animation: floatGlow1 16s infinite alternate ease-in-out;
-        }
-        .glow-2 {
-            width: 450px;
-            height: 450px;
-            background: radial-gradient(circle, rgba(255, 123, 44, 0.25) 0%, transparent 70%);
-            bottom: -5%;
-            right: 5%;
-            animation: floatGlow2 18s infinite alternate ease-in-out;
-        }
-        .glow-3 {
-            width: 320px;
-            height: 320px;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.2) 0%, transparent 70%);
-            bottom: 25%;
-            left: 20%;
-            animation: floatGlow3 14s infinite alternate ease-in-out;
-        }
-        @keyframes floatGlow1 {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(80px, 60px) scale(1.15); }
-        }
-        @keyframes floatGlow2 {
-            0% { transform: translate(0, 0) scale(1.1); }
-            100% { transform: translate(-70px, -50px) scale(0.9); }
-        }
-        @keyframes floatGlow3 {
-            0% { transform: translate(0, 0) scale(0.95); }
-            100% { transform: translate(50px, -40px) scale(1.1); }
-        }
-
-        /* 3. Floating T-Shirts, Price Tags & Retail Accessories Animation */
-        .retail-floating-elements {
-            position: absolute;
-            inset: 0;
-            overflow: hidden;
-            pointer-events: none;
-            z-index: 1;
-        }
-        .retail-particle {
-            position: absolute;
-            color: rgba(255, 255, 255, 0.15);
-            font-size: 26px;
-            animation: floatParticleUp 14s linear infinite;
-            filter: drop-shadow(0 0 8px rgba(0, 163, 255, 0.25));
-        }
-        .p1 { left: 8%; font-size: 36px; animation-duration: 16s; animation-delay: 0s; }
-        .p2 { left: 22%; font-size: 28px; animation-duration: 13s; animation-delay: 3s; color: rgba(255, 123, 44, 0.2); }
-        .p3 { left: 35%; font-size: 32px; animation-duration: 18s; animation-delay: 1s; }
-        .p4 { left: 52%; font-size: 24px; animation-duration: 15s; animation-delay: 4s; color: rgba(16, 185, 129, 0.2); }
-        .p5 { left: 68%; font-size: 34px; animation-duration: 17s; animation-delay: 2s; }
-        .p6 { left: 80%; font-size: 28px; animation-duration: 14s; animation-delay: 5s; color: rgba(255, 123, 44, 0.22); }
-        .p7 { left: 90%; font-size: 38px; animation-duration: 19s; animation-delay: 0.5s; }
-        .p8 { left: 14%; font-size: 30px; animation-duration: 15s; animation-delay: 7s; }
-
-        @keyframes floatParticleUp {
-            0% {
-                transform: translateY(105vh) rotate(0deg) scale(0.85);
-                opacity: 0;
-            }
-            15% { opacity: 0.8; }
-            85% { opacity: 0.8; }
-            100% {
-                transform: translateY(-15vh) rotate(360deg) scale(1.15);
-                opacity: 0;
-            }
-        }
-
+       
         /* 4. Frosted Glassmorphism Boutique Auth Card */
         .auth-card { 
             position: relative;
@@ -263,22 +213,172 @@
         .logo-tagline { font-size: 8px; color: #00a3ff; letter-spacing: 1.5px; font-weight: 700; white-space: nowrap; text-transform: uppercase; margin-top: 2px; }
         .sidebar.collapsed .sidebar-brand-box { display: none; }
         
-        .nav-list { margin-top: 12px; flex-grow: 1; overflow-y: auto; }
-        .nav-list li { list-style: none; }
-        .nav-list li a { display: flex; align-items: center; color: #cbd5e1; text-decoration: none; padding: 11px 18px; margin: 3px 14px; border-radius: 12px; transition: var(--transition); white-space: nowrap; font-weight: 500; font-size: 0.93rem; }
-        .nav-list li a:hover, .nav-list li a.active { background: var(--primary); background-image: var(--primary-gradient); color: white; box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.3); }
-        .nav-list li a i { font-size: 20px; min-width: 38px; }
+       /* =========================================================
+           PREMIUM ANIMATED SIDEBAR NAVIGATION MENU
+           ========================================================= */
+        .nav-list { 
+            margin-top: 14px; 
+            flex-grow: 1; 
+            overflow-y: auto; 
+            overflow-x: hidden;
+            padding-bottom: 20px;
+        }
+
+        /* Sleek Transparent Scrollbar */
+        .nav-list::-webkit-scrollbar { width: 4px; }
+        .nav-list::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+        .nav-list::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        .nav-list li { list-style: none; position: relative; }
+
+        .nav-list li a { 
+            display: flex; 
+            align-items: center; 
+            color: #94a3b8; 
+            text-decoration: none; 
+            padding: 11px 16px; 
+            margin: 4px 12px; 
+            border-radius: 12px; 
+            transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1); 
+            white-space: nowrap; 
+            font-weight: 600; 
+            font-size: 0.92rem; 
+            position: relative;
+            background: transparent;
+        }
+
+        /* 1. Subtle Slide & Background Transition on Hover */
+        .nav-list li a:hover { 
+            background: rgba(255, 255, 255, 0.06); 
+            color: #ffffff; 
+            transform: translateX(4px); 
+        }
+
+        /* 2. Micro-Icon Animation */
+        .nav-list li a i:first-child { 
+            font-size: 21px; 
+            min-width: 36px; 
+            transition: transform 0.25s ease, color 0.25s ease; 
+        }
+        .nav-list li a:hover i:first-child { 
+            transform: scale(1.18); 
+            color: #00d2ff; 
+        }
+
+        /* 3. Glowing Active Menu Pill */
+        .nav-list li a.active { 
+            background: var(--primary); 
+            background-image: var(--primary-gradient); 
+            color: #ffffff !important; 
+            box-shadow: 0 6px 18px rgba(var(--primary-rgb), 0.45); 
+            transform: translateX(4px);
+        }
+        .nav-list li a.active i:first-child {
+            color: #ffffff !important;
+            transform: scale(1.08);
+        }
+        /* Active Glowing Left Indicator */
+        .nav-list li a.active::before {
+            content: '';
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 22px;
+            background: #00d2ff;
+            border-radius: 0 4px 4px 0;
+            box-shadow: 0 0 10px #00d2ff;
+        }
+
+      /* 4. Smooth Submenu Expansion & Slide Animation */
         .nav-list li.has-submenu { display: flex; flex-direction: column; }
-        .submenu-arrow { margin-left: auto; transition: transform 0.3s ease; }
-        .has-submenu.open .submenu-arrow { transform: rotate(180deg); }
-        .sub-menu { display: none; padding-left: 20px; list-style: none; }
-        .has-submenu.open .sub-menu { display: block; }
+        .submenu-arrow { 
+            margin-left: auto; 
+            font-size: 18px; 
+            transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); 
+        }
+        .has-submenu.open .submenu-arrow { 
+            transform: rotate(180deg); 
+            color: #00d2ff;
+        }
+
+        .sub-menu { 
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            visibility: hidden;
+            transform: translateY(-8px);
+            padding-left: 12px; 
+            list-style: none; 
+            margin-left: 10px;
+            border-left: 1.5px solid rgba(255, 255, 255, 0.08);
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), 
+                        opacity 0.3s ease, 
+                        transform 0.35s ease, 
+                        visibility 0.4s ease;
+        }
+        .has-submenu.open .sub-menu { 
+            max-height: 350px;
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .sub-menu li a { 
+            font-size: 0.85rem; 
+            padding: 8px 14px; 
+            margin: 2px 8px; 
+            color: #64748b; 
+            font-weight: 500;
+            border-radius: 8px;
+        }
+        .sub-menu li a:hover { 
+            color: #ffffff; 
+            background: rgba(255, 255, 255, 0.04); 
+            transform: translateX(4px); 
+        }
+        .sub-menu li a.active { 
+            background: rgba(var(--primary-rgb), 0.25) !important; 
+            color: #00d2ff !important; 
+            box-shadow: none !important; 
+            font-weight: 700;
+        }
+
+        /* 5. Collapsed Sidebar State Cleanup */
         .sidebar.collapsed .sub-menu { display: none !important; }
-        .sub-menu li a { font-size: 13px; padding: 9px 15px; margin: 2px 14px; background: transparent; box-shadow: none; }
-        .sidebar.collapsed .links_name, .sidebar.collapsed .submenu-arrow { display: none; }
-        
-        .toggle-arrow { position: absolute; right: -15px; top: 35px; background: var(--primary); width: 30px; height: 30px; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: var(--transition); }
-        .sidebar.collapsed .toggle-arrow { transform: rotate(180deg); }
+        .sidebar.collapsed .links_name, 
+        .sidebar.collapsed .submenu-arrow { display: none; }
+
+        /* 6. Toggle Arrow Button with Pulse Glow on Hover */
+        .toggle-arrow { 
+            position: absolute; 
+            right: -14px; 
+            top: 32px; 
+            background: var(--primary); 
+            background-image: var(--primary-gradient); 
+            width: 28px; 
+            height: 28px; 
+            border-radius: 50%; 
+            color: white; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            box-shadow: 0 4px 12px rgba(var(--primary-rgb), 0.4); 
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            z-index: 10;
+        }
+        .toggle-arrow:hover { 
+            transform: scale(1.18); 
+            box-shadow: 0 0 16px rgba(0, 163, 255, 0.8); 
+        }
+        .sidebar.collapsed .toggle-arrow { 
+            transform: rotate(180deg); 
+        }
+        .sidebar.collapsed .toggle-arrow:hover { 
+            transform: rotate(180deg) scale(1.18); 
+        }
 
         .main-container { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
         header { height: 75px; background: white; padding: 0 30px; flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-color); }
@@ -299,11 +399,230 @@
         .user-header-badge { display: flex; align-items: center; gap: 10px; background: #f1f5f9; padding: 6px 14px; border-radius: 20px; font-size: 0.88rem; font-weight: 600; color: #334155; }
         .logout-link { color: #ef4444; cursor: pointer; margin-left: 6px; font-size: 1.1rem; }
 
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 18px; }
-        .stat-card, .graph-card { background: white; padding: 20px; border-radius: 18px; box-shadow: 0 4px 14px rgba(0,0,0,0.04); }
-        .stat-card h3 { font-size: 0.9rem; color: #64748b; font-weight: 600; margin-bottom: 8px; }
-        .stat-card p { font-size: 1.65rem; font-weight: 800; color: var(--dark); }
-        .graph-card { margin-top: 20px; }
+        /* =========================================================
+           PREMIUM ANIMATED DASHBOARD SYSTEM
+           ========================================================= */
+      /* Clean White Top Bar for Dashboard */
+        .dash-top-bar {
+            background: #ffffff;
+            border-radius: 16px;
+            padding: 16px 22px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-bottom: 22px;
+        }
+        .dash-pills-wrap {
+            display: flex;
+            background: #f1f5f9;
+            padding: 4px;
+            border-radius: 12px;
+            gap: 4px;
+        }
+        .dash-pill-btn {
+            border: none;
+            background: transparent;
+            padding: 8px 14px;
+            border-radius: 9px;
+            font-size: 0.84rem;
+            font-weight: 700;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .dash-pill-btn.active {
+            background: #ffffff;
+            color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        .dash-picker-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #f8fafc;
+            padding: 6px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+        .dash-picker-box label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: #475569;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin: 0;
+            cursor: pointer;
+        }
+        .dash-picker-box input[type="date"] {
+            border: none;
+            background: transparent;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #0f172a;
+            outline: none;
+            cursor: pointer;
+        }
+        .dash-welcome-banner::after {
+            content: '';
+            position: absolute;
+            right: -40px;
+            top: -40px;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(0, 163, 255, 0.25) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .dash-quick-btns {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            z-index: 2;
+        }
+        .dash-quick-btn {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #ffffff;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-size: 0.84rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            transition: all 0.25s ease;
+        }
+        .dash-quick-btn:hover {
+            background: #ffffff;
+            color: #0b1326;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+        .stat-card {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 18px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease, border-color 0.28s ease;
+            animation: dashEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .stat-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.08);
+            border-color: rgba(var(--primary-rgb), 0.35);
+        }
+        .stat-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+        .stat-card h3 {
+            font-size: 0.82rem;
+            color: #64748b;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 0;
+        }
+        .stat-card p {
+            font-size: 1.7rem;
+            font-weight: 900;
+            color: #0f172a;
+            margin: 4px 0 2px 0;
+            letter-spacing: -0.5px;
+        }
+        .stat-card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+        }
+        .stat-card:hover .stat-card-icon {
+            transform: scale(1.15) rotate(5deg);
+        }
+        .stat-card-sub {
+            font-size: 0.77rem;
+            color: #94a3b8;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .dashboard-detail-grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1.1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        @media (max-width: 1024px) {
+            .dashboard-detail-grid { grid-template-columns: 1fr; }
+        }
+
+        .graph-card {
+            background: white;
+            padding: 22px;
+            border-radius: 18px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+            animation: dashEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .dash-widget-box {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            animation: dashEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        .dash-widget-title {
+            font-size: 1rem;
+            font-weight: 800;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1.5px solid #f1f5f9;
+            padding-bottom: 10px;
+        }
+
+        @keyframes dashEntrance {
+            0% { opacity: 0; transform: translateY(18px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
 
         .pos-main { flex-grow: 1; display: flex; flex-direction: column; padding: 22px; overflow-y: auto; }
         .pos-filters { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 20px; }
@@ -316,14 +635,65 @@
         .card { background: white; padding: 14px; border-radius: 18px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); cursor: pointer; text-align: center; transition: transform 0.25s, box-shadow 0.25s; border: 2px solid transparent; position: relative; }
         .card.low-stock { border-color: #f59e0b; }
         .card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
-        .card .stock-qty { position: absolute; top: 10px; right: 10px; background: rgba(15, 23, 42, 0.85); color: white; padding: 3px 8px; border-radius: 8px; font-size: 0.75rem; font-weight: 700; }
-        .card .barcode-tag { position: absolute; top: 10px; left: 10px; background: #e0f2fe; color: #0284c7; padding: 2px 7px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; border: 1px solid #bae6fd; }
+        .card {
+    background: white;
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    cursor: pointer;
+    text-align: left; /* Retail POS cards left-aligned ziada premium lagte hain */
+    transition: all 0.2s ease;
+    position: relative;
+}
+.card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,102,255,0.08);
+    border-color: var(--primary);
+}
+.card .stock-qty { 
+    position: absolute; 
+    top: 8px; 
+    right: 8px; 
+    background: rgba(15, 23, 42, 0.8); 
+    backdrop-filter: blur(4px);
+    color: white; 
+    padding: 2px 8px; 
+    border-radius: 6px; 
+    font-size: 0.72rem; 
+    font-weight: 800; 
+}
+.card .barcode-tag { 
+    position: absolute; 
+    top: 8px; 
+    left: 8px; 
+    background: rgba(255, 255, 255, 0.9); 
+    color: #0369a1; 
+    padding: 2px 7px; 
+    border-radius: 6px; 
+    font-size: 0.7rem; 
+    font-weight: 800; 
+    border: 1px solid rgba(186, 230, 253, 0.8); 
+}
         .card img { width: 100%; height: 120px; object-fit: cover; border-radius: 12px; }
         .card h4 { margin: 10px 0 4px; font-size: 0.98rem; font-weight: 700; }
         .card .selling-p { color: var(--primary); font-weight: 800; font-size: 1.05rem; }
 
         .order-panel { width: 400px; flex-shrink: 0; background: white; border-left: 1px solid var(--border-color); padding: 22px; display: flex; flex-direction: column; overflow-y: auto; }
-        #cart-items { flex-grow: 1; min-height: 200px; max-height: 320px; overflow-y: auto; margin-bottom: 12px; }
+#cart-items { 
+    flex: 1 1 auto; 
+    overflow-y: auto; 
+    margin-bottom: 12px;
+    padding-right: 4px;
+}
+/* Modern thin scrollbar */
+#cart-items::-webkit-scrollbar {
+    width: 5px;
+}
+#cart-items::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
         .cart-empty-msg { height: 100%; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-style: italic; min-height: 120px; }
         .cart-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
         .cart-item img { width: 48px; height: 48px; border-radius: 8px; object-fit: cover; }
@@ -352,7 +722,16 @@
         .tab-btn { padding: 8px 16px; border-radius: 10px; border: 1px solid var(--border-color); background: white; font-weight: 600; color: #475569; font-size: 0.88rem; }
         .tab-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
-        .settings-form { background-color: #fff; padding: 30px; border-radius: 20px; max-width: 820px; margin: auto; box-shadow: 0 4px 14px rgba(0,0,0,0.05); }
+.settings-form { 
+    background-color: #fff; 
+    padding: 30px; 
+    border-radius: 20px; 
+    width: 100%; 
+    max-width: 100%; 
+    margin: 0; 
+    box-shadow: 0 4px 14px rgba(0,0,0,0.04); 
+    box-sizing: border-box;
+}
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; font-weight: 600; margin-bottom: 6px; color: #1e293b; font-size: 0.92rem; }
         .form-group input:not([type="checkbox"]):not([type="file"]), .form-group select, .form-group textarea { width: 100%; padding: 11px; border: 1px solid var(--border-color); border-radius: 10px; font-size: 0.95rem; outline: none; }
@@ -1107,22 +1486,7 @@
 <body class="theme-korvexa">
 
    <div id="login-page">
-        <!-- 1. Warm Boutique Ambient Lighting Orbs -->
-        <div class="retail-ambient-glow glow-1"></div>
-        <div class="retail-ambient-glow glow-2"></div>
-        <div class="retail-ambient-glow glow-3"></div>
-
-        <!-- 2. Floating T-Shirts, Price Tags & Retail Accessories Particles -->
-        <div class="retail-floating-elements">
-            <span class="retail-particle p1" title="T-Shirt"><i class='bx bxs-t-shirt'></i></span>
-            <span class="retail-particle p2" title="Price Tag"><i class='bx bx-purchase-tag-alt'></i></span>
-            <span class="retail-particle p3" title="Shopping Bag"><i class='bx bx-shopping-bag'></i></span>
-            <span class="retail-particle p4" title="Clothes Hanger"><i class='bx bx-closet'></i></span>
-            <span class="retail-particle p5" title="Barcode Tag"><i class='bx bx-barcode'></i></span>
-            <span class="retail-particle p6" title="Retail Item"><i class='bx bx-gift'></i></span>
-            <span class="retail-particle p7" title="T-Shirt"><i class='bx bxs-t-shirt'></i></span>
-            <span class="retail-particle p8" title="Retail Store"><i class='bx bx-store-alt'></i></span>
-        </div>
+       
 
         <!-- 3. Glassmorphism Floating Boutique Card -->
         <div class="auth-card">
@@ -1185,7 +1549,7 @@
                     <i class='bx bx-barcode-reader' style="font-size: 34px; color: #00d2ff;"></i>
                 </div>
                 <div class="sidebar-brand-box">
-                    <span class="logo-name" id="sidebar-logo-name">KORVEXA</span>
+                    <span class="logo-name" id="sidebar-logo-name">KORVEXA SOLUTION</span>
                     <span class="logo-tagline" id="sidebar-logo-tagline">POS & INVENTORY</span>
                 </div>
             </div>
@@ -1212,7 +1576,7 @@
                 <li id="nav-returns"><a href="#" onclick="switchView('return')"><i class='bx bx-undo'></i><span class="links_name">Return Management</span></a></li>
                 <li id="nav-expenses"><a href="#" onclick="switchView('expense')"><i class='bx bx-wallet'></i><span class="links_name">Expenses</span></a></li>
 
-                <li class="has-submenu" id="nav-reports">
+<li class="has-submenu" id="nav-reports">
                     <a href="#" onclick="toggleSubmenu(event, this)">
                         <i class='bx bx-line-chart'></i>
                         <span class="links_name">Reports</span>
@@ -1220,7 +1584,8 @@
                     </a>
                     <ul class="sub-menu">
                         <li><a href="#" onclick="switchView('profit-loss')"><i class='bx bx-coin-stack'></i>Profit & Loss</a></li>
-<li><a href="#" onclick="switchView('stock-audit')"><i class='bx bx-check-shield'></i>Stock Audit (Scan)</a></li>
+                        <li><a href="#" onclick="switchView('stock-report')"><i class='bx bx-archive-in'></i>Stock Report</a></li>
+                        <li><a href="#" onclick="switchView('stock-audit')"><i class='bx bx-check-shield'></i>Stock Audit</a></li>
                         <li><a href="#" onclick="switchView('purchaser-report')"><i class='bx bx-file-blank'></i>Purchaser Report</a></li>
                         <li><a href="#" onclick="switchView('return-report')"><i class='bx bx-undo'></i>Return Report</a></li>
                         <li><a href="#" onclick="switchView('expense-report')"><i class='bx bx-receipt'></i>Expense Report</a></li>
@@ -1237,7 +1602,10 @@
         <div id="mobile-backdrop" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:10000;" onclick="toggleMobile()"></div>
 
         <div class="main-container">
+
+            
            <header>
+            
                 <div style="display: flex; align-items: center; gap: 15px;">
                     <i class='bx bx-menu mobile-toggle' onclick="toggleMobile()"></i>
                     <h2 id="header-title" style="font-size: 20px; font-weight: 700; color: #0f172a;">Dashboard</h2>
@@ -1249,12 +1617,14 @@
                         <span id="net-status-text">Online</span>
                     </div>
 
-    <!-- LIVE REVERSE COUNTDOWN SUBSCRIPTION BADGE (AUTO-MONTH & DAY DECREMENT) -->
-<div id="cloud-subscription-badge" style="display: inline-flex; align-items: center; gap: 7px; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; background: #e0f2fe; color: #0284c7; border: 1.5px solid #bae6fd; white-space: nowrap; transition: all 0.3s ease;">
-    <span id="cloud-sub-dot" style="width: 8px; height: 8px; border-radius: 50%; background: #0284c7; display: inline-block; box-shadow: 0 0 6px #0284c7;"></span>
-    <span id="cloud-sub-text">Cloud Active: Calculating...</span>
+   
+<div class="header-theme-selector" title="Change System Theme Color">
+    <div class="theme-dot dot-korvexa" title="Korvexa Blue" onclick="applyTheme('theme-korvexa')"></div>
+    <div class="theme-dot dot-orange" title="Sunset Orange" onclick="applyTheme('theme-orange')"></div>
+    <div class="theme-dot dot-emerald" title="Emerald Green" onclick="applyTheme('theme-emerald')"></div>
+    <div class="theme-dot dot-indigo" title="Royal Indigo" onclick="applyTheme('theme-indigo')"></div>
+    <div class="theme-dot dot-crimson" title="Luxury Crimson" onclick="applyTheme('theme-crimson')"></div>
 </div>
-
                     <div id="admin-notif-btn" title="Pending User Approvals" style="position: relative; cursor: pointer; display: flex; align-items: center;" onclick="switchView('users')">
                         <i class='bx bx-bell' style="font-size: 1.65rem; color: #475569;"></i>
                         <span id="pending-notif-count" style="display: none; position: absolute; top: -5px; right: -6px; background: #ef4444; color: white; border-radius: 50%; font-size: 0.72rem; font-weight: 800; width: 19px; height: 19px; text-align: center; line-height: 19px; box-shadow: 0 2px 6px rgba(239, 68, 68, 0.4);">0</span>
@@ -1272,58 +1642,180 @@
                         <span>DEV CONTROL</span>
                     </div>
 
-                    <div class="header-theme-selector">
-                        <div class="theme-dot dot-korvexa" title="Korvexa Blue" onclick="applyTheme('theme-korvexa')"></div>
-                        <div class="theme-dot dot-orange" title="Sunset Orange" onclick="applyTheme('theme-orange')"></div>
-                        <div class="theme-dot dot-emerald" title="Emerald Green" onclick="applyTheme('theme-emerald')"></div>
-                        <div class="theme-dot dot-indigo" title="Royal Indigo" onclick="applyTheme('theme-indigo')"></div>
-                        <div class="theme-dot dot-crimson" title="Luxury Crimson" onclick="applyTheme('theme-crimson')"></div>
-                    </div>
+                    
                 </div>
             </header>
 
-            <!-- 1. DASHBOARD -->
+            
+
+          <!-- 1. DASHBOARD -->
             <div id="dashboard-view" class="view active">
                  <div class="content-wrapper">
-                    <div class="dashboard-grid">
-                        <div class="stat-card" style="border-left: 5px solid var(--primary);">
-                            <h3>Total Stock (Units)</h3>
-                            <p id="dash-total-stock">0</p>
+                    
+                   <!-- Clean White Top Date Filter Bar -->
+                    <div class="dash-top-bar">
+                        <div>
+                            <h2 style="font-size: 1.35rem; font-weight: 800; color: #0f172a; margin: 0 0 3px 0; display: flex; align-items: center; gap: 8px;">
+                                <i class='bx bx-grid-alt' style="color:var(--primary);"></i> Dashboard Overview
+                            </h2>
+                            <p style="color: #64748b; font-size: 0.85rem; margin: 0;" id="dash-live-date-time">
+                                Live business store overview
+                            </p>
                         </div>
-                        <div class="stat-card" style="border-left: 5px solid #10b981;">
-                            <h3>Total Sales (Cash/Bank)</h3>
-                            <p id="dash-total-sell">Rs. 0</p>
-                        </div>
-                        <div class="stat-card" style="border-left: 5px solid #ea580c;">
-                            <h3>Total Credit (Receivable)</h3>
-                            <p id="dash-total-udhar">Rs. 0</p>
-                        </div>
-                        <div class="stat-card" style="border-left: 5px solid #8b5cf6;">
-                            <h3>Est. Net Profit</h3>
-                            <p id="dash-est-net-profit" style="color:#10b981;">Rs. 0</p>
-                        </div>
-                        <div class="stat-card" style="border-left: 5px solid #ef4444;">
-                            <h3>Total Returns</h3>
-                            <p id="dash-total-return">Rs. 0</p>
-                        </div>
-                        <div class="stat-card" style="border-left: 5px solid #64748b;">
-                            <h3>Total Expenses</h3>
-                            <p id="dash-total-expense">Rs. 0</p>
-                        </div>
-                    </div>
-                    <div class="graph-card">
-                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px;">
-                            <div>
-                                <h3 style="font-size:1.15rem; font-weight:800; color:#0f172a;">
-                                    Financial Overview (Sales, Purchases, Expenses, Returns & Exchanges)
-                                </h3>
-                                <p style="font-size:0.83rem; color:#64748b; margin-top:2px;">
-                                    Daily financial movement across all store operations for the last 7 days.
-                                </p>
+
+                        <!-- Date Controls (Pills + Date Picker) -->
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <div class="dash-pills-wrap">
+                                <button type="button" class="dash-pill-btn active" id="btn-dash-today" onclick="setDashboardDatePreset('today')">
+                                    <i class='bx bx-calendar-event'></i>  (Today)
+                                </button>
+                                <button type="button" class="dash-pill-btn" id="btn-dash-yesterday" onclick="setDashboardDatePreset('yesterday')">
+                                    <i class='bx bx-time'></i>  (Yesterday)
+                                </button>
+                                <button type="button" class="dash-pill-btn" id="btn-dash-all" onclick="setDashboardDatePreset('all')">
+                                    <i class='bx bx-infinite'></i> All Time
+                                </button>
+                            </div>
+
+                            <div class="dash-picker-box">
+                                <label for="dash-filter-date"><i class='bx bx-calendar'></i> Date</label>
+                                <input type="date" id="dash-filter-date" onchange="onDashCustomDateSelect(this.value)" title="Kisi bhi tareekh ka record check karein">
                             </div>
                         </div>
-                        <div style="height: 330px; position: relative;"><canvas id="salesChart"></canvas></div>
                     </div>
+
+                    <!-- 6 High-Impact Micro-Animated KPI Cards -->
+                    <div class="dashboard-grid">
+                        <!-- 1. Total Stock -->
+                        <div class="stat-card" style="border-top: 4px solid #0066ff;">
+                            <div class="stat-card-top">
+                                <div>
+                                    <h3>Current Live Stock</h3>
+                                    <p id="dash-total-stock">0</p>
+                                </div>
+                                <div class="stat-card-icon" style="background: rgba(0, 102, 255, 0.12); color: #0066ff;">
+                                    <i class='bx bx-box'></i>
+                                </div>
+                            </div>
+                            <div class="stat-card-sub"><i class='bx bx-check-circle' style="color:#0066ff;"></i> Available across store & godown</div>
+                        </div>
+
+                        <!-- 2. Total Sales -->
+                        <div class="stat-card" style="border-top: 4px solid #10b981;">
+                            <div class="stat-card-top">
+                                <div>
+                                    <h3>Cash / Bank Sales</h3>
+                                    <p id="dash-total-sell" style="color:#10b981;">Rs. 0</p>
+                                </div>
+                                <div class="stat-card-icon" style="background: #dcfce7; color: #10b981;">
+                                    <i class='bx bx-trending-up'></i>
+                                </div>
+                            </div>
+                            <div class="stat-card-sub" id="sub-dash-sell"><i class='bx bx-badge-check' style="color:#10b981;"></i> Cleared received revenue</div>
+                        </div>
+
+                        <!-- 3. Receivables -->
+                        <div class="stat-card" style="border-top: 4px solid #ea580c;">
+                            <div class="stat-card-top">
+                                <div>
+                                    <h3>Receivables (Udhar)</h3>
+                                    <p id="dash-total-udhar" style="color:#ea580c;">Rs. 0</p>
+                                </div>
+                                <div class="stat-card-icon" style="background: #ffedd5; color: #ea580c;">
+                                    <i class='bx bx-time-five'></i>
+                                </div>
+                            </div>
+                            <div class="stat-card-sub" id="sub-dash-udhar"><i class='bx bx-error' style="color:#ea580c;"></i> Pending customer balances</div>
+                        </div>
+
+                        <!-- 4. Estimated Net Profit -->
+                        <div class="stat-card" style="border-top: 4px solid #8b5cf6;">
+                            <div class="stat-card-top">
+                                <div>
+                                    <h3>Est. Net Profit</h3>
+                                    <p id="dash-est-net-profit" style="color:#8b5cf6;">Rs. 0</p>
+                                </div>
+                                <div class="stat-card-icon" style="background: #f3e8ff; color: #8b5cf6;">
+                                    <i class='bx bx-wallet-alt'></i>
+                                </div>
+                            </div>
+                            <div class="stat-card-sub" id="sub-dash-profit"><i class='bx bx-line-chart' style="color:#8b5cf6;"></i> Sales minus COGS & Expenses</div>
+                        </div>
+
+                        <!-- 5. Returns -->
+                        <div class="stat-card" style="border-top: 4px solid #ef4444;">
+                            <div class="stat-card-top">
+                                <div>
+                                    <h3>Returns / Refunds</h3>
+                                    <p id="dash-total-return" style="color:#ef4444;">Rs. 0</p>
+                                </div>
+                                <div class="stat-card-icon" style="background: #fee2e2; color: #ef4444;">
+                                    <i class='bx bx-undo'></i>
+                                </div>
+                            </div>
+                            <div class="stat-card-sub" id="sub-dash-return"><i class='bx bx-shield-x' style="color:#ef4444;"></i> Returned inventory value</div>
+                        </div>
+
+                        <!-- 6. Expenses -->
+                        <div class="stat-card" style="border-top: 4px solid #64748b;">
+                            <div class="stat-card-top">
+                                <div>
+                                    <h3>Store Expenses</h3>
+                                    <p id="dash-total-expense" style="color:#475569;">Rs. 0</p>
+                                </div>
+                                <div class="stat-card-icon" style="background: #f1f5f9; color: #475569;">
+                                    <i class='bx bx-receipt'></i>
+                                </div>
+                            </div>
+                            <div class="stat-card-sub" id="sub-dash-expense"><i class='bx bx-dollar' style="color:#64748b;"></i> Utilities, staff & maintenance</div>
+                        </div>
+                    </div>
+
+                    <!-- Detail Section: Chart on Left + Widgets on Right -->
+                    <div class="dashboard-detail-grid">
+                        <!-- Left: Financial Movement Chart -->
+                        <div class="graph-card">
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+                                <div>
+                                    <h3 style="font-size:1.1rem; font-weight:800; color:#0f172a; margin:0;" id="dash-chart-heading">
+                                        <i class='bx bx-bar-chart-alt-2' style="color:var(--primary);"></i> 7-Day Store Financial Flow
+                                    </h3>
+                                    <p style="font-size:0.8rem; color:#64748b; margin-top:3px;">
+                                        Daily sales revenue, purchases, expenses and customer returns comparison.
+                                    </p>
+                                </div>
+                            </div>
+                            <div style="height: 330px; position: relative;">
+                                <canvas id="salesChart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Right: Dual Detail Widgets -->
+                        <div style="display:flex; flex-direction:column; gap:18px;">
+                            <!-- Widget 1: Low Stock & Out of Stock Alerts -->
+                            <div class="dash-widget-box">
+                                <div class="dash-widget-title">
+                                    <span><i class='bx bx-error-circle' style="color:#ef4444;"></i> Low & Out of Stock Alerts</span>
+                                    <button class="outline-btn" style="padding:4px 8px; font-size:0.75rem;" onclick="switchView('stock-report')">View All</button>
+                                </div>
+                                <div id="dash-low-stock-container" style="max-height: 145px; overflow-y: auto; display:flex; flex-direction:column; gap:8px;">
+                                    <div class="empty-placeholder" style="padding:15px; font-size:0.82rem;">Checking inventory levels...</div>
+                                </div>
+                            </div>
+
+                            <!-- Widget 2: Recent Sales Invoices Feed -->
+                            <div class="dash-widget-box">
+                                <div class="dash-widget-title">
+                                    <span id="dash-recent-sales-title"><i class='bx bx-receipt' style="color:#10b981;"></i> Invoices for Selected Date</span>
+                                    <button class="outline-btn" style="padding:4px 8px; font-size:0.75rem;" onclick="switchView('sell')">Sales Ledger</button>
+                                </div>
+                                <div id="dash-recent-sales-container" style="max-height: 155px; overflow-y: auto; display:flex; flex-direction:column; gap:8px;">
+                                    <div class="empty-placeholder" style="padding:15px; font-size:0.82rem;">No recent sales logged for this date.</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
@@ -2093,7 +2585,7 @@
                             </div>
                         </div>
 
-                        <div class="dashboard-grid" style="margin-bottom: 10px;">
+                    <div class="dashboard-grid" style="margin-bottom: 10px;">
                             <div class="stat-card" style="border-left: 5px solid #10b981;"><h3>Total Stock Left</h3><p id="report-remaining">0</p></div>
                             <div class="stat-card" style="border-left: 5px solid #0284c7;"><h3>Expected Sale Val</h3><p id="report-sale-val">Rs. 0</p></div>
                         </div>
@@ -2116,74 +2608,83 @@
                 </div>
             </div>
 
-            <!-- 12-B. STOCK AUDIT VIEW (BARCODE SCANNING) -->
+
+<!-- STOCK AUDIT & VERIFICATION VIEW -->
             <div id="stock-audit-view" class="view">
                 <div class="content-wrapper" style="width: 100%; max-width: 100%; padding: 22px 30px;">
                     <div class="fullscreen-report-wrapper">
-                        <div class="pl-top-bar">
+                        
+                        <!-- Top Header & Controls -->
+                        <div class="pl-top-bar" style="display: flex; justify-content: space-between; align-items: center; background: #ffffff; padding: 18px 24px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 4px 14px rgba(0,0,0,0.03);">
                             <div>
-                                <h2 style="font-size: 1.4rem; font-weight: 800; color: #0f172a;"><i class='bx bx-check-shield' style="color:var(--primary);"></i> Stock Audit & Verification</h2>
+                                <h2 style="font-size: 1.4rem; font-weight: 800; color: #0f172a; margin-bottom: 4px;">
+                                    <i class='bx bx-check-shield' style="color:#f59e0b;"></i> Stock Audit & Verification
+                                </h2>
                                 <p style="color: #64748b; font-size: 0.88rem;">Barcode scanner se physical stock verify karein. Scan karte jayein, system khud tally karega.</p>
                             </div>
-                            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                                <div class="pos-branch-select-box" style="padding: 6px 14px; background: #ffffff; border: 1.5px solid var(--primary);">
-                                    <label style="font-weight: 700; color: #0f172a; font-size: 0.88rem;"><i class='bx bx-map-pin' style="color:var(--primary);"></i> Select Area:</label>
-                                    <select id="audit-branch-filter" style="font-weight: 800; color: var(--primary);">
-                                        <option value="godown">Main Godown (Warehouse)</option>
+                            <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+                                <div class="pos-branch-select-box" style="padding: 8px 14px; background: #fffcf2; border: 1.5px solid #f59e0b;">
+                                    <label style="font-weight: 700; color: #b45309; font-size: 0.88rem;"><i class='bx bx-map-pin'></i> Select Area:</label>
+                                    <select id="audit-branch-filter" style="font-weight: 800; color: #b45309; background: transparent; border: none; outline: none;">
+                                        <option value="godown">Main Godown (Warehouse Only)</option>
                                     </select>
                                 </div>
-                                <button class="save-btn" id="btn-start-audit" onclick="startStockAudit()" style="background: #10b981; background-image: none;"><i class='bx bx-play-circle'></i> Start Audit</button>
-                                <button class="danger-btn" id="btn-stop-audit" onclick="stopStockAudit()" style="display: none;"><i class='bx bx-stop-circle'></i> Finish Audit</button>
+                                <button class="save-btn" id="btn-start-audit" style="background: #10b981; background-image: none; padding: 10px 20px;" onclick="toggleAuditMode()">
+                                    <i class='bx bx-play-circle'></i> Start Audit
+                                </button>
+                                <button class="outline-btn" id="btn-export-audit-pdf" style="display: none;" onclick="downloadAuditPDF()">
+                                    <i class='bx bxs-file-pdf'></i> Export PDF
+                                </button>
                             </div>
                         </div>
 
-                        <div class="pl-kpi-grid" style="margin-bottom: 20px;">
-                            <div class="pl-kpi-card" style="border-top: 4px solid var(--primary);">
-                                <div class="kpi-header"><span class="kpi-title">Expected Units</span><div class="kpi-icon" style="background: #e0f2fe; color: #0284c7;"><i class='bx bx-box'></i></div></div>
-                                <div class="kpi-value" id="audit-expected-qty">0</div>
+                        <!-- KPI Cards (3 Cards) -->
+                        <div class="pl-kpi-grid" style="margin-top: 15px;">
+                            <div class="pl-kpi-card" style="border-top: 4px solid #0ea5e9;">
+                                <div class="kpi-header"><span class="kpi-title">EXPECTED UNITS</span><div class="kpi-icon" style="background: #e0f2fe; color: #0ea5e9;"><i class='bx bx-box'></i></div></div>
+                                <div class="kpi-value" id="audit-kpi-expected" style="color: #0f172a;">0</div>
                                 <div class="kpi-subtitle">System ke mutabiq kul stock</div>
                             </div>
                             <div class="pl-kpi-card" style="border-top: 4px solid #10b981;">
-                                <div class="kpi-header"><span class="kpi-title">Scanned Units</span><div class="kpi-icon" style="background: #dcfce7; color: #16a34a;"><i class='bx bx-barcode-reader'></i></div></div>
-                                <div class="kpi-value" id="audit-scanned-qty" style="color: #16a34a;">0</div>
+                                <div class="kpi-header"><span class="kpi-title">SCANNED UNITS</span><div class="kpi-icon" style="background: #dcfce7; color: #10b981;"><i class='bx bx-barcode-reader'></i></div></div>
+                                <div class="kpi-value" id="audit-kpi-scanned" style="color: #10b981;">0</div>
                                 <div class="kpi-subtitle">Aap ne jitna scan kar liya</div>
                             </div>
                             <div class="pl-kpi-card" style="border-top: 4px solid #ef4444;">
-                                <div class="kpi-header"><span class="kpi-title">Missing Units</span><div class="kpi-icon" style="background: #fee2e2; color: #ef4444;"><i class='bx bx-error-circle'></i></div></div>
-                                <div class="kpi-value" id="audit-missing-qty" style="color: #ef4444;">0</div>
-                                <div class="kpi-subtitle">Jo physically nahi mila</div>
+                                <div class="kpi-header"><span class="kpi-title">MISSING / SHORT</span><div class="kpi-icon" style="background: #fee2e2; color: #ef4444;"><i class='bx bx-error-circle'></i></div></div>
+                                <div class="kpi-value" id="audit-kpi-missing" style="color: #ef4444;">0</div>
+                                <div class="kpi-subtitle">Jo physically nahi mila ya kam hai</div>
                             </div>
                         </div>
 
-                        <!-- Manual Scan Box (Agar Gun kaam na kare) -->
-                        <div id="audit-scan-box" style="display: none; background: #fff; padding: 15px; border-radius: 12px; border: 2px solid var(--primary); margin-bottom: 20px; align-items: center; gap: 10px;">
-                            <i class='bx bx-barcode-reader' style="font-size: 24px; color: var(--primary);"></i>
-                            <input type="text" id="audit-manual-barcode" placeholder="Scan Barcode Here (Audit Mode is ON)..." style="flex: 1; border: none; outline: none; font-size: 1rem; font-weight: 700; color: #0f172a;" autofocus>
-                            <span style="background: #e0f2fe; color: #0284c7; padding: 4px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 800; animation: pulseGlow 1.5s infinite;">● SCANNING ACTIVE</span>
-                        </div>
-
-                        <div class="stock-table-wrapper" style="width: 100%;">
+                        <!-- Audit Table -->
+                        <div class="stock-table-wrapper" style="margin-top: 15px;">
                             <table class="custom-table" style="width: 100%;">
                                 <thead>
                                     <tr>
                                         <th style="width: 5%;">Sr#</th>
                                         <th style="width: 15%;">Barcode</th>
                                         <th style="width: 35%;">Product Name</th>
-                                        <th style="text-align: center; width: 15%;">Expected (System)</th>
-                                        <th style="text-align: center; width: 15%;">Scanned (Physical)</th>
-                                        <th style="text-align: center; width: 15%;">Status</th>
+                                        <th style="width: 15%; text-align: center;">Expected (System)</th>
+                                        <th style="width: 15%; text-align: center;">Scanned (Physical)</th>
+                                        <th style="width: 15%; text-align: center;">Status</th>
                                     </tr>
                                 </thead>
                                 <tbody id="audit-tbody">
-                                    <tr><td colspan="6" class="empty-placeholder">"Start Audit" par click karein aur scanning shuru karein.</td></tr>
+                                    <tr>
+                                        <td colspan="6" class="empty-placeholder" style="padding: 30px; text-align: center;">
+                                            <i class='bx bx-play-circle' style="font-size: 3rem; color: #cbd5e1; display: block; margin-bottom: 10px;"></i>
+                                            "Start Audit" par click karein aur barcode gun se scanning shuru karein.
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
+
                     </div>
                 </div>
             </div>
 
-                   
 
             <!-- 13. PURCHASER REPORT VIEW -->
             <div id="purchaser-report-view" class="view">
@@ -2482,7 +2983,7 @@
                                 </p>
                             </div>
                             <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                                <!-- Quick Presets: Aaj, Kal, Hafta, All -->
+                                
                                 <div class="pl-pill-group">
                                     <button class="pl-pill-btn active" id="sales-preset-today" onclick="setSalesDatePreset('today')">
                                         <i class='bx bx-calendar-event'></i> Today 
@@ -2598,10 +3099,26 @@
                 </div>
             </div>
 
-            <!-- 19. SETTINGS VIEW -->
+           <!-- 19. SETTINGS VIEW -->
             <div id="settings-view" class="view">
-                <div class="content-wrapper">
+                <div class="content-wrapper" style="width: 100%; max-width: 100%; padding: 22px 30px; box-sizing: border-box;">
                     <div class="settings-form">
+                        
+                        <!-- Cloud Subscription Status Card -->
+                        <div style="background: #f8fafc; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 16px 20px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+                            <div>
+                                <h3 style="font-size: 1rem; font-weight: 800; color: #0f172a; margin-bottom: 3px; display: flex; align-items: center; gap: 6px;">
+                                    <i class='bx bx-cloud' style="color: var(--primary); font-size: 1.3rem;"></i> Cloud License & Subscription
+                                </h3>
+                                <p style="font-size: 0.82rem; color: #64748b; margin: 0;">Aapke software ka cloud server status aur baqaya muddat.</p>
+                            </div>
+
+                            <div id="cloud-subscription-badge" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 800; background: #e0f2fe; color: #0284c7; border: 1.5px solid #bae6fd; white-space: nowrap; transition: all 0.3s ease;">
+                                <span id="cloud-sub-dot" style="width: 9px; height: 9px; border-radius: 50%; background: #0284c7; display: inline-block; box-shadow: 0 0 6px #0284c7;"></span>
+                                <span id="cloud-sub-text">Cloud Active: Calculating...</span>
+                            </div>
+                        </div>
+
                         <h2>Themes & Styling</h2>
                         <div class="theme-selection-grid">
                             <div class="theme-card active" id="card-theme-korvexa" onclick="applyTheme('theme-korvexa')"><strong style="color:#0066ff;">Korvexa Blue</strong></div>
@@ -2616,19 +3133,19 @@
                         <div class="form-group" style="margin-top: 15px;"><label>Business Name</label><input type="text" id="restaurant-name" value="KORVEXA SOFTWARE"></div>
                         <div class="form-group"><label>Phone Number</label><input type="text" id="restaurant-number" value="(0300) 1234567"></div>
                         <div class="form-group"><label>Receipt Footer Note</label><textarea id="invoice-note" rows="2">YOUR WORK OUR IDENTITY. Thank you for your business!</textarea></div>
-                        <!-- Yeh form-group settings mein paste karein -->
-<div class="form-group">
-    <label><i class='bx bxs-discount' style="color:var(--primary);"></i> Global Store Discount (%)</label>
-    <input type="number" id="store-global-discount" min="0" max="100" placeholder="e.g. 10 (Zero ya khali choren agar discount na ho)">
-    <small style="color: #64748b; font-size: 0.8rem;">Yahan percentage likhein, yeh discount POS ki har product par foran lag jayega.</small>
-</div>
+                        
+                        <div class="form-group">
+                            <label><i class='bx bxs-discount' style="color:var(--primary);"></i> Global Store Discount (%)</label>
+                            <input type="number" id="store-global-discount" min="0" max="100" placeholder="e.g. 10 (Zero ya khali choren agar discount na ho)">
+                            <small style="color: #64748b; font-size: 0.8rem;">Yahan percentage likhein, yeh discount POS ki har product par foran lag jayega.</small>
+                        </div>
 
-<!-- Invoice Number Reset Control -->
-<div class="form-group">
-    <label><i class='bx bx-hash' style="color:var(--primary);"></i> Next Starting Invoice Number (POS Bill No)</label>
-    <input type="number" id="setting-next-invoice-no" min="1" value="1" placeholder="e.g. 1">
-    <small style="color: #64748b; font-size: 0.8rem;">Yahan 1 likh kar Save Settings dabayein to agla bill Invoice #1 banega, phir 2, 3, 4 banta rahega.</small>
-</div>
+                        <!-- Invoice Number Reset Control -->
+                        <div class="form-group">
+                            <label><i class='bx bx-hash' style="color:var(--primary);"></i> Next Starting Invoice Number (POS Bill No)</label>
+                            <input type="number" id="setting-next-invoice-no" min="1" value="1" placeholder="e.g. 1">
+                            <small style="color: #64748b; font-size: 0.8rem;">Yahan 1 likh kar Save Settings dabayein to agla bill Invoice #1 banega, phir 2, 3, 4 banta rahega.</small>
+                        </div>
 
                         <!-- LOCAL DRIVE BACKUP & STORAGE PATH SECTION -->
                         <hr style="margin: 25px 0; border-color: var(--border-color);">
@@ -3225,7 +3742,7 @@ window.saveExpense = async function() {
         return;
     }
 
-    // Aaj ki live tareekh aur time
+  
     const now = new Date();
     const expDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
@@ -3942,6 +4459,19 @@ const auth = firebase.auth();
             }
         };
 
+        window.clearDiagramTable = function() {
+            window.diagramPurchaseItems = [];
+            window.editingPurchaseDocId = null;
+            window.editingOriginalPurchaseItems = [];
+            
+            const saveBtn = document.getElementById('save-purchases-btn');
+            if (saveBtn) {
+                saveBtn.innerHTML = "<i class='bx bx-check-double'></i> Save Purchase & Stock Inventory";
+                saveBtn.style.background = "";
+            }
+            renderDiagramTable();
+        };
+
         // SUBMIT OR UPDATE COMPLETE DIAGRAM PURCHASE
         window.submitCompleteDiagramPurchase = async function() {
             const saveBtn = document.getElementById('save-purchases-btn');
@@ -3981,13 +4511,49 @@ const auth = firebase.auth();
 
                // =========================================================================
                 // CASE A: AGAR PURANI PURCHASE EDIT HO RAHI HAI (GODOWN + SHOP AUTO-SYNC)
-                // =========================================================================
+               // ==================== NAYA CODE (ISKO PASTE KAREIN) ====================
                 if (window.editingPurchaseDocId) {
-                    saveBtn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Purchase & Stock Update Ho Raha Hai...";
+                    saveBtn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Purchase & Stock Sync Ho Raha Hai...";
 
                     const batch = db.batch();
 
-                    // Har item ka stock difference nikal kar Godown aur Shop dono ko adjust karein
+                    // 1. DHOONDEIN: Konsay items purani purchase mein thay lekin ab delete kardiye gaye hain (Jaise Acrylic Painting)
+                    const completelyRemovedItems = (window.editingOriginalPurchaseItems || []).filter(oldIt => {
+                        return !window.diagramPurchaseItems.some(newIt => 
+                            (oldIt.productId && newIt.productId === oldIt.productId) ||
+                            (oldIt.barcode && newIt.barcode && String(oldIt.barcode).trim() === String(newIt.barcode).trim()) ||
+                            (oldIt.name && newIt.name && oldIt.name.trim().toLowerCase() === newIt.name.trim().toLowerCase())
+                        );
+                    });
+
+                    // 2. DELETE HUE ITEMS KO GODOWN, SHOPS AUR POS SE MUKAMMAL KHATAM KAREIN
+                    for (let removedItem of completelyRemovedItems) {
+                        const matchedProduct = window.menuItems.find(p => 
+                            (removedItem.productId && p.id === removedItem.productId) ||
+                            (removedItem.barcode && p.barcode && String(p.barcode).trim() === String(removedItem.barcode).trim()) ||
+                            (removedItem.name && p.name && p.name.trim().toLowerCase() === removedItem.name.trim().toLowerCase())
+                        );
+
+                        if (matchedProduct) {
+                            // A. Shop / Branch Stock se delete karein
+                            const branchRecords = (window.branchStockList || []).filter(bs => 
+                                bs.productId === matchedProduct.id || 
+                                (bs.productBarcode && bs.productBarcode === matchedProduct.barcode)
+                            );
+                            for (let bRec of branchRecords) {
+                                batch.delete(branchStockDB.doc(bRec.id));
+                            }
+
+                            // B. Main Products Inventory se delete karein taake POS aur Barcodes mein show na ho
+                            batch.delete(productsDB.doc(matchedProduct.id));
+
+                            // In-memory list se bhi foran hata dein
+                            window.menuItems = window.menuItems.filter(p => p.id !== matchedProduct.id);
+                            window.branchStockList = window.branchStockList.filter(bs => bs.productId !== matchedProduct.id);
+                        }
+                    }
+
+                    // 3. BACHE HUE ITEMS KA STOCK ADJUST KAREIN
                     for (let prod of window.diagramPurchaseItems) {
                         const matchedProduct = window.menuItems.find(p => 
                             (prod.productId && p.id === prod.productId) ||
@@ -4005,7 +4571,7 @@ const auth = firebase.auth();
 
                         const oldQty = oldItem ? Number(oldItem.qty || 0) : 0;
                         const newQty = Number(prod.qty || 0);
-                        const diffQty = newQty - oldQty; // e.g. 4 - 6 = -2
+                        const diffQty = newQty - oldQty;
 
                         const newCost = Number(prod.cost !== undefined ? prod.cost : prod.costPrice) || 0;
                         const newSale = Number(prod.sale !== undefined ? prod.sale : prod.price) || 0;
@@ -4014,10 +4580,8 @@ const auth = firebase.auth();
                             let currentGodownStock = Number(matchedProduct.stock || 0);
 
                             if (diffQty < 0) {
-                                const neededDeduction = Math.abs(diffQty); // 2 pcs minus karne hain
-                                
+                                const neededDeduction = Math.abs(diffQty);
                                 if (currentGodownStock >= neededDeduction) {
-                                    // Godown mein stock mojood hai, godown se minus karein
                                     batch.update(productsDB.doc(matchedProduct.id), {
                                         stock: firebase.firestore.FieldValue.increment(diffQty),
                                         costPrice: newCost,
@@ -4026,13 +4590,8 @@ const auth = firebase.auth();
                                         barcode: prod.barcode || matchedProduct.barcode || '',
                                         img: prod.img || matchedProduct.img || ''
                                     });
-                                    matchedProduct.stock = currentGodownStock + diffQty;
                                 } else {
-                                    // Godown mein stock kam hai (maal shop transfer ho chuka hai)
-                                    const godownMinus = Math.max(0, currentGodownStock);
-                                    const remainingMinusFromShop = neededDeduction - godownMinus;
-
-                                    // 1. Godown stock 0 par set karein (negative nahi hone dega)
+                                    const remainingMinusFromShop = neededDeduction - Math.max(0, currentGodownStock);
                                     batch.update(productsDB.doc(matchedProduct.id), {
                                         stock: 0,
                                         costPrice: newCost,
@@ -4041,28 +4600,25 @@ const auth = firebase.auth();
                                         barcode: prod.barcode || matchedProduct.barcode || '',
                                         img: prod.img || matchedProduct.img || ''
                                     });
-                                    matchedProduct.stock = 0;
 
-                                    // 2. Shop (Branch) ke stock se minus karein
                                     const branchStockRecords = (window.branchStockList || []).filter(bs => bs.productId === matchedProduct.id);
                                     let toDeduct = remainingMinusFromShop;
-
                                     for (let bRec of branchStockRecords) {
                                         if (toDeduct <= 0) break;
                                         const curBQty = Number(bRec.qty || 0);
-                                        const deductFromThis = Math.min(curBQty, toDeduct);
-
-                                        batch.update(branchStockDB.doc(bRec.id), {
-                                            qty: firebase.firestore.FieldValue.increment(-deductFromThis),
-                                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-                                        });
-
-                                        bRec.qty = Math.max(0, curBQty - deductFromThis);
-                                        toDeduct -= deductFromThis;
+                                        const deductThis = Math.min(curBQty, toDeduct);
+                                        if (curBQty - deductThis <= 0) {
+                                            batch.delete(branchStockDB.doc(bRec.id));
+                                        } else {
+                                            batch.update(branchStockDB.doc(bRec.id), {
+                                                qty: firebase.firestore.FieldValue.increment(-deductThis),
+                                                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                                            });
+                                        }
+                                        toDeduct -= deductThis;
                                     }
                                 }
                             } else {
-                                // Agar quantity barhai hai (e.g. 4 se 6 ki)
                                 batch.update(productsDB.doc(matchedProduct.id), {
                                     stock: firebase.firestore.FieldValue.increment(diffQty),
                                     costPrice: newCost,
@@ -4071,14 +4627,7 @@ const auth = firebase.auth();
                                     barcode: prod.barcode || matchedProduct.barcode || '',
                                     img: prod.img || matchedProduct.img || ''
                                 });
-                                matchedProduct.stock = currentGodownStock + diffQty;
                             }
-
-                            matchedProduct.costPrice = newCost;
-                            matchedProduct.price = newSale;
-                            matchedProduct.name = prod.name;
-                            prod.productId = matchedProduct.id;
-
                         } else {
                             const newDocRef = productsDB.doc();
                             batch.set(newDocRef, {
@@ -4097,7 +4646,7 @@ const auth = firebase.auth();
                         }
                     }
 
-                    // 3. Purchase document update
+                    // 4. Purchase Order Update Karein
                     batch.update(purchasesDB.doc(window.editingPurchaseDocId), {
                         vendorName: purchaserName,
                         vendorPhone: purchaserPhone,
@@ -4111,18 +4660,15 @@ const auth = firebase.auth();
                         lastEditedAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
 
-                    // Commit all updates
                     await batch.commit();
 
                     Toast.fire({
                         icon: 'success',
-                        title: 'Purchase Order aur Shop Stock dono kamyabi say sync hogaye!'
+                        title: 'Purchase Order, Godown aur Shop Stock sab sync hogaye!'
                     });
 
-                    // Edit state reset karein
                     window.editingPurchaseDocId = null;
                     window.editingOriginalPurchaseItems = [];
-
                 } else {
                     // =========================================================================
                     // CASE B: AGAR NAYI PURCHASE SAVE HO RAHI HAI
@@ -4299,7 +4845,7 @@ if (typeof window.saveAllDataToLocalDrive === 'function') {
 
                     const displaySerial = item.serialNo || item.poNumber || '-';
 
-                   tbody.innerHTML += `
+                tbody.innerHTML += `
                         <tr>
                             <td>
                                 <strong style="color:var(--primary);">${displaySerial}</strong><br>
@@ -4322,6 +4868,7 @@ if (typeof window.saveAllDataToLocalDrive === 'function') {
                             <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
                             <td class="action-btns">
                                 <button class="btn-edit" onclick="openEditPurchaseModal('${item.id}')" title="Edit Purchase & Stock"><i class='bx bx-edit'></i> Edit</button>
+                                <button class="btn-delete" onclick="deletePurchaserWithCompleteStock('${item.id}')" title="Purchaser & Stock Mukammal Delete Karein"><i class='bx bx-trash'></i> Delete</button>
                                 ${payDueActionBtn}
                                 ${due <= 0 ? `<span style="color:#10b981; font-weight:700; font-size:0.82rem; margin-left:4px;"><i class='bx bx-check-circle'></i> Cleared</span>` : ''}
                             </td>
@@ -4339,6 +4886,173 @@ if (typeof window.saveAllDataToLocalDrive === 'function') {
             if (kpiPaid) kpiPaid.textContent = `Rs. ${totalPaidSum.toLocaleString()}`;
             if (kpiDue) kpiDue.textContent = `Rs. ${totalDueSum.toLocaleString()}`;
             if (kpiQty) kpiQty.textContent = `${totalItemsQty} pcs`;
+        };
+
+// =========================================================================
+        // PURCHASER DELETE FUNCTION (WITH CLEAN PROFESSIONAL ENGLISH ALERTS)
+        // =========================================================================
+        window.deletePurchaserWithCompleteStock = async function(purchaseId) {
+            const purchase = (window.purchasesList || []).find(p => p.id === purchaseId);
+            if (!purchase) {
+                alert("Purchase record not found!");
+                return;
+            }
+
+            const vendorName = purchase.vendorName || 'Purchaser';
+            const serialNo = purchase.serialNo || purchase.poNumber || 'Record';
+
+            const confirmResult = await Swal.fire({
+                title: 'Permanent Delete Warning!',
+                html: `
+                    <div style="text-align:left; font-size:0.9rem; color:#334155; line-height:1.6;">
+                        Are you sure you want to permanently delete <b>${vendorName}</b> (Bill: <b style="color:#0066ff;">${serialNo}</b>)?<br><br>
+                        <b style="color:#ef4444;">⚠️ This action will:</b>
+                        <ul style="margin-top:6px; padding-left:18px;">
+                            <li>Deduct/remove all purchased inventory from <b>Main Warehouse / Godown</b>.</li>
+                            <li>Deduct stock from <b>Assigned Shops/Stores</b> if already transferred.</li>
+                            <li>Completely remove the item from <b>POS & Barcode Screens</b> if stock reaches zero.</li>
+                        </ul>
+                    </div>
+                `,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#64748b',
+                confirmButtonText: 'Yes, Delete Completely',
+                cancelButtonText: 'Cancel'
+            });
+
+            if (!confirmResult.isConfirmed) return;
+
+            Swal.fire({
+                title: 'Deleting Inventory & Barcodes...',
+                html: 'Please wait while inventory database is synchronizing.',
+                allowOutsideClick: false,
+                didOpen: () => { Swal.showLoading(); }
+            });
+
+            try {
+                const batch = db.batch();
+
+                let itemsToDelete = purchase.items || [];
+                if (itemsToDelete.length === 0 && purchase.productName) {
+                    itemsToDelete = [{
+                        name: purchase.productName,
+                        barcode: purchase.barcode || '',
+                        qty: Number(purchase.qty || 1)
+                    }];
+                }
+
+                for (let item of itemsToDelete) {
+                    const deductQty = Number(item.qty || 1);
+
+                    const matchedProduct = (window.menuItems || []).find(p => 
+                        (item.productId && p.id === item.productId) ||
+                        (item.barcode && p.barcode && String(p.barcode).trim() === String(item.barcode).trim()) ||
+                        (item.name && p.name && p.name.trim().toLowerCase() === String(item.name).trim().toLowerCase())
+                    );
+
+                    if (matchedProduct) {
+                        let currentGodownQty = Number(matchedProduct.stock || 0);
+                        let remainingToDeduct = deductQty;
+
+                        // Step 1: Pehle Godown se stock minus karein
+                        if (currentGodownQty >= remainingToDeduct) {
+                            currentGodownQty -= remainingToDeduct;
+                            remainingToDeduct = 0;
+                        } else {
+                            remainingToDeduct -= currentGodownQty;
+                            currentGodownQty = 0;
+                        }
+
+                        // Step 2: Agar Godown me stock khatam ho jaye aur deduct karna baqi ho, toh Shop se minus karein
+                        if (remainingToDeduct > 0) {
+                            const branchRecords = (window.branchStockList || []).filter(bs => 
+                                bs.productId === matchedProduct.id ||
+                                (bs.productBarcode && matchedProduct.barcode && bs.productBarcode === matchedProduct.barcode)
+                            );
+
+                            for (let bRec of branchRecords) {
+                                if (remainingToDeduct <= 0) break;
+                                
+                                const curBQty = Number(bRec.qty || 0);
+                                if (curBQty > 0) {
+                                    const deductFromShop = Math.min(curBQty, remainingToDeduct);
+                                    remainingToDeduct -= deductFromShop;
+                                    
+                                    if (curBQty - deductFromShop <= 0) {
+                                        batch.delete(branchStockDB.doc(bRec.id));
+                                        // Local Memory Foran Update
+                                        window.branchStockList = window.branchStockList.filter(x => x.id !== bRec.id);
+                                    } else {
+                                        batch.update(branchStockDB.doc(bRec.id), {
+                                            qty: firebase.firestore.FieldValue.increment(-deductFromShop),
+                                            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                                        });
+                                        // Local Memory Foran Update
+                                        const localBranch = window.branchStockList.find(x => x.id === bRec.id);
+                                        if(localBranch) localBranch.qty = curBQty - deductFromShop;
+                                    }
+                                }
+                            }
+                        }
+
+                        // Step 3: Product ko Delete ya Update karein (Stock 0 hone par POS se hamesha ke liye ghayab ho jayega)
+                        const remainingBranchStock = (window.branchStockList || [])
+                            .filter(bs => bs.productId === matchedProduct.id)
+                            .reduce((sum, bs) => sum + Number(bs.qty || 0), 0);
+
+                        if (currentGodownQty <= 0 && remainingBranchStock <= 0) {
+                            batch.delete(productsDB.doc(matchedProduct.id));
+                            // UI ko foran saaf karne ke liye local array se nikal dein
+                            window.menuItems = window.menuItems.filter(m => m.id !== matchedProduct.id);
+                        } else {
+                            batch.update(productsDB.doc(matchedProduct.id), {
+                                stock: currentGodownQty
+                            });
+                            // Local array update
+                            const localProd = window.menuItems.find(m => m.id === matchedProduct.id);
+                            if(localProd) localProd.stock = currentGodownQty;
+                        }
+                    }
+                }
+
+                // Purchase Record Khatam
+                batch.delete(purchasesDB.doc(purchaseId));
+
+                // Cloud Par Data Bhejein
+                await batch.commit();
+
+                // Purchase list me se foran item hata dein
+                window.purchasesList = (window.purchasesList || []).filter(p => p.id !== purchaseId);
+
+                if (typeof window.saveAllDataToLocalDrive === 'function') {
+                    window.saveAllDataToLocalDrive(true);
+                }
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Purchaser Deleted Successfully!',
+                    text: 'Purchaser record aur uska stock mukammal taur par delete ho gaya hai.',
+                    timer: 2500,
+                    showConfirmButton: false
+                });
+
+                // Sab Screens Ko Live Refresh Karein
+                if (typeof window.renderPurchaseDetailsView === 'function') window.renderPurchaseDetailsView();
+                if (typeof window.renderPurchaserReport === 'function') window.renderPurchaserReport();
+                if (typeof window.filterMenu === 'function') window.filterMenu();
+                if (typeof window.renderAllProductBarcodesView === 'function') window.renderAllProductBarcodesView();
+                if (typeof window.renderStockReport === 'function') window.renderStockReport();
+
+            } catch (err) {
+                console.error("Delete purchase error:", err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Delete Failed',
+                    text: 'An error occurred while deleting: ' + err.message
+                });
+            }
         };
 
         window.openPayVendorModal = function(purchaseId) {
@@ -4462,7 +5176,8 @@ if (typeof window.saveAllDataToLocalDrive === 'function') {
 
     // Agar koi Shop add hi nahi hui
     if (!window.branchesList || window.branchesList.length === 0) {
-        posBranchSelect.innerHTML = '<option value="">Koi shop Mojood Nahi (Pehle Add Karein)</option>';
+        posBranchSelect.innerHTML = '<option value="">No Store Available (Please Add First)</option>';
+
         posBranchSelect.disabled = true;
         return;
     }
@@ -4475,7 +5190,7 @@ if (typeof window.saveAllDataToLocalDrive === 'function') {
             posBranchSelect.value = assignedObj.id;
             posBranchSelect.disabled = true; // User kisi doosri Shop ya godown par switch nahi kar sakta
         } else {
-            posBranchSelect.innerHTML = '<option value="">Assigned shop Nahi Mili</option>';
+        posBranchSelect.innerHTML = '<option value="">No Store Available (Please Add First)</option>';
             posBranchSelect.disabled = true;
         }
     } else {
@@ -5772,6 +6487,32 @@ if (typeof window.saveAllDataToLocalDrive === 'function') {
                     window.renderTransferHistoryReports();
                 }
             });
+
+            // CLOUD LIVE SYNC: Store Settings & Discount Listener (Har Laptop Par Live Sync)
+            settingsDB.doc('store_settings').onSnapshot(doc => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    localStorage.setItem('pos_biz_name', data.bizName || 'SAJAWAT BY MAGENTA');
+                    localStorage.setItem('pos_biz_phone', data.bizPhone || '(0300) 1234567');
+                    localStorage.setItem('pos_biz_note', data.bizNote || 'YOUR WORK OUR IDENTITY. Thank you for your business!');
+                    localStorage.setItem('pos_global_discount', (data.globalDiscount !== undefined ? data.globalDiscount : 0).toString());
+                    if (data.nextInvoiceNo) {
+                        localStorage.setItem('pos_next_invoice_no', data.nextInvoiceNo.toString());
+                    }
+
+                    // Input fields ko bhi update karein agar settings page khula ho
+                    const discInput = document.getElementById('store-global-discount');
+                    if (discInput) discInput.value = data.globalDiscount || 0;
+
+                    // Dukan ka naam aur POS live refresh karein
+                    if (typeof window.applyBusinessBrandInfo === 'function') {
+                        window.applyBusinessBrandInfo();
+                    }
+                    if (typeof window.filterMenu === 'function') {
+                        window.filterMenu();
+                    }
+                }
+            });
         }
 
 cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
@@ -5809,7 +6550,7 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
             });
         };
 
-      window.filterMenu = function() {
+     window.filterMenu = function() {
     const searchTerm = (document.getElementById('menu-search')?.value || '').toLowerCase().trim();
     const activeBtn = document.querySelector('#pos-category-filters button.active');
     const activeCategory = activeBtn ? activeBtn.dataset.category : 'all';
@@ -5817,24 +6558,9 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
     const menuGrid = document.getElementById('menu-grid');
     if (!menuGrid) return;
 
-    if (!selectedBranch) {
-        menuGrid.innerHTML = `
-            <div class="empty-placeholder" style="grid-column: 1/-1; padding: 40px 20px;">
-                <i class='bx bx-error-circle' style="font-size:3.5rem; color:#ef4444; display:block; margin-bottom:10px;"></i>
-                <h3 style="color:#0f172a; margin-bottom:6px;">Main Godown Se Direct Sale Mana Hai!</h3>
-                <p style="color:#64748b; font-size:0.9rem;">
-                    Cheezein sirf Shop se bikti hain. Upar se pehle Shop select karein.
-                </p>
-            </div>
-        `;
-        return;
-    }
-
     const filteredItems = [];
 
-    // Sirf wahi product aayenge jo menuItems (Main Inventory) mein zinda hain aur jinki purchase active hai
     (window.menuItems || []).forEach(item => {
-        // Validation check: Agar product ka record valid na ho to ignore karein
         if (!item || !item.id) return;
 
         const matchesCategory = (activeCategory === 'all' || item.category === activeCategory);
@@ -5842,22 +6568,27 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
                                (item.barcode && String(item.barcode).toLowerCase().includes(searchTerm)));
 
         if (matchesCategory && matchesSearch) {
-            // Selected shop ka stock nikalna
-            const bStockRecord = (window.branchStockList || []).find(bs => bs.branchId === selectedBranch && (bs.productId === item.id || (bs.productBarcode && bs.productBarcode === item.barcode)));
-            const branchQty = bStockRecord ? Number(bStockRecord.qty || 0) : 0;
+            // 1. Branch/Shop ka stock check karein
+            let branchQty = 0;
+            if (selectedBranch && selectedBranch !== 'all') {
+                const bStockRecord = (window.branchStockList || []).find(bs => 
+                    bs.branchId === selectedBranch && 
+                    (bs.productId === item.id || (bs.productBarcode && bs.productBarcode === item.barcode))
+                );
+                branchQty = bStockRecord ? Number(bStockRecord.qty || 0) : 0;
+            }
 
-            // Total combined stock check (Agar item purchase se delete ho chuka hai to POS mein nahi aayega)
-            const godownStock = Number(item.stock || 0);
-            const allStoresStock = (window.branchStockList || [])
-                .filter(bs => bs.productId === item.id)
-                .reduce((sum, bs) => sum + Number(bs.qty || 0), 0);
+            // 2. Main Godown ka stock
+            const godownQty = Number(item.stock || 0);
 
-            const hasValidInventory = (godownStock + allStoresStock) > 0;
+            // AGAR Shop par stock 0 ho lekin Godown mein maal mojood ho, tab bhi POS par show ho:
+            const displayQty = branchQty > 0 ? branchQty : godownQty;
 
-            if (branchQty > 0 && hasValidInventory) {
+            // Agar total stock 0 se bara hai toh item lazmi show karein
+            if (displayQty > 0) {
                 filteredItems.push({
                     ...item,
-                    currentBranchStock: branchQty
+                    currentBranchStock: displayQty
                 });
             }
         }
@@ -5869,8 +6600,7 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
         menuGrid.innerHTML = `
             <div class="empty-placeholder" style="grid-column: 1/-1;">
                 <i class='bx bx-box' style="font-size:3rem; display:block; margin-bottom:8px;"></i>
-                Is Shop par filhal koi stock dastyab nahi hai.<br>
-                <small style="color:#64748b;">(Main Godown se is Shop par 'Product to Move Store' ke zariye stock transfer karein)</small>
+                Currently no stock is available at this Store / Warehouse.
             </div>
         `;
         return;
@@ -5880,8 +6610,6 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
 
     filteredItems.forEach(item => {
         const displayStock = item.currentBranchStock;
-        const branchTag = `<div style="font-size:0.75rem; color:#0284c7; font-weight:700; margin-top:4px;"><i class='bx bx-store'></i> Shop Stock</div>`;
-
         const originalPrice = parseFloat(item.price || 0);
         let finalSellingPrice = originalPrice;
         let priceDisplayHtml = `Rs. ${originalPrice.toLocaleString()}`;
@@ -5890,9 +6618,7 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
         if (globalDiscountPercent > 0) {
             const discountAmount = (originalPrice * globalDiscountPercent) / 100;
             finalSellingPrice = Math.max(0, originalPrice - discountAmount);
-            
             discountBadgeHtml = `<div style="position:absolute; top:35px; right:10px; background:#ef4444; color:white; padding:2px 7px; border-radius:6px; font-size:0.72rem; font-weight:800; z-index:2;">${globalDiscountPercent}% OFF</div>`;
-            
             priceDisplayHtml = `
                 <span style="text-decoration: line-through; color: #94a3b8; font-size: 0.85rem; font-weight: 500; margin-right: 5px;">Rs. ${originalPrice.toLocaleString()}</span>
                 <span style="color:#10b981; font-weight:800;">Rs. ${finalSellingPrice.toLocaleString()}</span>
@@ -5912,37 +6638,14 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
             ${imageHtml}
             <h4>${item.name}</h4>
             <p class="selling-p">${priceDisplayHtml}</p>
-            ${branchTag}
         `;
         card.addEventListener('click', () => addToCart(item.id));
         menuGrid.appendChild(card);
     });
-
-    if (typeof window.updateDashboardMetrics === 'function') {
-        window.updateDashboardMetrics();
-    }
 };
 
-// =========================================================
-// AUTO-PURGE: REMOVE ORPHANED SHOP STOCKS (FOR H267, H268, ETC.)
-// =========================================================
-async function cleanupDeletedProductsFromShopStock() {
-    if (!window.branchStockList || !window.menuItems) return;
 
-    for (let bStock of window.branchStockList) {
-        // Agar shop stock wala item main menuItems mein exist hi nahi karta
-        const existsInMain = window.menuItems.some(p => p.id === bStock.productId || (p.barcode && p.barcode === bStock.productBarcode));
-        
-        if (!existsInMain) {
-            try {
-                await branchStockDB.doc(bStock.id).delete();
-                console.log(`Removed deleted item from Shop Stock: ${bStock.productName}`);
-            } catch(e) {}
-        }
-    }
-}
-setTimeout(cleanupDeletedProductsFromShopStock, 2500);
-
+// setTimeout(cleanupDeletedProductsFromShopStock, 2000);
         window.addToCart = function(itemId) {
     const item = window.menuItems.find(i => i.id === itemId);
     if (!item) return;
@@ -5953,12 +6656,16 @@ setTimeout(cleanupDeletedProductsFromShopStock, 2500);
         return;
     }
 
-    // Sirf is Shop ka stock check karein
+    // Shop ka stock check karein, agar wahan nahi hai tou Godown (main inventory) ka stock check karein
     const bStockRecord = (window.branchStockList || []).find(bs => bs.branchId === selectedBranch && bs.productId === item.id);
-    const maxAvailable = bStockRecord ? Number(bStockRecord.qty || 0) : 0;
+    const branchQty = bStockRecord ? Number(bStockRecord.qty || 0) : 0;
+    const godownQty = Number(item.stock || 0);
+    
+    // Asal Available Quantity
+    const maxAvailable = branchQty > 0 ? branchQty : godownQty;
 
     if (maxAvailable <= 0) {
-        alert(`"${item.name}" ka stock is Shop par khatam (OUT OF STOCK) hai! Godown se transfer karein.`);
+        alert(`"${item.name}" ka stock Shop aur Godown dono main khatam (OUT OF STOCK) hai!`);
         window.filterMenu();
         return;
     }
@@ -6255,7 +6962,7 @@ setTimeout(cleanupDeletedProductsFromShopStock, 2500);
             const activeEl = document.activeElement;
             const isTypingInOtherBox = activeEl && (
                 activeEl.tagName === 'TEXTAREA' || 
-                (activeEl.tagName === 'INPUT' && activeEl.id !== 'menu-search' && activeEl.id !== 'transfer-barcode-scan' && activeEl.id !== 'audit-manual-barcode')
+                (activeEl.tagName === 'INPUT' && activeEl.id !== 'menu-search' && activeEl.id !== 'transfer-barcode-scan')
             );
 
             if (isTypingInOtherBox && !activeEl.classList.contains('pos-mini-input')) {
@@ -6267,19 +6974,19 @@ setTimeout(cleanupDeletedProductsFromShopStock, 2500);
                 barcodeGunBuffer = "";
             }
 
-            if (e.key === 'Enter') {
+           if (e.key === 'Enter') {
                 if (barcodeGunBuffer.length >= 3) {
                     e.preventDefault();
                     const scannedCode = barcodeGunBuffer.trim();
                     barcodeGunBuffer = "";
 
                     const isTransferActive = document.getElementById('branch-transfer-view')?.classList.contains('active');
-                    const isAuditActive = document.getElementById('stock-audit-view')?.classList.contains('active') && window.isStockAuditRunning === true;
+                    const isAuditActive = document.getElementById('stock-audit-view')?.classList.contains('active');
                     
-                    if (isTransferActive && typeof window.handleTransferScannedBarcode === 'function') {
+                    if (isAuditActive && window.isAuditRunning) {
+                        window.processAuditScan(scannedCode);
+                    } else if (isTransferActive && typeof window.handleTransferScannedBarcode === 'function') {
                         window.handleTransferScannedBarcode(scannedCode);
-                    } else if (isAuditActive && typeof window.handleAuditScannedBarcode === 'function') {
-                        window.handleAuditScannedBarcode(scannedCode);
                     } else {
                         processScannedCode(scannedCode);
                         const searchBox = document.getElementById('menu-search');
@@ -6530,8 +7237,7 @@ setTimeout(cleanupDeletedProductsFromShopStock, 2500);
                 const currentUser = JSON.parse(currentUserStr);
                 if (currentUser.role !== 'superadmin' && currentUser.role !== 'supermaster') {
                     const p = currentUser.permissions || {};
-                   const viewPermMap = {
-                        'stock-audit': p.reports,
+                    const viewPermMap = {
                         'dashboard': p.dashboard,
                         'pos': p.pos,
                         'add-purchase-product': p.purchaser,
@@ -6540,6 +7246,7 @@ setTimeout(cleanupDeletedProductsFromShopStock, 2500);
                         'product-barcodes': p.purchaser,
                         'profit-loss': p.reports,
                         'stock-report': p.reports,
+                        'stock-audit': p.reports,
                         'purchaser-report': p.reports,
                         'return-report': p.reports,
                         'expense-report': p.reports,
@@ -6550,7 +7257,6 @@ setTimeout(cleanupDeletedProductsFromShopStock, 2500);
                         'expense': p.expenses,
                         'settings': p.settings,
                         'users': p.users
-                        
                     };
                     if (viewPermMap[v] === false) {
                         alert("Access Denied! You do not have permission to view this module.");
@@ -6563,8 +7269,7 @@ setTimeout(cleanupDeletedProductsFromShopStock, 2500);
             const targetView = document.getElementById(`${v}-view`);
             if(targetView) targetView.classList.add('active');
             
-           const titles = {
-                'stock-audit': 'Stock Audit & Verification',
+            const titles = {
                 'dashboard': 'Dashboard',
                 'pos': 'Point of Sale (POS)',
                 'add-purchase-product': 'Purchase & Product',
@@ -6573,6 +7278,7 @@ setTimeout(cleanupDeletedProductsFromShopStock, 2500);
                 'product-barcodes': 'Product Barcodes',
                 'profit-loss': 'Profit & Loss Financial Analytics',
                 'stock-report': 'Stock Inventory Report',
+                'stock-audit': 'Stock Audit & Verification',
                 'purchaser-report': 'Purchaser & Vendor Procurement Report',
                 'return-report': 'Product Returns Report',
                 'expense-report': 'Store Expenses Report',
@@ -6604,48 +7310,42 @@ setTimeout(cleanupDeletedProductsFromShopStock, 2500);
                 window.renderTransferHistoryReports();
             }
             if(v === 'purchase-details') window.renderPurchaseDetailsView();
-            if(v === 'profit-loss') window.renderProfitLossReport();
+           if(v === 'profit-loss') window.renderProfitLossReport();
             if(v === 'stock-report') window.renderStockReport();
+            if(v === 'stock-audit') window.initStockAuditView(); /* YE NAYI LINE ADD KAREIN */
             if(v === 'purchaser-report') window.renderPurchaserReport();
             if(v === 'return-report') window.renderReturnReport();
             if(v === 'expense-report') window.renderExpenseReport();
             if(v === 'cashbook-report') window.renderCashBookReport();
             if(v === 'sell') window.renderSellView();
             if(v === 'cashbook') window.renderCashBookFlow();
-           if(v === 'return') window.renderReturnView();
+            if(v === 'return') window.renderReturnView();
             if(v === 'expense') window.renderExpenseView();
             if(v === 'all-reports') window.renderAllReportsView();
             if(v === 'users') renderUsersManagementTable();
-            if(v === 'stock-audit') window.initStockAuditView(); // <--- YAHAN YEH NAYI LINE ADD KARNI HAI
             
-           document.querySelectorAll('.nav-list a').forEach(a => { 
+            document.querySelectorAll('.nav-list a').forEach(a => { 
                 a.classList.remove('active'); 
-                if(a.getAttribute('onclick')?.includes(`switchView('${v}')`)) {
-                    a.classList.add('active'); 
-                    
-                    // Agar click hone wala module simple hai (arrow wala nahi hai), 
-                    // to baki tamam khule hue arrow wale modules band kar do
-                    if (!a.closest('.has-submenu')) {
-                        document.querySelectorAll('.has-submenu').forEach(menu => menu.classList.remove('open'));
-                    }
-                }
+                if(a.getAttribute('onclick')?.includes(`switchView('${v}')`)) a.classList.add('active'); 
             });
         };
 
        function toggleSubmenu(event, element) {
             event.preventDefault(); 
-            
-            let parentLi = element.parentElement;
-            
-            // 1. Baki tamam open dropdowns ko dhoond kar khud band (close) kar dega
-            document.querySelectorAll('.has-submenu').forEach(menu => {
-                if (menu !== parentLi) {
-                    menu.classList.remove('open');
-                }
+            const currentLi = element.closest('.has-submenu') || element.parentElement;
+            const isOpen = currentLi.classList.contains('open');
+
+            // 1. Pehle tamam doosre arrow wale dropdowns ko band karein
+            document.querySelectorAll('.nav-list li.has-submenu').forEach(li => {
+                li.classList.remove('open');
             });
 
-            // 2. Sirf usi ko open ya close karega jis par click kiya gaya hai
-            parentLi.classList.toggle('open');
+            // 2. Agar current menu pehle se band tha to sirf isko kholein
+            if (!isOpen) {
+                currentLi.classList.add('open');
+            }
+
+            // 3. Agar sidebar choti thi to poori khol dein
             document.getElementById('sidebar')?.classList.remove('collapsed');
         }
 
@@ -6764,157 +7464,76 @@ setTimeout(cleanupDeletedProductsFromShopStock, 2500);
         return;
     }
 
-const SUPER_MASTER_USER = "supermaster";
-    const SUPER_MASTER_PASS = "korvexa192168";
-
-
-
-    if (iden === SUPER_MASTER_USER && p === SUPER_MASTER_PASS) {
-        const superMasterUser = {
-            id: 'super_master_developer',
-            name: 'Super Master Developer',
-            username: 'supermaster',
-            email: 'supermaster@korvexa.dev',
-            role: 'supermaster',
-            status: 'active',
-            assignedBranch: 'all',
-            permissions: {
-                dashboard: true, pos: true, purchaser: true, reports: true,
-                sales: true, dailySheet: true, allReports: true, returns: true,
-                exchanges: true, expenses: true, settings: true, users: true,
-                stockCols: { barcode: true, product: true, costPrice: true, sellingPrice: true, totalStock: true }
-            }
-        };
-
-        sessionStorage.setItem('pos_current_user', JSON.stringify(superMasterUser));
-        document.getElementById('login-page')?.classList.add('hidden');
-        
-        // Safe check taake missing element ki wajah se code crash na ho
-        const lockScreen = document.getElementById('software-lockdown-screen');
-        if (lockScreen) lockScreen.style.display = 'none';
-
-        const badge = document.getElementById('header-user-display');
-        if (badge) badge.textContent = 'Super Master';
-
-        // 1. Header mein DEV CONTROL button show karein
-        const devBtn = document.getElementById('super-master-header-btn');
-        if (devBtn) devBtn.style.display = 'flex';
-
-        // 2. Sidebar mein bhi "Dev License Control" module show karein
-        const sidebarDev = document.getElementById('nav-dev-license');
-        if (sidebarDev) sidebarDev.style.display = 'block';
-
-        applyUserPermissions(superMasterUser);
-
-        // 3. Login hote hi foran License Control Modal auto-open ho jaye
-        setTimeout(() => {
-            if (typeof window.openSuperMasterModal === 'function') {
-                window.openSuperMasterModal();
-            }
-        }, 300);
-
-        if (window.Toast) {
-            Toast.fire({ icon: 'success', title: 'Super Master Developer Console Unlocked!' });
-        }
-        return;
-    }
-
-    // 2. CHECK: AGAR SOFTWARE BAND / EXPIRED HAI TO POPUP & MESSAGE SHOW HO
-    if (window.isSoftwareLockedGlobal === true) {
-        const supportPhone = window.currentLicenseData?.supportPhone || '0300-1234567';
-
-        // Login screen par red error text
-        if (err) {
-            err.textContent = 'Software Expired: Please Contact Developer';
-            err.className = 'auth-msg error';
-        }
-
-       // User ko clear English alert popup show ho jaye
-        if (window.Swal) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Cloud Software Expired',
-                html: `
-                    <p style="font-size: 1.05rem; font-weight: 700; color: #b91c1c; margin-top: 6px;">
-                        Please Contact Software Developer
-                    </p>
-                    <p style="font-size: 0.88rem; color: #64748b; margin-top: 8px; line-height: 1.5;">
-                        Your software license subscription has expired. Please contact the developer to reactivate your access.
-                    </p>
-                    <div style="margin-top: 14px; background: #fef2f2; border: 1.5px dashed #f87171; padding: 10px; border-radius: 10px; font-weight: 800; color: #0284c7; font-size: 1.1rem;">
-                        <i class='bx bxs-phone-call'></i> Helpline: ${supportPhone}
-                    </div>
-                `,
-                confirmButtonText: 'OK',
-                confirmButtonColor: '#ef4444'
-            });
-        }
-
-        return;
-    }
-
     try {
         if (err) {
-            err.textContent = 'Tasdeeq (Verifying) ho rahi hai...';
+            err.textContent = 'Verifying credentials...';
             err.className = 'auth-msg';
         }
 
         let loginEmail = iden;
 
-        // Agar user ne email ke bajaye username likha ho
+        // Agar user ne username likha ho toh Firestore se uska email nikalna
         if (!iden.includes('@')) {
             const snap = await usersDB.where('username', '==', iden).get();
             if (snap.empty) {
-                if (err) { err.textContent = 'Is username ka koi account nahi mila!'; err.className = 'auth-msg error'; }
+                if (err) { 
+                    err.textContent = 'Is username ka koi account nahi mila!'; 
+                    err.className = 'auth-msg error'; 
+                }
                 return;
             }
             loginEmail = snap.docs[0].data().email;
         }
 
-        // Firebase Auth login
+        // 1. Asal Firebase Authentication (Cloud par encrypted check hota hai)
         const userCredential = await auth.signInWithEmailAndPassword(loginEmail, p);
         const user = userCredential.user;
 
-        // Master Admin (Shop Owner) Check
-        if (loginEmail === 'sajawatbymagenta@gmail.com') {
-            const masterUser = {
-                id: user.uid,
-                name: 'Master Admin',
-                username: user.displayName || 'sajawatbymagenta',
-                email: 'sajawatbymagenta@gmail.com',
-                role: 'superadmin',
-                status: 'active',
-                assignedBranch: 'all',
-                permissions: {
-                    dashboard: true, pos: true, purchaser: true, reports: true,
-                    sales: true, dailySheet: true, allReports: true, returns: true,
-                    exchanges: true, expenses: true, settings: true, users: true,
-                    stockCols: { barcode: true, product: true, costPrice: true, sellingPrice: true, totalStock: true }
-                }
-            };
-
-            sessionStorage.setItem('pos_current_user', JSON.stringify(masterUser));
-            document.getElementById('login-page')?.classList.add('hidden');
-            const badge = document.getElementById('header-user-display');
-            if (badge) badge.textContent = 'Master Admin';
-
-            // Master Admin se developer button chupayein
-            const devBtn = document.getElementById('super-master-header-btn');
-            if (devBtn) devBtn.style.display = 'none';
-
-            applyUserPermissions(masterUser);
-            return;
-        }
-
-        // Normal Staff User check
+        // 2. Database se is user ka role aur status check karna
         const userDoc = await usersDB.doc(user.uid).get();
         if (!userDoc.exists) {
-            if (err) { err.textContent = 'User profile database mein mojood nahi hai!'; err.className = 'auth-msg error'; }
+            if (err) { 
+                err.textContent = 'User profile database mein mojood nahi hai!'; 
+                err.className = 'auth-msg error'; 
+            }
             await auth.signOut();
             return;
         }
 
         const userData = { id: userDoc.id, ...userDoc.data() };
+        const isSuperMaster = (userData.role === 'supermaster' || userData.role === 'developer');
+
+        // 3. Agar Software Expired ho aur login karne wala Developer NAHI hai toh roko:
+        if (window.isSoftwareLockedGlobal === true && !isSuperMaster) {
+            await auth.signOut();
+            const supportPhone = window.currentLicenseData?.supportPhone || '0300-1234567';
+            if (err) {
+                err.textContent = 'Software Expired: Please Contact Developer';
+                err.className = 'auth-msg error';
+            }
+            if (window.Swal) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Cloud License Expired',
+                    html: `
+                        <p style="color:#b91c1c; font-weight:700;">Please Contact Software Developer</p>
+                        <p style="color:#64748b; font-size:0.85rem;">Your software license subscription has expired.</p>
+                        <div style="margin-top:10px; background:#fef2f2; padding:8px; border-radius:8px; font-weight:800; color:#0284c7;">
+                            Helpline: ${supportPhone}
+                        </div>
+                    `,
+                    confirmButtonColor: '#ef4444'
+                });
+            }
+            return;
+        }
+
+        // 4. Status Check (Blocked ya Pending)
+        if (userData.status === 'blocked') {
+            if (err) { err.textContent = 'Yeh account block kar diya gaya hai!'; err.className = 'auth-msg error'; }
+            await auth.signOut();
+            return;
+        }
 
         if (userData.status === 'pending') {
             if (err) { err.textContent = 'Aapka account admin ki manzoori (approval) ka muntazir hai!'; err.className = 'auth-msg error'; }
@@ -6922,25 +7541,37 @@ const SUPER_MASTER_USER = "supermaster";
             return;
         }
 
-        if (userData.status === 'blocked') {
-            if (err) { err.textContent = 'Yeh account block kar diya gaya hai!'; err.className = 'auth-msg error'; }
-            await auth.signOut();
-            return;
-        }
-
-        // Active Staff Login
+        // 5. Successful Login -> Session Create karein
         sessionStorage.setItem('pos_current_user', JSON.stringify(userData));
         document.getElementById('login-page')?.classList.add('hidden');
-        const badge = document.getElementById('header-user-display');
-        if (badge) badge.textContent = userData.username || userData.email;
+        
+        const lockScreen = document.getElementById('software-lockdown-screen');
+        if (lockScreen && isSuperMaster) lockScreen.style.display = 'none';
 
-        // Staff se developer button chupayein
+        const badge = document.getElementById('header-user-display');
+        if (badge) badge.textContent = isSuperMaster ? 'Super Master' : (userData.username || userData.email);
+
+        // Developer Buttons: Sirf Super Master ko nazar aayenge
         const devBtn = document.getElementById('super-master-header-btn');
-        if (devBtn) devBtn.style.display = 'none';
+        const sidebarDev = document.getElementById('nav-dev-license');
+        if (devBtn) devBtn.style.display = isSuperMaster ? 'flex' : 'none';
+        if (sidebarDev) sidebarDev.style.display = isSuperMaster ? 'block' : 'none';
 
         applyUserPermissions(userData);
 
+        if (isSuperMaster) {
+            setTimeout(() => {
+                if (typeof window.openSuperMasterModal === 'function') {
+                    window.openSuperMasterModal();
+                }
+            }, 300);
+            if (window.Toast) {
+                Toast.fire({ icon: 'success', title: 'Super Master Developer Console Unlocked!' });
+            }
+        }
+
     } catch(e) {
+        console.error("Login Error:", e);
         if (err) {
             let errorText = 'Ghalat Email ya Password!';
             if (e.code === 'auth/user-not-found') errorText = 'Yeh Email register nahi hai!';
@@ -7444,8 +8075,7 @@ window.applyUserPermissions = function(user) {
         const activeView = document.querySelector('.view.active');
         const activeId = activeView ? activeView.id.replace('-view', '') : '';
 
-       const viewPermMap = {
-            'stock-audit': p.reports,
+        const viewPermMap = {
             'dashboard': p.dashboard,
             'pos': p.pos,
             'add-purchase-product': p.purchaser,
@@ -7678,7 +8308,7 @@ window.applyUserPermissions = function(user) {
         }
 
         // Realtime data load hone ke 2 second baad auto-run karein
-        setTimeout(autoFixNegativeStockDiscrepancies, 2000);
+// setTimeout(autoFixNegativeStockDiscrepancies, 2000);
 
 // POS Charge Button Event Listener (100% OFFLINE-READY)
             document.getElementById('charge-btn')?.addEventListener('click', () => { 
@@ -8018,21 +8648,25 @@ window.showInvoiceModal = function(sale) {
 
         
 // =========================================================
-// BUSINESS BRANDING & SETTINGS ENGINE (LIVE UPDATE HAR JAGA)
+// BUSINESS BRANDING & SETTINGS ENGINE (CLOUD LIVE SYNC HAR LAPTOP PAR)
 // =========================================================
 window.applyBusinessBrandInfo = function() {
     const bName = localStorage.getItem('pos_biz_name') || 'SAJAWAT BY MAGENTA';
     const bPhone = localStorage.getItem('pos_biz_phone') || '(0300) 1234567';
     const bNote = localStorage.getItem('pos_biz_note') || 'YOUR WORK OUR IDENTITY. Thank you for your business!';
+    const globalDisc = parseFloat(localStorage.getItem('pos_global_discount')) || 0;
 
     // 1. Settings page ke inputs
     const nameInput = document.getElementById('restaurant-name');
     const phoneInput = document.getElementById('restaurant-number');
-   const noteInput = document.getElementById('invoice-note');
+    const noteInput = document.getElementById('invoice-note');
     const nextInvInput = document.getElementById('setting-next-invoice-no');
+    const discInput = document.getElementById('store-global-discount');
+
     if (nameInput) nameInput.value = bName;
     if (phoneInput) phoneInput.value = bPhone;
-  if (noteInput) noteInput.value = bNote;
+    if (noteInput) noteInput.value = bNote;
+    if (discInput) discInput.value = globalDisc;
 
     // Database check: Settings mein hamesha asal agla invoice number dikhayein
     let maxInvCheck = 0;
@@ -8043,9 +8677,9 @@ window.applyBusinessBrandInfo = function() {
     let storedNext = parseInt(localStorage.getItem('pos_next_invoice_no') || '1', 10);
     if (nextInvInput) nextInvInput.value = Math.max(maxInvCheck + 1, storedNext);
 
-    // 2. Sidebar logo par pakka KORVEXA hi rahega (Change nahi hoga)
+    // 2. Sidebar logo set to KORVEXA SOLUTION
     const sidebarLogo = document.getElementById('sidebar-logo-name');
-    if (sidebarLogo) sidebarLogo.textContent = 'KORVEXA';
+    if (sidebarLogo) sidebarLogo.textContent = 'KORVEXA SOLUTION';
 
     // 3. Customer bill / receipt par dukan ka naam aur number aayega
     const recName = document.getElementById('invoice-restaurant-name');
@@ -8059,60 +8693,192 @@ window.applyBusinessBrandInfo = function() {
 // Page load hote hi settings load karein
 window.applyBusinessBrandInfo();
 
-document.getElementById('save-settings-btn')?.addEventListener('click', () => {
-    const bName = document.getElementById('restaurant-name')?.value.trim();
-    const bPhone = document.getElementById('restaurant-number')?.value.trim();
-    const bNote = document.getElementById('invoice-note')?.value.trim();
+// Save Settings Button: Firebase Cloud + LocalStorage Dono Mein Save Hoga
+document.getElementById('save-settings-btn')?.addEventListener('click', async () => {
+    const saveBtn = document.getElementById('save-settings-btn');
+    const bName = document.getElementById('restaurant-name')?.value.trim() || 'SAJAWAT BY MAGENTA';
+    const bPhone = document.getElementById('restaurant-number')?.value.trim() || '(0300) 1234567';
+    const bNote = document.getElementById('invoice-note')?.value.trim() || 'YOUR WORK OUR IDENTITY. Thank you for your business!';
     const globalDisc = parseFloat(document.getElementById('store-global-discount')?.value) || 0;
     const nextInvNo = parseInt(document.getElementById('setting-next-invoice-no')?.value) || 1;
 
-    if (bName) localStorage.setItem('pos_biz_name', bName);
-    if (bPhone) localStorage.setItem('pos_biz_phone', bPhone);
-    if (bNote) localStorage.setItem('pos_biz_note', bNote);
-    localStorage.setItem('pos_global_discount', globalDisc);
-    localStorage.setItem('pos_next_invoice_no', nextInvNo.toString());
+    try {
+        if (saveBtn) {
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Cloud Par Save Ho Raha Hai...";
+        }
 
-    // Har jaga naam aur number foran update karein
-    window.applyBusinessBrandInfo();
+        // 1. Local browser mein save karein
+        localStorage.setItem('pos_biz_name', bName);
+        localStorage.setItem('pos_biz_phone', bPhone);
+        localStorage.setItem('pos_biz_note', bNote);
+        localStorage.setItem('pos_global_discount', globalDisc.toString());
+        localStorage.setItem('pos_next_invoice_no', nextInvNo.toString());
 
-    if (typeof window.filterMenu === 'function') window.filterMenu();
+        // 2. Firebase Cloud Database mein save karein (Taake tamam laptops par chal jaye)
+        await settingsDB.doc('store_settings').set({
+            bizName: bName,
+            bizPhone: bPhone,
+            bizNote: bNote,
+            globalDiscount: globalDisc,
+            nextInvoiceNo: nextInvNo,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
 
-    if (window.Toast) {
-        Toast.fire({ icon: 'success', title: 'Business Name aur Settings update ho gayin!' });
-    } else {
-        alert("Business Name aur Settings update ho gayin!");
+        // Har jaga naam, discount aur POS update karein
+        window.applyBusinessBrandInfo();
+        if (typeof window.filterMenu === 'function') window.filterMenu();
+
+        if (window.Toast) {
+            Toast.fire({ icon: 'success', title: 'Settings Cloud Par Save Hogayin! Tamam Devices Par Sync Hogayi.' });
+        } else {
+            alert("Settings Cloud Par Save Hogayin! Tamam Devices Par Sync Hogayi.");
+        }
+    } catch (err) {
+        console.error("Cloud settings save error:", err);
+        alert("Settings save karne mein masla aaya: " + err.message);
+    } finally {
+        if (saveBtn) {
+            saveBtn.disabled = false;
+            saveBtn.innerHTML = "<i class='bx bx-check'></i> Save Settings";
+        }
     }
 });
 
-            // Dashboard Metrics Calculator
-            window.updateDashboardMetrics = function() {
-                const totalStock = window.menuItems.reduce((acc, item) => acc + Number(item.stock || 0), 0);
-                const sEl = document.getElementById('dash-total-stock');
-                if (sEl) sEl.innerHTML = `${totalStock} <span style="font-size:1rem">units</span>`;
+          // =========================================================
+            // DASHBOARD DATE FILTER ENGINE (ANY DATE SELECTION)
+            // =========================================================
+            window.dashCurrentFilterMode = 'today';
+            window.dashCustomSelectedDate = '';
 
-                const totalCashBankSales = window.salesHistory.filter(s => s.paymentStatus === 'Paid').reduce((acc, sale) => acc + Number(sale.total || 0), 0);
+            // 1. Preset Buttons: Today, Yesterday, All Time
+            window.setDashboardDatePreset = function(preset) {
+                window.dashCurrentFilterMode = preset;
+
+                document.querySelectorAll('.dash-pills-wrap .dash-pill-btn').forEach(btn => btn.classList.remove('active'));
+                const targetBtn = document.getElementById(`btn-dash-${preset}`);
+                if (targetBtn) targetBtn.classList.add('active');
+
+                const dateInput = document.getElementById('dash-filter-date');
+                if (dateInput) dateInput.value = '';
+
+                window.updateDashboardMetrics();
+            };
+
+            // 2. Specific Custom Date Picker Change
+            window.onDashCustomDateSelect = function(selectedDateStr) {
+                if (!selectedDateStr) return;
+                window.dashCurrentFilterMode = 'custom';
+                window.dashCustomSelectedDate = selectedDateStr;
+
+                document.querySelectorAll('.dash-pills-wrap .dash-pill-btn').forEach(btn => btn.classList.remove('active'));
+
+                window.updateDashboardMetrics();
+            };
+
+            // 3. Main Dashboard Calculation with Dynamic Date Filtering
+            window.updateDashboardMetrics = function() {
+                const now = new Date();
+                const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
+                const yst = new Date();
+                yst.setDate(now.getDate() - 1);
+                const ystStr = `${yst.getFullYear()}-${String(yst.getMonth() + 1).padStart(2, '0')}-${String(yst.getDate()).padStart(2, '0')}`;
+
+                // Target Date ka faisla
+                let activeDateStr = todayStr;
+                let filterLabel = '(Today)';
+
+                if (window.dashCurrentFilterMode === 'today') {
+                    activeDateStr = todayStr;
+                    filterLabel = ` (${formatToDisplayDate(todayStr)})`;
+                } else if (window.dashCurrentFilterMode === 'yesterday') {
+                    activeDateStr = ystStr;
+                    filterLabel = ` (${formatToDisplayDate(ystStr)})`;
+                } else if (window.dashCurrentFilterMode === 'custom' && window.dashCustomSelectedDate) {
+                    activeDateStr = window.dashCustomSelectedDate;
+                    filterLabel = `Date: ${formatToDisplayDate(activeDateStr)}`;
+                } else if (window.dashCurrentFilterMode === 'all') {
+                    activeDateStr = 'ALL';
+                    filterLabel = 'All Time (Kul Record)';
+                }
+
+                // Filter Indicator Badge Update
+                const badgeEl = document.getElementById('dash-filter-status-badge');
+                if (badgeEl) {
+                    badgeEl.innerHTML = `<i class='bx bx-check-circle'></i> Filter: ${filterLabel}`;
+                }
+
+                // Subtitle context labels
+                const subContext = activeDateStr === 'ALL' ? 'All time record' : `For ${filterLabel}`;
+                const subSell = document.getElementById('sub-dash-sell');
+                const subUdhar = document.getElementById('sub-dash-udhar');
+                const subProfit = document.getElementById('sub-dash-profit');
+                const subRet = document.getElementById('sub-dash-return');
+                const subExp = document.getElementById('sub-dash-expense');
+
+                if (subSell) subSell.innerHTML = `<i class='bx bx-badge-check' style="color:#10b981;"></i> ${subContext}`;
+                if (subUdhar) subUdhar.innerHTML = `<i class='bx bx-error' style="color:#ea580c;"></i> ${subContext}`;
+                if (subProfit) subProfit.innerHTML = `<i class='bx bx-line-chart' style="color:#8b5cf6;"></i> ${subContext}`;
+                if (subRet) subRet.innerHTML = `<i class='bx bx-shield-x' style="color:#ef4444;"></i> ${subContext}`;
+                if (subExp) subExp.innerHTML = `<i class='bx bx-dollar' style="color:#64748b;"></i> ${subContext}`;
+
+                // Live Date in Header
+                const dateEl = document.getElementById('dash-live-date-time');
+                if (dateEl) {
+                    dateEl.textContent = `Live Store Overview | Selected: ${filterLabel}`;
+                }
+
+                // Date Matching Helper Function
+                function isDateMatch(recordDate) {
+                    if (!recordDate) return false;
+                    if (activeDateStr === 'ALL') return true;
+                    return recordDate.substring(0, 10) === activeDateStr;
+                }
+
+                // 1. Total Stock calculation across Godown & Stores (Always Live)
+                let totalStock = (window.menuItems || []).reduce((acc, item) => acc + Number(item.stock || 0), 0);
+                (window.branchStockList || []).forEach(bs => {
+                    totalStock += Number(bs.qty || 0);
+                });
+                const sEl = document.getElementById('dash-total-stock');
+                if (sEl) sEl.innerHTML = `${totalStock.toLocaleString()} <span style="font-size:0.9rem; font-weight:600; color:#64748b;">units</span>`;
+
+                // 2. Filtered Sales (Cash / Bank) for Selected Date
+                const targetSales = (window.salesHistory || []).filter(s => isDateMatch(s.date));
+                const totalCashBankSales = targetSales
+                    .filter(s => s.paymentStatus === 'Paid')
+                    .reduce((acc, sale) => acc + Number(sale.total || 0), 0);
                 const sellEl = document.getElementById('dash-total-sell');
                 if (sellEl) sellEl.textContent = `Rs. ${totalCashBankSales.toLocaleString()}`;
 
-                const totalCreditSales = window.salesHistory.filter(s => s.paymentStatus === 'Unpaid').reduce((acc, sale) => acc + Number(sale.total || 0), 0);
+                // 3. Filtered Receivables (Udhar) for Selected Date
+                const totalCreditSales = targetSales
+                    .filter(s => s.paymentStatus === 'Unpaid')
+                    .reduce((acc, sale) => acc + Number(sale.total || 0), 0);
                 const udharEl = document.getElementById('dash-total-udhar');
                 if (udharEl) udharEl.textContent = `Rs. ${totalCreditSales.toLocaleString()}`;
 
-                const totalReturns = window.returnsList.reduce((acc, ret) => acc + Number(ret.refund || 0), 0);
+                // 4. Filtered Returns & Refunds for Selected Date
+                const targetReturns = (window.returnsList || []).filter(r => isDateMatch(r.date));
+                const totalReturns = targetReturns.reduce((acc, ret) => acc + Number(ret.refund || 0), 0);
                 const retEl = document.getElementById('dash-total-return');
                 if (retEl) retEl.textContent = `Rs. ${totalReturns.toLocaleString()}`;
 
-                const totalExpenses = window.expensesList.reduce((acc, exp) => acc + Number(exp.amount || 0), 0);
+                // 5. Filtered Expenses for Selected Date
+                const targetExpenses = (window.expensesList || []).filter(e => isDateMatch(e.date));
+                const totalExpenses = targetExpenses.reduce((acc, exp) => acc + Number(exp.amount || 0), 0);
                 const expEl = document.getElementById('dash-total-expense');
                 if (expEl) expEl.textContent = `Rs. ${totalExpenses.toLocaleString()}`;
                 const cardExpEl = document.getElementById('total-expense-card-val');
                 if (cardExpEl) cardExpEl.textContent = `Rs. ${totalExpenses.toLocaleString()}`;
 
-                let totalSoldRevenue = window.salesHistory.reduce((acc, s) => acc + Number(s.total || 0), 0);
+                // 6. Estimated Net Profit for Selected Date
+                let totalSoldRevenue = targetSales.reduce((acc, s) => acc + Number(s.total || 0), 0);
                 let totalCogs = 0;
-                window.salesHistory.forEach(s => {
+                targetSales.forEach(s => {
                     (s.items || []).forEach(it => {
-                        const originalProd = window.menuItems.find(m => m.id === it.id);
+                        const originalProd = (window.menuItems || []).find(m => m.id === it.id);
                         const cp = it.costPrice !== undefined ? Number(it.costPrice) : (originalProd ? Number(originalProd.costPrice || 0) : 0);
                         totalCogs += (cp * Number(it.qty || 1));
                     });
@@ -8121,11 +8887,210 @@ document.getElementById('save-settings-btn')?.addEventListener('click', () => {
                 const estNetEl = document.getElementById('dash-est-net-profit');
                 if (estNetEl) {
                     estNetEl.textContent = `Rs. ${estNetProfit.toLocaleString()}`;
-                    estNetEl.style.color = estNetProfit >= 0 ? '#10b981' : '#ef4444';
+                    estNetEl.style.color = estNetProfit >= 0 ? '#8b5cf6' : '#ef4444';
                 }
 
-updateSalesChart();
+                // =========================================================
+                // DETAIL WIDGET 1: LOW STOCK ALERTS (Current Healthy/Low Levels)
+                // =========================================================
+                const lowStockContainer = document.getElementById('dash-low-stock-container');
+                if (lowStockContainer) {
+                    const lowItems = [];
+                    (window.menuItems || []).forEach(p => {
+                        const godownQty = Number(p.stock || 0);
+                        const storeQty = (window.branchStockList || [])
+                            .filter(bs => bs.productId === p.id)
+                            .reduce((sum, bs) => sum + Number(bs.qty || 0), 0);
+                        const totalUnits = godownQty + storeQty;
+                        if (totalUnits <= 5) {
+                            lowItems.push({ name: p.name, barcode: p.barcode || 'N/A', stock: totalUnits });
+                        }
+                    });
+
+                    if (lowItems.length === 0) {
+                        lowStockContainer.innerHTML = `
+                            <div style="background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:10px 12px; font-size:0.82rem; color:#166534; display:flex; align-items:center; gap:8px;">
+                                <i class='bx bx-check-shield' style="font-size:1.2rem;"></i> All inventory stock levels are healthy!
+                            </div>
+                        `;
+                    } else {
+                        lowStockContainer.innerHTML = lowItems.slice(0, 5).map(item => `
+                            <div style="display:flex; justify-content:space-between; align-items:center; background:#fff1f2; border:1px solid #fecaca; padding:8px 12px; border-radius:10px; font-size:0.82rem;">
+                                <div>
+                                    <strong style="color:#991b1b;">${item.name}</strong> 
+                                    <code style="font-size:0.75rem; color:#64748b; margin-left:4px;">${item.barcode}</code>
+                                </div>
+                                <span style="background:${item.stock === 0 ? '#ef4444' : '#f59e0b'}; color:white; font-size:0.74rem; font-weight:800; padding:2px 8px; border-radius:6px;">
+                                    ${item.stock === 0 ? 'OUT OF STOCK' : item.stock + ' Left'}
+                                </span>
+                            </div>
+                        `).join('');
+                    }
+                }
+
+                // =========================================================
+                // DETAIL WIDGET 2: INVOICES SPECIFIC TO SELECTED DATE
+                // =========================================================
+                const recentSalesContainer = document.getElementById('dash-recent-sales-container');
+                const recentTitle = document.getElementById('dash-recent-sales-title');
+                if (recentTitle) {
+                    recentTitle.innerHTML = `<i class='bx bx-receipt' style="color:#10b981;"></i> Invoices for ${filterLabel}`;
+                }
+
+                if (recentSalesContainer) {
+                    const matchedInvoices = targetSales.slice(0, 5);
+                    if (matchedInvoices.length === 0) {
+                        recentSalesContainer.innerHTML = `<div class="empty-placeholder" style="padding:15px; font-size:0.82rem;">Is tareekh ki koi sale invoice nahi mili.</div>`;
+                    } else {
+                        recentSalesContainer.innerHTML = matchedInvoices.map(s => {
+                            const isPaid = (s.paymentStatus === 'Paid');
+                            return `
+                                <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; border:1px solid #e2e8f0; padding:8px 12px; border-radius:10px; font-size:0.82rem;">
+                                    <div>
+                                        <strong style="color:#0f172a;">#${s.invoiceId}</strong> 
+                                        <span style="color:#64748b; margin-left:4px;">${s.customerName || 'Cash Customer'}</span>
+                                        <div style="font-size:0.74rem; color:#94a3b8;">${(s.date || '').substring(0, 16)}</div>
+                                    </div>
+                                    <div style="text-align:right;">
+                                        <strong style="color:${isPaid ? '#10b981' : '#ea580c'};">Rs. ${Number(s.total || 0).toLocaleString()}</strong>
+                                        <div style="font-size:0.72rem; font-weight:700; color:${isPaid ? '#15803d' : '#b45309'};">${s.paymentStatus || 'Paid'}</div>
+                                    </div>
+                                </div>
+                            `;
+                        }).join('');
+                    }
+                }
+
+                // 7. Update Chart up to the selected date
+                updateSalesChart(activeDateStr === 'ALL' ? todayStr : activeDateStr);
             };
+
+            // Dynamic Chart Generator supporting any chosen date
+            function updateSalesChart(referenceDateStr) {
+                const canvas = document.getElementById('salesChart');
+                if (!canvas) return;
+                if (salesChartInstance) salesChartInstance.destroy();
+
+                const baseDate = referenceDateStr ? new Date(referenceDateStr) : new Date();
+
+                const dayLabels = [];
+                const dateKeys = [];
+                const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+                // 7 din piche ka timeline
+                for (let i = 6; i >= 0; i--) {
+                    const d = new Date(baseDate);
+                    d.setDate(baseDate.getDate() - i);
+                    const ymd = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+                    dateKeys.push(ymd);
+                    dayLabels.push(`${daysOfWeek[d.getDay()]} (${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')})`);
+                }
+
+                const salesData = [0, 0, 0, 0, 0, 0, 0];
+                const purchaseData = [0, 0, 0, 0, 0, 0, 0];
+                const expenseData = [0, 0, 0, 0, 0, 0, 0];
+                const returnData = [0, 0, 0, 0, 0, 0, 0];
+
+                (window.salesHistory || []).forEach(s => {
+                    const sDate = (s.date || '').substring(0, 10);
+                    const idx = dateKeys.indexOf(sDate);
+                    if (idx !== -1) salesData[idx] += Number(s.total || 0);
+                });
+
+                (window.purchasesList || []).forEach(p => {
+                    const pDate = (p.date || '').substring(0, 10);
+                    const idx = dateKeys.indexOf(pDate);
+                    if (idx !== -1) purchaseData[idx] += Number(p.totalBill || 0);
+                });
+
+                (window.expensesList || []).forEach(e => {
+                    const eDate = (e.date || '').substring(0, 10);
+                    const idx = dateKeys.indexOf(eDate);
+                    if (idx !== -1) expenseData[idx] += Number(e.amount || 0);
+                });
+
+                (window.returnsList || []).forEach(r => {
+                    const rDate = (r.date || '').substring(0, 10);
+                    const idx = dateKeys.indexOf(rDate);
+                    if (idx !== -1) returnData[idx] += Number(r.refund || 0);
+                });
+
+                const chartHeading = document.getElementById('dash-chart-heading');
+                if (chartHeading) {
+                    chartHeading.innerHTML = `<i class='bx bx-bar-chart-alt-2' style="color:var(--primary);"></i> 7-Day Timeline ending ${formatToDisplayDate(dateKeys[6])}`;
+                }
+
+                const ctx = canvas.getContext('2d');
+                salesChartInstance = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: dayLabels,
+                        datasets: [
+                            {
+                                label: 'Sales (Rs.)',
+                                data: salesData,
+                                backgroundColor: 'rgba(0, 102, 255, 0.85)',
+                                borderColor: '#0066ff',
+                                borderWidth: 1,
+                                borderRadius: 5
+                            },
+                            {
+                                label: 'Purchases (Rs.)',
+                                data: purchaseData,
+                                backgroundColor: 'rgba(139, 92, 246, 0.85)',
+                                borderColor: '#8b5cf6',
+                                borderWidth: 1,
+                                borderRadius: 5
+                            },
+                            {
+                                label: 'Expenses (Rs.)',
+                                data: expenseData,
+                                backgroundColor: 'rgba(239, 68, 68, 0.85)',
+                                borderColor: '#ef4444',
+                                borderWidth: 1,
+                                borderRadius: 5
+                            },
+                            {
+                                label: 'Returns (Rs.)',
+                                data: returnData,
+                                backgroundColor: 'rgba(245, 158, 11, 0.85)',
+                                borderColor: '#f59e0b',
+                                borderWidth: 1,
+                                borderRadius: 5
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        interaction: { mode: 'index', intersect: false },
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                                labels: { font: { family: 'Plus Jakarta Sans', size: 11, weight: '700' }, boxWidth: 12, padding: 12 }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.dataset.label}: Rs. ${context.parsed.y.toLocaleString()}`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { grid: { display: false }, ticks: { font: { family: 'Plus Jakarta Sans', weight: '600', size: 10 } } },
+                            y: {
+                                beginAtZero: true,
+                                grid: { color: '#f1f5f9' },
+                                ticks: {
+                                    font: { family: 'Plus Jakarta Sans', size: 10 },
+                                    callback: function(value) { return 'Rs. ' + value.toLocaleString(); }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
 
             function updateSalesChart() {
                 const canvas = document.getElementById('salesChart');
@@ -8337,7 +9302,7 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
         // SALES & CUSTOMER LEDGER FUNCTIONS (WITH DATE RANGE & KPIs)
         // =========================================================
         window.currentSalesFilter = 'all';
-        window.currentSalesDatePreset = 'today'; // Default: Aaj ki date par set rahega
+        window.currentSalesDatePreset = 'today'; 
 
         // 1. Date Preset Handler (Today, Yesterday, Weekly, All Time)
         window.setSalesDatePreset = function(type) {
@@ -8537,13 +9502,15 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
                             <strong style="color:#0f172a; font-size:1rem;">Rs. ${total.toLocaleString()}</strong><br>
                             <small style="color:#64748b;">Paid: <b style="color:#10b981;">Rs. ${paid.toLocaleString()}</b></small>
                         </td>
-                        <td class="action-btns" style="display:flex; flex-wrap:wrap; gap:4px; justify-content:center;">
-                            <button class="btn-view" onclick="reprintSaleInvoice('${sale.id}')" title="Print Invoice"><i class='bx bx-printer'></i></button>
-                            <button class="btn-edit" onclick="editSaleInvoice('${sale.id}')" title="Edit Bill"><i class='bx bx-edit'></i></button>
-                            <button class="btn-return" onclick="openSaleReturn('${sale.id}')" title="Return Product"><i class='bx bx-undo'></i></button>
-                            <button class="btn-delete" onclick="deleteSaleRecord('${sale.id}', true)" title="Delete Bill"><i class='bx bx-trash'></i></button>
-                            ${payDueBtn}
-                        </td>
+                        <td style="text-align: center; vertical-align: middle; white-space: nowrap;">
+    <div style="display: inline-flex; align-items: center; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 2px;">
+        <button class="btn-view" style="padding: 6px 9px; border-radius: 7px; background: transparent; color: #0284c7; box-shadow: none;" onclick="reprintSaleInvoice('${sale.id}')" title="Print Invoice"><i class='bx bx-printer' style="font-size: 1.1rem;"></i></button>
+        <button class="btn-edit" style="padding: 6px 9px; border-radius: 7px; background: transparent; color: #3b82f6; box-shadow: none;" onclick="editSaleInvoice('${sale.id}')" title="Edit Bill"><i class='bx bx-edit' style="font-size: 1.1rem;"></i></button>
+        <button class="btn-return" style="padding: 6px 9px; border-radius: 7px; background: transparent; color: #ea580c; box-shadow: none;" onclick="openSaleReturn('${sale.id}')" title="Return Item"><i class='bx bx-undo' style="font-size: 1.1rem;"></i></button>
+        <button class="btn-delete" style="padding: 6px 9px; border-radius: 7px; background: transparent; color: #ef4444; box-shadow: none;" onclick="deleteSaleRecord('${sale.id}', true)" title="Delete Bill"><i class='bx bx-trash' style="font-size: 1.1rem;"></i></button>
+        ${payDueBtn}
+    </div>
+</td>
                     </tr>
                 `;
             });
@@ -8626,7 +9593,7 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
         // DAILY CASH BOOK FLOW & EXPENSES (FIXED)
         // =========================================================
 
-        // 1. Cash Book ko Aaj ki Tareekh (Today) par set karna
+        
         window.setCashBookToday = function() {
             const today = new Date();
             const ymd = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
@@ -12227,6 +13194,7 @@ updateNetworkStatus();
                         cart.push({
                             id: it.id,
                             name: it.name,
+                            costPrice: it.costPrice !== undefined ? it.costPrice : 0, // Cost Price safe rahegi
                             price: it.price,
                             originalPrice: it.originalPrice || it.price,
                             qty: it.qty,
@@ -12535,7 +13503,7 @@ function initCloudLicenseWatcher() {
             phoneEl.textContent = data.supportPhone;
         }
 
-        // Date check: Aaj ki tareekh
+        
         const now = new Date();
         const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
         
@@ -12650,35 +13618,7 @@ window.saveSuperMasterLicenseSettings = async function() {
     }
 };
 
-// 4. Locked Screen se Developer Bypass Password
-window.openDeveloperOverrideModal = async function() {
-    const { value: pass } = await Swal.fire({
-        title: 'Super Master Verification',
-        text: 'Apna Super Master Password darj karein:',
-        input: 'password',
-        inputPlaceholder: 'Enter developer master key...',
-        showCancelButton: true,
-        confirmButtonColor: '#0066ff'
-    });
 
-    // Aapka secret developer password
-    if (pass === "Dev@Korvexa#9988") {
-        const superMasterUser = {
-            id: 'super_master_developer',
-            name: 'Super Master Developer',
-            username: 'supermaster',
-            role: 'supermaster',
-            status: 'active',
-            permissions: { dashboard:true, pos:true, purchaser:true, reports:true, sales:true, dailySheet:true, allReports:true, returns:true, exchanges:true, expenses:true, settings:true, users:true }
-        };
-        sessionStorage.setItem('pos_current_user', JSON.stringify(superMasterUser));
-        document.getElementById('software-lockdown-screen').style.display = 'none';
-        document.getElementById('login-page')?.classList.add('hidden');
-        openSuperMasterModal();
-    } else if (pass) {
-        alert("Ghalat Master Password!");
-    }
-};
 
 // =========================================================================
 // AUTO-EXPIRY (03-JAN-2026 TO 03-JAN-2027), AUTO MONTHLY STATUS & RECHARGE ENGINE
@@ -12919,45 +13859,75 @@ window.saveSuperMasterLicenseSettings = async function() {
 };
 
 window.openDeveloperOverrideModal = async function() {
-    const { value: pass } = await Swal.fire({
-        title: 'Super Master Developer Unlock',
-        text: 'Developer Master Password darj karein:',
-        input: 'password',
-        inputPlaceholder: 'Enter developer key...',
+    const { value: formValues } = await Swal.fire({
+        title: '<div style="font-size:1.2rem; font-weight:800; color:#0f172a;"><i class="bx bxs-shield-quarter" style="color:#0066ff;"></i> Developer Cloud Unlock</div>',
+        html: `
+            <p style="font-size:0.83rem; color:#64748b; margin-bottom:12px;">Apna registered Developer Email aur Password darj karein:</p>
+            <input id="swal-dev-email" class="swal2-input" placeholder="Developer Email" style="font-size:0.9rem;">
+            <input id="swal-dev-pass" type="password" class="swal2-input" placeholder="Developer Password" style="font-size:0.9rem;">
+        `,
+        focusConfirm: false,
         showCancelButton: true,
-        confirmButtonColor: '#0066ff'
+        confirmButtonText: '<i class="bx bx-check-shield"></i> Verify & Unlock',
+        confirmButtonColor: '#0066ff',
+        cancelButtonColor: '#64748b',
+        preConfirm: () => {
+            const email = document.getElementById('swal-dev-email').value.trim();
+            const pass = document.getElementById('swal-dev-pass').value;
+            if (!email || !pass) {
+                Swal.showValidationMessage('Developer Email aur Password dono darj karein!');
+                return false;
+            }
+            return { email, pass };
+        }
     });
 
-    if (pass === "Dev@Korvexa#9988") {
-        const superMasterUser = {
-            id: 'super_master_developer',
-            name: 'Super Master Developer',
-            username: 'supermaster',
-            role: 'supermaster',
-            status: 'active',
-            permissions: { dashboard:true, pos:true, purchaser:true, reports:true, sales:true, allReports:true, returns:true, expenses:true, settings:true, users:true }
-        };
+    if (!formValues) return;
 
-        sessionStorage.setItem('pos_current_user', JSON.stringify(superMasterUser));
-        
-        // Lock screen hide karein aur system access dein
-        document.getElementById('software-lockdown-screen').style.display = 'none';
-        document.getElementById('login-page')?.classList.add('hidden');
-        
-        const devBtn = document.getElementById('super-master-header-btn');
-        const sidebarDev = document.getElementById('nav-dev-license');
-        if (devBtn) devBtn.style.display = 'flex';
-        if (sidebarDev) sidebarDev.style.display = 'block';
-
-        // Foran date barhane wala modal open karein
-        openSuperMasterModal();
-
-        Toast.fire({
-            icon: 'success',
-            title: 'Super Master Access Granted!'
+    try {
+        Swal.fire({
+            title: 'Verifying with Cloud Server...',
+            allowOutsideClick: false,
+            didOpen: () => { Swal.showLoading(); }
         });
-    } else if (pass) {
-        alert("Ghalat Master Key!");
+
+        // Firebase Authentication ke zariye real check (Code mein koi password nahi hai)
+        const cred = await auth.signInWithEmailAndPassword(formValues.email, formValues.pass);
+        const userDoc = await usersDB.doc(cred.user.uid).get();
+
+        if (userDoc.exists && (userDoc.data().role === 'supermaster' || userDoc.data().role === 'developer')) {
+            const devData = { id: userDoc.id, ...userDoc.data() };
+            sessionStorage.setItem('pos_current_user', JSON.stringify(devData));
+
+            // Lock screen band karein aur access dein
+            const lockScreen = document.getElementById('software-lockdown-screen');
+            if (lockScreen) lockScreen.style.display = 'none';
+            document.getElementById('login-page')?.classList.add('hidden');
+
+            const devBtn = document.getElementById('super-master-header-btn');
+            const sidebarDev = document.getElementById('nav-dev-license');
+            if (devBtn) devBtn.style.display = 'flex';
+            if (sidebarDev) sidebarDev.style.display = 'block';
+
+            applyUserPermissions(devData);
+
+            Swal.close();
+            openSuperMasterModal();
+            Toast.fire({ icon: 'success', title: 'Super Master Developer Unlocked!' });
+        } else {
+            await auth.signOut();
+            Swal.fire({
+                icon: 'error',
+                title: 'Access Denied',
+                text: 'Yeh account Developer / Super Master nahi hai!'
+            });
+        }
+    } catch(err) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Verification Failed',
+            text: err.message
+        });
     }
 };
 
@@ -13213,129 +14183,128 @@ window.captureProductSnapshot = async function() {
             });
         };
 
+// =========================================================================
+// STOCK AUDIT & VERIFICATION ENGINE (LOGIC & PDF)
+// =========================================================================
 
-// =========================================================================
-// STOCK AUDIT & VERIFICATION ENGINE (BARCODE SCANNER)
-// =========================================================================
-window.isStockAuditRunning = false;
+window.isAuditRunning = false;
 window.auditDataList = [];
 
-// Screen load hone par dropdown bharna
+// 1. Dropdown Populate Karein
 window.initStockAuditView = function() {
     const selectEl = document.getElementById('audit-branch-filter');
     if (!selectEl) return;
-    const currentSelected = selectEl.value || 'godown';
-
-    selectEl.innerHTML = `<option value="godown">Main Godown (Warehouse Only)</option>`;
-    (window.branchesList || []).forEach(branch => {
-        selectEl.innerHTML += `<option value="${branch.id}">${branch.name} - ${branch.area}</option>`;
-    });
-    selectEl.value = currentSelected;
     
-    // Agar audit run nahi ho raha to reset karein
-    if (!window.isStockAuditRunning) {
-        document.getElementById('audit-tbody').innerHTML = `<tr><td colspan="6" class="empty-placeholder">"Start Audit" par click karein aur scanning shuru karein.</td></tr>`;
-        document.getElementById('audit-expected-qty').textContent = '0';
-        document.getElementById('audit-scanned-qty').textContent = '0';
-        document.getElementById('audit-missing-qty').textContent = '0';
+    // Agar audit run nahi ho raha to dropdown populate karein
+    if (!window.isAuditRunning) {
+        const currentSelected = selectEl.value || 'godown';
+        selectEl.innerHTML = `<option value="godown">Main Godown (Warehouse Only)</option>`;
+        (window.branchesList || []).forEach(branch => {
+            selectEl.innerHTML += `<option value="${branch.id}">${branch.name} - ${branch.area}</option>`;
+        });
+        selectEl.value = currentSelected;
     }
 };
 
-window.startStockAudit = function() {
-    const selectedBranch = document.getElementById('audit-branch-filter').value;
-    const products = window.menuItems || [];
-    window.auditDataList = [];
+// 2. Start / Stop Audit Button
+window.toggleAuditMode = function() {
+    const btn = document.getElementById('btn-start-audit');
+    const branchSelect = document.getElementById('audit-branch-filter');
+    const pdfBtn = document.getElementById('btn-export-audit-pdf');
 
-    // Data Load Karein Expected Quantities ke sath
-    products.forEach(p => {
-        let expectedQty = 0;
-        if (selectedBranch === 'godown') {
-            expectedQty = Number(p.stock || 0);
-        } else {
-            const bStockRecord = (window.branchStockList || []).find(bs => bs.branchId === selectedBranch && bs.productId === p.id);
-            expectedQty = bStockRecord ? Number(bStockRecord.qty || 0) : 0;
+    if (!window.isAuditRunning) {
+        // --- START AUDIT ---
+        const selectedBranch = branchSelect.value;
+        const products = window.menuItems || [];
+        
+        window.auditDataList = [];
+        
+        products.forEach(p => {
+            let expectedQty = 0;
+            if (selectedBranch === 'godown') {
+                expectedQty = Number(p.stock || 0);
+            } else {
+                const bStockRecord = (window.branchStockList || []).find(bs => bs.branchId === selectedBranch && bs.productId === p.id);
+                expectedQty = bStockRecord ? Number(bStockRecord.qty || 0) : 0;
+            }
+
+            // Sirf wo items list mein dalein jinka expected stock 0 se zyada ho
+            if (expectedQty > 0) {
+                window.auditDataList.push({
+                    id: p.id,
+                    barcode: p.barcode || 'N/A',
+                    name: p.name || 'Unknown',
+                    expected: expectedQty,
+                    scanned: 0
+                });
+            }
+        });
+
+        if (window.auditDataList.length === 0) {
+            alert("No stock found in the system for this location. Audit cannot be started.");
+            return;
         }
 
-        // Sirf wahi item list mein layein jo expect kiya ja raha hai (ya us area ka hissa ho)
-        if (expectedQty > 0 || (selectedBranch === 'godown')) {
-            window.auditDataList.push({
-                id: p.id,
-                barcode: String(p.barcode || '').trim().toLowerCase(),
-                name: p.name,
-                expected: expectedQty,
-                scanned: 0 // Shuru mein 0
-            });
-        }
-    });
+        window.isAuditRunning = true;
+        branchSelect.disabled = true;
+        btn.innerHTML = `<i class='bx bx-stop-circle'></i> Stop & Finalize Audit`;
+        btn.style.background = "#ef4444"; // Red color for stop
+        pdfBtn.style.display = "block";
 
-    window.isStockAuditRunning = true;
-    
-    // UI Update Karein
-    document.getElementById('btn-start-audit').style.display = 'none';
-    document.getElementById('btn-stop-audit').style.display = 'block';
-    document.getElementById('audit-branch-filter').disabled = true;
-    document.getElementById('audit-scan-box').style.display = 'flex';
-    
-    const manualInput = document.getElementById('audit-manual-barcode');
-    if (manualInput) manualInput.focus();
+        Toast.fire({ icon: 'info', title: 'Audit Shuru Ho Gaya Hai. Barcode Gun Se Scan Karein!' });
+        window.renderAuditTable();
 
-    Toast.fire({ icon: 'info', title: 'Audit Start! Ab items ko scan karna shuru karein.' });
-    window.renderStockAuditTable();
-};
-
-window.stopStockAudit = function() {
-    if(!confirm("Kya aap waqai Audit khatam karna chahte hain? Data reset ho jayega.")) return;
-    
-    window.isStockAuditRunning = false;
-    window.auditDataList = [];
-    
-    document.getElementById('btn-start-audit').style.display = 'block';
-    document.getElementById('btn-stop-audit').style.display = 'none';
-    document.getElementById('audit-branch-filter').disabled = false;
-    document.getElementById('audit-scan-box').style.display = 'none';
-    
-    window.initStockAuditView();
-};
-
-// Jab Scanner chalay ga tab yeh function hit hoga
-window.handleAuditScannedBarcode = function(rawCode) {
-    if (!rawCode) return;
-    const code = String(rawCode).trim().toLowerCase();
-    
-    // List mein item dhoondein (barcode se ya naam se)
-    let foundIndex = window.auditDataList.findIndex(item => item.barcode === code || String(item.name).toLowerCase() === code);
-    
-    if (foundIndex !== -1) {
-        // Item mil gaya, uski scanned quantity barha dein
-        window.auditDataList[foundIndex].scanned += 1;
-        playBeepSound(); // Beep ki awaz (jo aapke code me already hai)
-        
-        // Item ko table mein sab se oopar le aayen (taake user ko nazar aaye usne abhi kya scan kiya hai)
-        const scannedItem = window.auditDataList.splice(foundIndex, 1)[0];
-        window.auditDataList.unshift(scannedItem);
-        
-        window.renderStockAuditTable();
-        
-        const manualInput = document.getElementById('audit-manual-barcode');
-        if (manualInput) {
-            manualInput.value = '';
-            manualInput.focus();
-        }
     } else {
-        Toast.fire({ icon: 'error', title: `Barcode [${rawCode}] ka item is jagah ke stock mein mojood nahi hai!` });
+        // --- STOP AUDIT ---
+        if(confirm("Kya aap waqai Audit rokna chahte hain? Aap PDF export kar saktay hain.")) {
+            window.isAuditRunning = false;
+            branchSelect.disabled = false;
+            btn.innerHTML = `<i class='bx bx-play-circle'></i> Start Audit`;
+            btn.style.background = "#10b981"; // Green color
+        }
     }
 };
 
-// Enter dabane par bhi (Manual)
-document.getElementById('audit-manual-barcode')?.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        window.handleAuditScannedBarcode(this.value);
-    }
-});
+// 3. Process Barcode Scan (Yeh function event listener se call hoga)
+window.processAuditScan = function(rawBarcode) {
+    if (!rawBarcode || !window.isAuditRunning) return;
+    
+    const code = String(rawBarcode).trim().toLowerCase();
+    
+    // Find item in audit list
+    const matchedIndex = window.auditDataList.findIndex(item => String(item.barcode).toLowerCase() === code);
 
-window.renderStockAuditTable = function() {
+    if (matchedIndex !== -1) {
+        window.auditDataList[matchedIndex].scanned += 1;
+        
+        // Beep Sound
+        try {
+            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = 'sine';
+            osc.frequency.value = 1200; // High pitch for audit success
+            gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.1);
+        } catch(e) {}
+
+        // Table dobara draw karein
+        window.renderAuditTable();
+    } else {
+        Toast.fire({ icon: 'error', title: `Barcode [${rawBarcode}] system list mein nahi mila!` });
+    }
+};
+
+// 4. Render Table and update KPIs
+window.renderAuditTable = function() {
     const tbody = document.getElementById('audit-tbody');
+    const expKpi = document.getElementById('audit-kpi-expected');
+    const scanKpi = document.getElementById('audit-kpi-scanned');
+    const missKpi = document.getElementById('audit-kpi-missing');
+
     if (!tbody) return;
     tbody.innerHTML = '';
 
@@ -13343,44 +14312,114 @@ window.renderStockAuditTable = function() {
     let totalScanned = 0;
     let totalMissing = 0;
 
-    window.auditDataList.forEach((item, idx) => {
+    // Sorting: Jo items miss ho rahe hain wo upar aayenge (taake dhondne mein asani ho)
+    const sortedList = [...window.auditDataList].sort((a, b) => {
+        const missA = a.expected - a.scanned;
+        const missB = b.expected - b.scanned;
+        return missB - missA; // Highest missing first
+    });
+
+    sortedList.forEach((item, idx) => {
         totalExpected += item.expected;
         totalScanned += item.scanned;
         
-        let diff = item.expected - item.scanned;
-        if (diff > 0) totalMissing += diff;
+        let missing = item.expected - item.scanned;
+        if (missing > 0) totalMissing += missing;
 
         let statusHtml = '';
-        let rowBg = '';
-        
-        if (item.scanned === 0) {
-            statusHtml = `<span style="background:#fee2e2; color:#ef4444; padding:3px 8px; border-radius:6px; font-weight:800; font-size:0.8rem;">Not Scanned</span>`;
-        } else if (item.scanned === item.expected) {
-            statusHtml = `<span style="background:#dcfce7; color:#16a34a; padding:3px 8px; border-radius:6px; font-weight:800; font-size:0.8rem;"><i class='bx bx-check-double'></i> MATCHED</span>`;
-            rowBg = 'background: #f0fdf4;';
-        } else if (item.scanned < item.expected) {
-            statusHtml = `<span style="background:#fef3c7; color:#d97706; padding:3px 8px; border-radius:6px; font-weight:800; font-size:0.8rem;">Short: ${diff}</span>`;
-            rowBg = 'background: #fffbeb;';
+        let rowStyle = '';
+
+        if (item.scanned === item.expected) {
+            statusHtml = `<span style="background: #dcfce7; color: #16a34a; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.8rem;"><i class='bx bx-check'></i> Matched</span>`;
+            rowStyle = 'background: #f8fafc; opacity: 0.8;'; // Halke grey mein takay clear wale side ho jayein
         } else if (item.scanned > item.expected) {
-            statusHtml = `<span style="background:#e0f2fe; color:#0284c7; padding:3px 8px; border-radius:6px; font-weight:800; font-size:0.8rem;">Extra: ${Math.abs(diff)}</span>`;
+            const excess = item.scanned - item.expected;
+            statusHtml = `<span style="background: #fef3c7; color: #d97706; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.8rem;"><i class='bx bx-plus'></i> Excess (${excess})</span>`;
+        } else {
+            statusHtml = `<span style="background: #fee2e2; color: #dc2626; padding: 4px 10px; border-radius: 6px; font-weight: 700; font-size: 0.8rem;"><i class='bx bx-minus'></i> Short (${missing})</span>`;
         }
 
         tbody.innerHTML += `
-            <tr style="${rowBg}">
+            <tr style="${rowStyle}">
                 <td>${idx + 1}</td>
-                <td><code>${item.barcode || '-'}</code></td>
-                <td><strong style="color:#0f172a;">${item.name}</strong></td>
-                <td style="text-align: center; font-weight: 700;">${item.expected}</td>
-                <td style="text-align: center; font-weight: 800; color: ${item.scanned > 0 ? 'var(--primary)' : '#94a3b8'};">${item.scanned}</td>
+                <td><code>${item.barcode}</code></td>
+                <td><strong>${item.name}</strong></td>
+                <td style="text-align: center; font-weight: 800; font-size: 1.05rem;">${item.expected}</td>
+                <td style="text-align: center; font-weight: 800; font-size: 1.05rem; color: #10b981;">${item.scanned}</td>
                 <td style="text-align: center;">${statusHtml}</td>
             </tr>
         `;
     });
 
-    document.getElementById('audit-expected-qty').textContent = totalExpected;
-    document.getElementById('audit-scanned-qty').textContent = totalScanned;
-    document.getElementById('audit-missing-qty').textContent = totalMissing;
+    if (expKpi) expKpi.textContent = totalExpected;
+    if (scanKpi) scanKpi.textContent = totalScanned;
+    if (missKpi) missKpi.textContent = totalMissing;
 };
+
+// 5. Generate PDF Report
+window.downloadAuditPDF = function() {
+    if (window.auditDataList.length === 0) {
+        alert("Report banane ke liye data nahi hai!");
+        return;
+    }
+
+    const selectEl = document.getElementById('audit-branch-filter');
+    const locationName = selectEl.options[selectEl.selectedIndex].text;
+
+    let totalExpected = 0;
+    let totalScanned = 0;
+    let totalMissing = 0;
+
+    const rows = window.auditDataList.map((item, idx) => {
+        totalExpected += item.expected;
+        totalScanned += item.scanned;
+        let missing = item.expected - item.scanned;
+        if (missing > 0) totalMissing += missing;
+
+        let statusText = 'Matched';
+        if (item.scanned > item.expected) statusText = `Excess (+${item.scanned - item.expected})`;
+        if (item.scanned < item.expected) statusText = `Short (-${missing})`;
+
+        return [
+            String(idx + 1),
+            item.barcode,
+            item.name,
+            String(item.expected),
+            String(item.scanned),
+            statusText
+        ];
+    });
+
+    window.generateProfessionalPDF({
+        reportTitle: `PHYSICAL STOCK AUDIT & VERIFICATION`,
+        periodText: `Location: ${locationName}`,
+        fileName: `Stock_Audit_${new Date().toISOString().slice(0, 10)}`,
+        orientation: 'portrait',
+        kpis: [
+            { label: 'Expected System Stock', value: `${totalExpected} units`, color: '#0ea5e9' },
+            { label: 'Physical Scanned', value: `${totalScanned} units`, color: '#10b981' },
+            { label: 'Missing / Short', value: `${totalMissing} units`, color: '#ef4444' }
+        ],
+        headers: [
+            { title: 'Sr#', align: 'center' },
+            { title: 'Barcode', align: 'left' },
+            { title: 'Product Name', align: 'left' },
+            { title: 'System', align: 'center' },
+            { title: 'Physical', align: 'center' },
+            { title: 'Status Variance', align: 'center' }
+        ],
+        rows: rows,
+        totals: [
+            'AUDIT TOTALS',
+            '-',
+            '-',
+            String(totalExpected),
+            String(totalScanned),
+            `Short: ${totalMissing}`
+        ]
+    });
+};
+
 
    </script>
 
@@ -13545,156 +14584,7 @@ window.renderStockAuditTable = function() {
     </div>
 </div>
 
-<style>
-@keyframes pulseGlowLock {
-    0% { transform: scale(1); box-shadow: 0 0 20px rgba(239,68,68,0.3); }
-    100% { transform: scale(1.08); box-shadow: 0 0 45px rgba(239,68,68,0.7); }
-}
 
-/* =========================================================================
-   ADVANCED BARCODE PRINT & INTERACTIVE PREVIEW STYLING
-   ========================================================================= */
-:root {
-    --bc-width: 50mm;
-    --bc-height: 24mm;
-    --bc-left-offset: 0mm;
-    --bc-top-offset: 0mm;
-    --bc-barcode-h: 11mm;
-    --bc-font-comp: 8px;
-    --bc-font-name: 9px;
-    --bc-font-price: 10px;
-    --bc-font-weight: 800;
-    --bc-font-family: 'Plus Jakarta Sans', Arial, sans-serif;
-}
-
-#preview-paper-stage {
-    width: 100%;
-    min-height: 270px;
-    background: #e2e8f0;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-    overflow: auto;
-    position: relative;
-    border: 2px dashed #94a3b8;
-    user-select: none;
-}
-
-#live-sticker-sample {
-    background: #ffffff;
-    border: 1.5px dashed #0284c7;
-    box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-    border-radius: 4px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    text-align: center;
-    box-sizing: border-box;
-    cursor: grab;
-    position: relative;
-    padding: 3px;
-    overflow: hidden;
-}
-
-#live-sticker-sample:active {
-    cursor: grabbing;
-}
-
-/* Corner Resize Handle */
-.sticker-resize-handle {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 14px;
-    height: 14px;
-    background: #0284c7;
-    cursor: se-resize;
-    border-top-left-radius: 4px;
-}
-
-@media print {
-    #barcode-print-area:not(:empty) {
-        display: block !important;
-        position: relative !important;
-        width: var(--bc-width, 50mm) !important;
-        margin: 0 auto !important;
-        padding: var(--bc-top-offset, 0mm) 0 0 var(--bc-left-offset, 0mm) !important;
-        background: #ffffff !important;
-    }
-
-    .barcode-sticker-print-box {
-        width: var(--bc-width, 50mm) !important;
-        height: var(--bc-height, 25mm) !important;
-        max-height: var(--bc-height, 25mm) !important;
-        margin: 0 !important;
-        padding: 1mm 1.5mm !important;
-        text-align: center;
-        border: none !important;
-        border-radius: 0 !important;
-        display: flex !important;
-        flex-direction: column !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        box-sizing: border-box !important;
-        background: #ffffff !important;
-        overflow: hidden !important;
-        font-family: var(--bc-font-family, Arial, sans-serif) !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-        page-break-after: always !important;
-        break-after: page !important;
-    }
-
-    .bcp-company {
-        font-size: var(--bc-font-comp, 8px) !important;
-        font-weight: var(--bc-font-weight, 900) !important;
-        text-transform: uppercase;
-        line-height: 1.1 !important;
-        margin: 0 !important;
-        color: #000000 !important;
-        max-width: 98%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .bcp-title {
-        font-size: var(--bc-font-name, 9px) !important;
-        font-weight: var(--bc-font-weight, 800) !important;
-        line-height: 1.1 !important;
-        max-width: 98% !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        margin: 0 !important;
-        color: #000000 !important;
-    }
-
-    .bcp-svg {
-        width: 96% !important;
-        height: var(--bc-barcode-h, 11mm) !important;
-        margin: 0.5mm auto !important;
-        display: block !important;
-    }
-
-    .bcp-price {
-        font-size: var(--bc-font-price, 10px) !important;
-        font-weight: 900 !important;
-        line-height: 1.1 !important;
-        margin: 0 !important;
-        color: #000000 !important;
-        border-top: 1px solid #000000;
-        width: 96%;
-        padding-top: 0.5mm;
-    }
-}
-
-
-
-</style>
 
 <!-- =========================================================================
      2. SUPER MASTER DEVELOPER CONTROL MODAL (SIRF SUPER MASTER KO DIKHEGA)
