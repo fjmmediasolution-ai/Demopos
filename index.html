@@ -1750,7 +1750,6 @@
                 <li id="nav-sales"><a href="#" onclick="switchView('sell')"><i class='bx bx-dollar-circle'></i><span class="links_name">Sales & Ledger</span></a></li>
                 <li id="nav-all-reports"><a href="#" onclick="switchView('all-reports')"><i class='bx bx-pie-chart-alt-2'></i><span class="links_name">All Reports</span></a></li>
                 <li id="nav-returns"><a href="#" onclick="switchView('return')"><i class='bx bx-undo'></i><span class="links_name">Return Management</span></a></li>
-                <li id="nav-exchanges"><a href="#" onclick="switchView('exchange')"><i class='bx bx-refresh'></i><span class="links_name">Exchange Management</span></a></li>
                 <li id="nav-expenses"><a href="#" onclick="switchView('expense')"><i class='bx bx-wallet'></i><span class="links_name">Expenses</span></a></li>
 
                 <li class="has-submenu" id="nav-reports">
@@ -1765,7 +1764,6 @@
                         <li><a href="#" onclick="switchView('stock-audit')"><i class='bx bx-check-shield'></i>Stock Audit</a></li>
                         <li><a href="#" onclick="switchView('purchaser-report')"><i class='bx bx-file-blank'></i>Purchaser Report</a></li>
                         <li><a href="#" onclick="switchView('return-report')"><i class='bx bx-undo'></i>Return Report</a></li>
-                        <li><a href="#" onclick="switchView('exchange-report')"><i class='bx bx-transfer-alt'></i>Exchange Report</a></li>
                         <li><a href="#" onclick="switchView('expense-report')"><i class='bx bx-receipt'></i>Expense Report</a></li>
                         <li><a href="#" onclick="switchView('cashbook-report')"><i class='bx bx-book-open'></i>Cash Book Report</a></li>
                     </ul>
@@ -5765,9 +5763,14 @@ if (typeof window.saveAllDataToLocalDrive === 'function') {
                 <option value="main">Main Warehouse / Godown</option>
             `;
 
-            window.branchesList.forEach(branch => {
-                fromSelect.innerHTML += `<option value="${branch.id}">${branch.name} (${branch.area})</option>`;
-                toSelect.innerHTML += `<option value="${branch.id}">${branch.name} (${branch.area})</option>`;
+            const addedStoreKeys = new Set();
+            (window.branchesList || []).forEach(branch => {
+                const uniqueKey = `${(branch.name || '').trim().toLowerCase()}_${(branch.area || '').trim().toLowerCase()}`;
+                if (!addedStoreKeys.has(uniqueKey)) {
+                    addedStoreKeys.add(uniqueKey);
+                    fromSelect.innerHTML += `<option value="${branch.id}">${branch.name} (${branch.area})</option>`;
+                    toSelect.innerHTML += `<option value="${branch.id}">${branch.name} (${branch.area})</option>`;
+                }
             });
 
             fromSelect.value = prevFrom;
@@ -7010,10 +7013,22 @@ if (typeof window.saveAllDataToLocalDrive === 'function') {
             });
 
             branchesDB.orderBy('createdAt', 'asc').onSnapshot(snapshot => {
-                window.branchesList = [];
+                const rawList = [];
                 snapshot.forEach(doc => {
-                    window.branchesList.push({ id: doc.id, ...doc.data() });
+                    rawList.push({ id: doc.id, ...doc.data() });
                 });
+
+                // Deduplicate stores by unique Name + Area to prevent duplicates
+                const seenStoreKeys = new Set();
+                window.branchesList = [];
+                rawList.forEach(branch => {
+                    const key = `${(branch.name || '').trim().toLowerCase()}_${(branch.area || '').trim().toLowerCase()}`;
+                    if (!seenStoreKeys.has(key)) {
+                        seenStoreKeys.add(key);
+                        window.branchesList.push(branch);
+                    }
+                });
+
                 if (typeof window.renderBranchListView === 'function') window.renderBranchListView();
                 if (typeof window.populateTransferStoreDropdowns === 'function') window.populateTransferStoreDropdowns();
             });
@@ -7118,27 +7133,24 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
                                (item.barcode && String(item.barcode).toLowerCase().includes(searchTerm)));
 
         if (matchesCategory && matchesSearch) {
-            // 1. Branch/Shop ka stock check karein
             let branchQty = 0;
             if (selectedBranch && selectedBranch !== 'all') {
+                // Sirf is selected Shop par mojood transferred stock check karein
                 const bStockRecord = (window.branchStockList || []).find(bs => 
                     bs.branchId === selectedBranch && 
                     (bs.productId === item.id || (bs.productBarcode && bs.productBarcode === item.barcode))
                 );
                 branchQty = bStockRecord ? Number(bStockRecord.qty || 0) : 0;
+            } else {
+                // Agar godown ya all view ho
+                branchQty = Number(item.stock || 0);
             }
 
-            // 2. Main Godown ka stock
-            const godownQty = Number(item.stock || 0);
-
-            // AGAR Shop par stock 0 ho lekin Godown mein maal mojood ho, tab bhi POS par show ho:
-            const displayQty = branchQty > 0 ? branchQty : godownQty;
-
-            // Agar total stock 0 se bara hai toh item lazmi show karein
-            if (displayQty > 0) {
+            // Jab tak maal is shop par move nahi kiya gaya hoga, ye POS par show nahi hoga
+            if (branchQty > 0) {
                 filteredItems.push({
                     ...item,
-                    currentBranchStock: displayQty
+                    currentBranchStock: branchQty
                 });
             }
         }
@@ -7202,20 +7214,16 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
 
     const selectedBranch = document.getElementById('pos-selected-branch')?.value;
     if (!selectedBranch) {
-        alert("Main Godown se direct sale mana hai! Pehle Shop select karein.");
+        alert("Pehle Store / Shop select karein!");
         return;
     }
 
-    // Shop ka stock check karein, agar wahan nahi hai tou Godown (main inventory) ka stock check karein
+    // Sirf is Shop par mojood stock allow hoga
     const bStockRecord = (window.branchStockList || []).find(bs => bs.branchId === selectedBranch && bs.productId === item.id);
-    const branchQty = bStockRecord ? Number(bStockRecord.qty || 0) : 0;
-    const godownQty = Number(item.stock || 0);
-    
-    // Asal Available Quantity
-    const maxAvailable = branchQty > 0 ? branchQty : godownQty;
+    const maxAvailable = bStockRecord ? Number(bStockRecord.qty || 0) : 0;
 
     if (maxAvailable <= 0) {
-        alert(`"${item.name}" is OUT OF STOCK across all locations!`);
+        alert(`"${item.name}" is OUT OF STOCK at this Store! Please move stock from Godown first.`);
         window.filterMenu();
         return;
     }
@@ -15925,7 +15933,6 @@ window.renderSellView = function() {
                         <button class="pro-icon-btn pro-btn-print" onclick="reprintSaleInvoice('${sale.id}')" title="Print Receipt"><i class='bx bx-printer'></i></button>
                         <button class="pro-icon-btn pro-btn-edit" onclick="editSaleInvoice('${sale.id}')" title="Edit Invoice"><i class='bx bx-edit-alt'></i></button>
                         <button class="pro-icon-btn pro-btn-return" onclick="openSaleReturn('${sale.id}')" title="Return Product"><i class='bx bx-undo'></i></button>
-                        <button class="pro-icon-btn pro-btn-exchange" onclick="openSaleExchange('${sale.id}')" title="Exchange Product"><i class='bx bx-refresh'></i></button>
                         <button class="pro-icon-btn pro-btn-delete" onclick="deleteSaleRecord('${sale.id}', true)" title="Delete Invoice"><i class='bx bx-trash'></i></button>
                         ${payDueBtn}
                     </div>
