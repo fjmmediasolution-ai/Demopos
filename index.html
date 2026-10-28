@@ -3940,9 +3940,21 @@
     <div id="expense-modal" class="modal-overlay">
         <div class="modal-content">
             <span class="close-modal" onclick="closeExpenseModal()">&times;</span>
-            <h2 style="margin-bottom: 20px;">Add New Expense</h2>
-            <div class="form-group"><label>Title / Description</label><input type="text" id="expense-title" placeholder="e.g. Electricity Bill, Shop Rent, Staff Refreshment"></div>
-            <div class="form-group">
+            <h2 style="margin-bottom: 16px;"><i class='bx bx-wallet' style="color:var(--primary);"></i> Add New Expense</h2>
+            
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label><i class='bx bx-store-alt' style="color:var(--primary);"></i> Select Store / Branch *</label>
+                <select id="expense-branch" style="font-weight: 700; color: #0f172a;">
+                    <!-- Stores will load here dynamically -->
+                </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label>Title / Description *</label>
+                <input type="text" id="expense-title" placeholder="e.g. Electricity Bill, Shop Rent, Staff Refreshment">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 12px;">
                 <label>Category</label>
                 <select id="expense-category">
                     <option value="Utilities">Utilities (Bills)</option>
@@ -3953,8 +3965,15 @@
                     <option value="Other">Other Expenses</option>
                 </select>
             </div>
-            <div class="form-group"><label>Amount (Rs.)</label><input type="number" id="expense-amount" placeholder="e.g. 2500"></div>
-            <button class="save-btn" style="width: 100%; justify-content: center;" onclick="saveExpense()">Save Expense</button>
+
+            <div class="form-group" style="margin-bottom: 16px;">
+                <label>Amount (Rs.) *</label>
+                <input type="number" id="expense-amount" min="1" placeholder="e.g. 2500">
+            </div>
+
+            <button class="save-btn" style="width: 100%; justify-content: center;" onclick="saveExpense()">
+                <i class='bx bx-check-circle'></i> Save Expense
+            </button>
         </div>
     </div>
 
@@ -4208,21 +4227,49 @@ window.openExpenseModal = function() {
     const modal = document.getElementById('expense-modal');
     if (!modal) return;
 
-    // Purani likhi hui values ko saaf (Reset) karein
     const titleInput = document.getElementById('expense-title');
     const catSelect = document.getElementById('expense-category');
     const amtInput = document.getElementById('expense-amount');
+    const branchSelect = document.getElementById('expense-branch');
 
     if (titleInput) titleInput.value = '';
     if (catSelect) catSelect.selectedIndex = 0;
     if (amtInput) amtInput.value = '';
 
-    // Modal ko screen par open karein
+    // Populate branch select with existing stores
+    if (branchSelect) {
+        branchSelect.innerHTML = `<option value="main">Main Warehouse / Godown</option>`;
+        const seenKeys = new Set();
+        (window.branchesList || []).forEach(b => {
+            const key = `${(b.name || '').trim().toLowerCase()}_${(b.area || '').trim().toLowerCase()}`;
+            if (!seenKeys.has(key)) {
+                seenKeys.add(key);
+                branchSelect.innerHTML += `<option value="${b.id}">${b.name} (${b.area})</option>`;
+            }
+        });
+
+        // Auto-assign if current user is restricted to a specific branch
+        const currentUserStr = sessionStorage.getItem('pos_current_user');
+        if (currentUserStr) {
+            try {
+                const u = JSON.parse(currentUserStr);
+                if (u.role !== 'superadmin' && u.role !== 'supermaster' && u.assignedBranch && u.assignedBranch !== 'all') {
+                    branchSelect.value = u.assignedBranch;
+                    branchSelect.disabled = true;
+                } else {
+                    branchSelect.disabled = false;
+                    // Default to POS selected branch if available
+                    const posBranch = document.getElementById('pos-selected-branch')?.value;
+                    if (posBranch && posBranch !== 'all') branchSelect.value = posBranch;
+                }
+            } catch(e) {}
+        }
+    }
+
     modal.classList.add('visible');
     setTimeout(() => titleInput?.focus(), 100);
 };
 
-// 2. Add Expense ka Popup (Modal) band karne ka function
 window.closeExpenseModal = function() {
     const modal = document.getElementById('expense-modal');
     if (modal) {
@@ -4230,15 +4277,19 @@ window.closeExpenseModal = function() {
     }
 };
 
-// 3. Kharcha Firebase Database mein save karne ka function
 window.saveExpense = async function() {
     const title = document.getElementById('expense-title')?.value.trim();
     const category = document.getElementById('expense-category')?.value || 'Other';
     const amount = parseFloat(document.getElementById('expense-amount')?.value);
+    const branchSelect = document.getElementById('expense-branch');
 
-    // Validation checks
+    const branchId = branchSelect ? branchSelect.value : 'main';
+    const branchName = branchSelect && branchSelect.selectedIndex >= 0 
+        ? branchSelect.options[branchSelect.selectedIndex].text 
+        : 'Main Warehouse / Godown';
+
     if (!title) {
-        alert("Please enter expense title/description!");
+        alert("Please enter expense title / description!");
         return;
     }
 
@@ -4247,26 +4298,25 @@ window.saveExpense = async function() {
         return;
     }
 
-  
     const now = new Date();
     const expDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
     try {
-        // Firebase Firestore mein kharcha save karna
         await expensesDB.add({
             title: title,
             category: category,
             amount: amount,
+            branchId: branchId,
+            branchName: branchName,
             date: expDate,
             timestamp: firebase.firestore.FieldValue.serverTimestamp()
         });
 
         Toast.fire({
             icon: 'success',
-            title: 'Expense recorded successfully!'
+            title: `Expense recorded for ${branchName} successfully!`
         });
 
-        // Form popup ko band karein
         window.closeExpenseModal();
 
     } catch (err) {
@@ -5405,6 +5455,7 @@ if (typeof window.saveAllDataToLocalDrive === 'function') {
                             </td>
                             <td><span class="status-badge ${statusClass}">${statusLabel}</span></td>
                             <td class="action-btns">
+                                <button class="btn-view" style="background:#0284c7;" onclick="printSinglePurchaseInvoice('${item.id}')" title="Print Purchase Bill"><i class='bx bx-printer'></i> Print Bill</button>
                                 <button class="btn-edit" onclick="openEditPurchaseModal('${item.id}')" title="Edit Purchase & Stock"><i class='bx bx-edit'></i> Edit</button>
                                 <button class="btn-delete" onclick="deletePurchaserWithCompleteStock('${item.id}')" title="Purchaser & Stock Mukammal Delete Karein"><i class='bx bx-trash'></i> Delete</button>
                                 ${payDueActionBtn}
@@ -5592,6 +5643,70 @@ if (typeof window.saveAllDataToLocalDrive === 'function') {
                 });
             }
         };
+
+// INDIVIDUAL PURCHASE BILL / INVOICE PRINT & PDF GENERATOR
+        window.printSinglePurchaseInvoice = function(purchaseId) {
+            const purchase = (window.purchasesList || []).find(p => p.id === purchaseId);
+            if (!purchase) {
+                alert("Purchase record not found!");
+                return;
+            }
+
+            const items = purchase.items && Array.isArray(purchase.items) ? purchase.items : [{
+                name: purchase.productName || 'Purchased Item',
+                barcode: purchase.barcode || '',
+                cost: Number(purchase.costPrice || (purchase.totalBill / (purchase.qty || 1))),
+                qty: Number(purchase.qty || 1),
+                total: Number(purchase.totalBill || 0)
+            }];
+
+            const rows = items.map((it, idx) => {
+                const cost = Number(it.cost !== undefined ? it.cost : (it.costPrice || 0));
+                const qty = Number(it.qty || 1);
+                const lineTotal = Number(it.total || (cost * qty));
+
+                return [
+                    String(idx + 1),
+                    `<b>${it.name}</b> ${it.barcode ? `<br><small style="color:#64748b;">Code: ${it.barcode}</small>` : ''}`,
+                    `Rs. ${cost.toLocaleString()}`,
+                    `<b>${qty} pcs</b>`,
+                    `Rs. ${lineTotal.toLocaleString()}`
+                ];
+            });
+
+            const bill = Number(purchase.totalBill || 0);
+            const paid = Number(purchase.paidAmount !== undefined ? purchase.paidAmount : bill);
+            const due = Number(purchase.remainingDue !== undefined ? purchase.remainingDue : Math.max(0, bill - paid));
+
+            window.generateProfessionalPDF({
+                reportTitle: `OFFICIAL PURCHASE BILL & INVOICE`,
+                periodText: `PO Ref: ${purchase.serialNo || purchase.poNumber || 'PUR'} | Date: ${purchase.date || '-'}`,
+                fileName: `Purchase_Invoice_${purchase.serialNo || 'PUR'}`,
+                orientation: 'portrait',
+                kpis: [
+                    { label: 'Vendor / Supplier', value: purchase.vendorName || '-', color: '#0066ff' },
+                    { label: 'Total Bill', value: `Rs. ${bill.toLocaleString()}`, color: '#0f172a' },
+                    { label: 'Amount Paid', value: `Rs. ${paid.toLocaleString()}`, color: '#10b981' },
+                    { label: 'Balance Due', value: `Rs. ${due.toLocaleString()}`, color: '#ef4444' }
+                ],
+                headers: [
+                    { title: 'Sr #', align: 'center' },
+                    { title: 'Product Description', align: 'left' },
+                    { title: 'Unit Cost', align: 'right' },
+                    { title: 'Quantity', align: 'center' },
+                    { title: 'Subtotal', align: 'right' }
+                ],
+                rows: rows,
+                totals: [
+                    'GRAND TOTAL',
+                    '-',
+                    '-',
+                    `${purchase.qty || items.reduce((a, b) => a + Number(b.qty || 1), 0)} pcs`,
+                    `Rs. ${bill.toLocaleString()}`
+                ]
+            });
+        };
+
 
         window.openPayVendorModal = function(purchaseId) {
             const purchase = window.purchasesList.find(p => p.id === purchaseId);
@@ -10993,8 +11108,18 @@ const nextRetSeq = (window.returnsList ? window.returnsList.length : 0) + 1; con
                         <span class="close-modal" onclick="closeEditExpenseModal()">&times;</span>
                         <h2 style="margin-bottom: 16px;"><i class='bx bx-edit' style="color:var(--primary);"></i> Edit Store Expense</h2>
                         <input type="hidden" id="edit-exp-doc-id">
-                        <div class="form-group"><label>Expense Title / Description *</label><input type="text" id="edit-exp-title"></div>
-                        <div class="form-group">
+                        
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label><i class='bx bx-store-alt' style="color:var(--primary);"></i> Store / Branch *</label>
+                            <select id="edit-exp-branch" style="font-weight: 700; color: #0f172a;"></select>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 12px;">
+                            <label>Expense Title / Description *</label>
+                            <input type="text" id="edit-exp-title">
+                        </div>
+                        
+                        <div class="form-group" style="margin-bottom: 12px;">
                             <label>Category</label>
                             <select id="edit-exp-category">
                                 <option value="Utilities">Utilities (Bills)</option>
@@ -11005,7 +11130,10 @@ const nextRetSeq = (window.returnsList ? window.returnsList.length : 0) + 1; con
                                 <option value="Other">Other Expenses</option>
                             </select>
                         </div>
-                        <div class="form-group"><label>Amount (Rs.) *</label><input type="number" id="edit-exp-amount" min="1"></div>
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label>Amount (Rs.) *</label>
+                            <input type="number" id="edit-exp-amount" min="1">
+                        </div>
                         <button class="save-btn" id="save-edit-exp-btn" style="width: 100%; justify-content: center; margin-top:8px;" onclick="saveEditedExpense()">
                             <i class='bx bx-check-circle'></i> Update Expense
                         </button>
@@ -11169,6 +11297,20 @@ const nextRetSeq = (window.returnsList ? window.returnsList.length : 0) + 1; con
             document.getElementById('edit-exp-category').value = exp.category || 'Other';
             document.getElementById('edit-exp-amount').value = exp.amount || 0;
 
+            const branchSelect = document.getElementById('edit-exp-branch');
+            if (branchSelect) {
+                branchSelect.innerHTML = `<option value="main">Main Warehouse / Godown</option>`;
+                const seenKeys = new Set();
+                (window.branchesList || []).forEach(b => {
+                    const key = `${(b.name || '').trim().toLowerCase()}_${(b.area || '').trim().toLowerCase()}`;
+                    if (!seenKeys.has(key)) {
+                        seenKeys.add(key);
+                        branchSelect.innerHTML += `<option value="${b.id}">${b.name} (${b.area})</option>`;
+                    }
+                });
+                branchSelect.value = exp.branchId || 'main';
+            }
+
             document.getElementById('edit-expense-modal')?.classList.add('visible');
         };
 
@@ -11181,7 +11323,13 @@ const nextRetSeq = (window.returnsList ? window.returnsList.length : 0) + 1; con
             const title = document.getElementById('edit-exp-title').value.trim();
             const category = document.getElementById('edit-exp-category').value;
             const amount = parseFloat(document.getElementById('edit-exp-amount').value);
+            const branchSelect = document.getElementById('edit-exp-branch');
             const saveBtn = document.getElementById('save-edit-exp-btn');
+
+            const branchId = branchSelect ? branchSelect.value : 'main';
+            const branchName = branchSelect && branchSelect.selectedIndex >= 0 
+                ? branchSelect.options[branchSelect.selectedIndex].text 
+                : 'Main Warehouse / Godown';
 
             if (!title) { alert("Description / Title lazmi hai!"); return; }
             if (isNaN(amount) || amount <= 0) { alert("Durust amount likhein!"); return; }
@@ -11194,10 +11342,12 @@ const nextRetSeq = (window.returnsList ? window.returnsList.length : 0) + 1; con
                     title: title,
                     category: category,
                     amount: amount,
+                    branchId: branchId,
+                    branchName: branchName,
                     lastEditedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
 
-                alert("Kharcha kamyabi say update hogaya!");
+                Toast.fire({ icon: 'success', title: 'Expense updated successfully!' });
                 closeEditExpenseModal();
             } catch (err) {
                 alert("Error: " + err.message);
@@ -11212,6 +11362,12 @@ const nextRetSeq = (window.returnsList ? window.returnsList.length : 0) + 1; con
             const tbody = document.getElementById('expense-tbody');
             const totalCard = document.getElementById('total-expense-card-val');
 
+            // Header mein Store column check karein
+            const theadTr = document.querySelector('#expense-view table thead tr');
+            if (theadTr && !theadTr.innerHTML.includes('Store / Branch')) {
+                theadTr.innerHTML = `<th>Title</th><th>Category</th><th>Store / Branch</th><th>Date</th><th>Amount</th><th>Action</th>`;
+            }
+
             if (!tbody) return;
             tbody.innerHTML = '';
 
@@ -11219,11 +11375,12 @@ const nextRetSeq = (window.returnsList ? window.returnsList.length : 0) + 1; con
             let totalAmount = 0;
 
             if (expenses.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="empty-placeholder">Koi kharcha darj nahi hai.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="empty-placeholder">Koi kharcha darj nahi hai. "+ Add Expense" dabayein.</td></tr>`;
             } else {
                 expenses.forEach(exp => {
                     const amt = Number(exp.amount || 0);
                     totalAmount += amt;
+                    const branchDisp = exp.branchName || 'Main Warehouse / Godown';
 
                     tbody.innerHTML += `
                         <tr>
@@ -11231,6 +11388,11 @@ const nextRetSeq = (window.returnsList ? window.returnsList.length : 0) + 1; con
                             <td>
                                 <span class="status-badge" style="background:#f1f5f9; color:#334155; font-weight:700;">
                                     ${exp.category || 'General'}
+                                </span>
+                            </td>
+                            <td>
+                                <span style="background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.8rem;">
+                                    <i class='bx bx-store'></i> ${branchDisp}
                                 </span>
                             </td>
                             <td><small style="color:#64748b; font-weight:600;">${exp.date || '-'}</small></td>
@@ -13411,10 +13573,33 @@ window.downloadAllReportsPDF = function() {
         return true;
     }
 
-    // Filter data across models
-    const filteredSales = (window.salesHistory || []).filter(s => isWithinPeriod(s.date));
-    const filteredExpenses = (window.expensesList || []).filter(e => isWithinPeriod(e.date));
-    const filteredReturns = (window.returnsList || []).filter(r => isWithinPeriod(r.date));
+    const branchFilter = document.getElementById('all-rep-branch-filter')?.value || 'all';
+
+    // Filter data with Branch selection check
+    const filteredSales = (window.salesHistory || []).filter(s => {
+        if (!isWithinPeriod(s.date)) return false;
+        if (branchFilter !== 'all' && (s.branchId || 'main') !== branchFilter) return false;
+        return true;
+    });
+
+    const filteredExpenses = (window.expensesList || []).filter(e => {
+        if (!isWithinPeriod(e.date)) return false;
+        if (branchFilter !== 'all') {
+            const expBranch = e.branchId || 'main';
+            if (expBranch !== branchFilter) return false;
+        }
+        return true;
+    });
+
+    const filteredReturns = (window.returnsList || []).filter(r => {
+        if (!isWithinPeriod(r.date)) return false;
+        if (branchFilter !== 'all') {
+            const originalSale = (window.salesHistory || []).find(s => s.invoiceId === r.invoiceRef);
+            const rBranch = originalSale ? (originalSale.branchId || 'main') : 'main';
+            if (rBranch !== branchFilter) return false;
+        }
+        return true;
+    });
 
     // 1. Period Text Calculation (DD/MM/YYYY - DD/MM/YYYY)
     let periodDisplay = '';
@@ -15995,7 +16180,10 @@ window.renderAllReportsView = function() {
 
     const filteredExpenses = (window.expensesList || []).filter(e => {
         if (!isWithinPeriod(e.date)) return false;
-        if (branchFilter !== 'all' && (e.branchId || 'main') !== branchFilter) return false;
+        if (branchFilter !== 'all') {
+            const expBranch = e.branchId || 'main';
+            if (expBranch !== branchFilter) return false;
+        }
         return true;
     });
 
@@ -16009,7 +16197,7 @@ window.renderAllReportsView = function() {
         return true;
     });
 
-    // Calculations
+    // Accurate Calculations for Selected Branch or All Branches
     const totalSales = filteredSales.reduce((sum, s) => sum + Number(s.total || 0), 0);
     const totalPayment = filteredSales.reduce((sum, s) => {
         const total = Number(s.total || 0);
@@ -16017,7 +16205,8 @@ window.renderAllReportsView = function() {
         return sum + paid;
     }, 0);
     
-    const totalExpensesCalc = branchFilter === 'all' ? filteredExpenses.reduce((sum, e) => sum + Number(e.amount || 0), 0) : 0;
+    // Now calculates exact expenses for the selected branch
+    const totalExpensesCalc = filteredExpenses.reduce((sum, e) => sum + Number(e.amount || 0), 0);
     
     const totalRefund = filteredReturns.reduce((sum, r) => sum + Number(r.refund || 0), 0);
     const netCashInHand = totalPayment - totalExpensesCalc - totalRefund;
@@ -16088,16 +16277,18 @@ window.renderAllReportsView = function() {
     }
 
     if (expDetailsTbody) {
-        if (filteredExpenses.length === 0 || branchFilter !== 'all') {
-            expDetailsTbody.innerHTML = `<tr><td colspan="4" class="empty-placeholder">${branchFilter !== 'all' ? 'Expenses are only visible in All Stores view.' : 'Koi kharcha record nahi mila.'}</td></tr>`;
+        if (filteredExpenses.length === 0) {
+            expDetailsTbody.innerHTML = `<tr><td colspan="4" class="empty-placeholder">Chuni hui branch ya muddat ka koi kharcha record nahi mila.</td></tr>`;
         } else {
             filteredExpenses.forEach(exp => {
                 const expDate = formatDateSlash(exp.date);
+                const branchTag = exp.branchName ? `<br><small style="color:var(--primary); font-weight:700;"><i class='bx bx-store'></i> ${exp.branchName}</small>` : '';
+
                 expDetailsTbody.innerHTML += `
                     <tr>
                         <td>${expDate}</td>
                         <td><span class="status-badge" style="background:#f1f5f9; color:#475569;">${exp.category || 'General'}</span></td>
-                        <td><strong>${exp.title || '-'}</strong></td>
+                        <td><strong>${exp.title || '-'}</strong>${branchTag}</td>
                         <td style="text-align: right; font-weight: 800; color: #ef4444;">Rs. ${Number(exp.amount || 0).toLocaleString()}</td>
                     </tr>
                 `;
