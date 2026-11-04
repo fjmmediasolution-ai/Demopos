@@ -2286,9 +2286,17 @@
                     </div>
 
                  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:15px;">
-                        <div class="search-box" style="max-width:380px;">
-                            <i class='bx bx-search'></i>
-                            <input type="text" id="purchase-details-search-input" placeholder="Search by Purchaser, Number, Serial # or Product..." oninput="renderPurchaseDetailsView()">
+                        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; flex:1;">
+                            <div class="search-box" style="max-width:340px;">
+                                <i class='bx bx-search'></i>
+                                <input type="text" id="purchase-details-search-input" placeholder="Search by Purchaser, Number, Serial # or Product..." oninput="renderPurchaseDetailsView()">
+                            </div>
+                            <div class="pos-branch-select-box" style="padding: 6px 14px; background: #ffffff; border: 1.5px solid var(--primary);">
+                                <label style="font-weight: 700; color: #0f172a; font-size: 0.8rem;"><i class='bx bx-store' style="color:var(--primary);"></i> Store:</label>
+                                <select id="pur-details-branch-filter" onchange="renderPurchaseDetailsView()" style="font-weight: 800; color: var(--primary); max-width: 170px; outline: none; border: none; background: transparent;">
+                                    <option value="all">All Stores (Total Business)</option>
+                                </select>
+                            </div>
                         </div>
                         <button type="button" class="save-btn" onclick="downloadPurchaserDetailsPDF()"><i class='bx bxs-file-pdf'></i> Export Purchaser Details PDF</button>
                     </div>
@@ -2797,6 +2805,13 @@
                                     <button class="pl-pill-btn active" id="pl-preset-all" onclick="setPLPreset('all')"><i class='bx bx-infinite'></i> All</button>
                                 </div>
 
+                                <!-- Branch / Store Filter Dropdown for Profit & Loss -->
+                                <div class="pos-branch-select-box" style="padding: 6px 14px; background: #ffffff; border: 1.5px solid var(--primary);">
+                                    <select id="pl-branch-filter" onchange="renderProfitLossReport()" style="font-weight: 800; color: var(--primary); max-width: 160px; outline: none; border: none; background: transparent;">
+                                        <option value="all">All Stores (Total Business)</option>
+                                    </select>
+                                </div>
+
                                 <div class="pl-date-picker-box">
                                     <input type="date" id="pl-date-from" title="From Date">
                                     <span style="color:#94a3b8; font-weight:700;">→</span>
@@ -3023,6 +3038,14 @@
                                     <button class="pl-pill-btn active" id="pur-preset-all" onclick="setPurchaserReportPreset('all')"><i class='bx bx-infinite'></i> All Time</button>
                                 </div>
 
+                                <!-- Store / Branch Filter Dropdown for Purchaser Report -->
+                                <div class="pos-branch-select-box" style="padding: 6px 14px; background: #ffffff; border: 1.5px solid var(--primary);">
+                                    <label style="font-weight: 700; color: #0f172a; font-size: 0.8rem;"><i class='bx bx-store' style="color:var(--primary);"></i> Store:</label>
+                                    <select id="pur-rep-branch-filter" onchange="renderPurchaserReport()" style="font-weight: 800; color: var(--primary); max-width: 170px; outline: none; border: none; background: transparent;">
+                                        <option value="all">All Stores (Total Business)</option>
+                                    </select>
+                                </div>
+
                                 <div class="pl-date-picker-box">
                                     <input type="date" id="pur-rep-date-from" title="From Date">
                                     <span style="color:#94a3b8; font-weight:700;">→</span>
@@ -3096,6 +3119,14 @@
                                     <button class="pl-pill-btn active" id="ret-preset-all" onclick="setReturnReportPreset('all')"><i class='bx bx-infinite'></i> All Time</button>
                                 </div>
 
+                                <!-- Store / Branch Filter Dropdown for Return Report -->
+                                <div class="pos-branch-select-box" style="padding: 6px 14px; background: #ffffff; border: 1.5px solid var(--primary);">
+                                    <label style="font-weight: 700; color: #0f172a; font-size: 0.8rem;"><i class='bx bx-store' style="color:var(--primary);"></i> Store:</label>
+                                    <select id="ret-rep-branch-filter" onchange="renderReturnReport()" style="font-weight: 800; color: var(--primary); max-width: 170px; outline: none; border: none; background: transparent;">
+                                        <option value="all">All Stores (Total Business)</option>
+                                    </select>
+                                </div>
+
                                 <div class="pl-date-picker-box">
                                     <input type="date" id="ret-rep-date-from" title="From Date">
                                     <span style="color:#94a3b8; font-weight:700;">→</span>
@@ -3167,6 +3198,14 @@
                                     <button class="pl-pill-btn active" id="exp-rep-preset-all" onclick="setExpenseReportPreset('all')"><i class='bx bx-infinite'></i> All Time</button>
                                 </div>
 
+                                <!-- Store / Branch Filter Dropdown for Expense Report -->
+                                <div class="pos-branch-select-box" style="padding: 6px 14px; background: #ffffff; border: 1.5px solid var(--primary);">
+                                    <label style="font-weight: 700; color: #0f172a; font-size: 0.8rem;"><i class='bx bx-store' style="color:var(--primary);"></i> Store:</label>
+                                    <select id="exp-rep-branch-filter" onchange="renderExpenseReport()" style="font-weight: 800; color: var(--primary); max-width: 170px; outline: none; border: none; background: transparent;">
+                                        <option value="all">All Stores (Total Business)</option>
+                                    </select>
+                                </div>
+
                                 <div class="pl-date-picker-box">
                                     <input type="date" id="exp-rep-date-from" title="From Date">
                                     <span style="color:#94a3b8; font-weight:700;">→</span>
@@ -3227,6 +3266,14 @@
                                     <button class="pl-pill-btn" id="cb-rep-preset-weekly" onclick="setCashBookReportPreset('weekly')"><i class='bx bx-calendar-week'></i> Weekly</button>
                                     <button class="pl-pill-btn" id="cb-rep-preset-monthly" onclick="setCashBookReportPreset('monthly')"><i class='bx bx-calendar'></i> Monthly</button>
                                     <button class="pl-pill-btn active" id="cb-rep-preset-all" onclick="setCashBookReportPreset('all')"><i class='bx bx-infinite'></i> All Time</button>
+                                </div>
+
+                                <!-- Store / Branch Filter Dropdown for Cash Book Report -->
+                                <div class="pos-branch-select-box" style="padding: 6px 14px; background: #ffffff; border: 1.5px solid var(--primary);">
+                                    <label style="font-weight: 700; color: #0f172a; font-size: 0.8rem;"><i class='bx bx-store' style="color:var(--primary);"></i> Store:</label>
+                                    <select id="cb-rep-branch-filter" onchange="renderCashBookReport()" style="font-weight: 800; color: var(--primary); max-width: 170px; outline: none; border: none; background: transparent;">
+                                        <option value="all">All Stores (Total Business)</option>
+                                    </select>
                                 </div>
 
                                 <div class="pl-date-picker-box">
@@ -5366,20 +5413,27 @@ if (typeof window.saveAllDataToLocalDrive === 'function') {
             }
         };
 
-        // PURCHASER DETAILS & DUES PAY SYSTEM
+        // PURCHASER DETAILS & DUES PAY SYSTEM (WITH STORE FILTER)
         window.renderPurchaseDetailsView = function() {
             const tbody = document.getElementById('purchase-details-tbody');
             if (!tbody) return;
             tbody.innerHTML = '';
 
             const searchTerm = (document.getElementById('purchase-details-search-input')?.value || '').toLowerCase().trim();
+            const branchFilter = document.getElementById('pur-details-branch-filter')?.value || 'all';
 
             let totalPurchasesSum = 0;
             let totalPaidSum = 0;
             let totalDueSum = 0;
             let totalItemsQty = 0;
 
-            const filtered = window.purchasesList.filter(p => {
+            const filtered = (window.purchasesList || []).filter(p => {
+                // Branch filter: Check destination or items branch
+                if (branchFilter !== 'all') {
+                    const pBranch = p.destinationId || p.branchId || 'main';
+                    if (pBranch !== branchFilter) return false;
+                }
+
                 const sNo = p.serialNo || p.poNumber || '';
                 const itemsStr = (p.items || []).map(i => i.name).join(' ') + ' ' + (p.productName || '');
                 return sNo.toLowerCase().includes(searchTerm) ||
@@ -10985,7 +11039,15 @@ const nextRetSeq = (window.returnsList ? window.returnsList.length : 0) + 1; con
             const fromDate = document.getElementById('exp-rep-date-from')?.value;
             const toDate = document.getElementById('exp-rep-date-to')?.value;
 
+            const branchFilter = document.getElementById('exp-rep-branch-filter')?.value || 'all';
+
             const filtered = (window.expensesList || []).filter(exp => {
+                // Store / Branch Filter
+                if (branchFilter !== 'all') {
+                    const expBranch = exp.branchId || 'main';
+                    if (expBranch !== branchFilter) return false;
+                }
+
                 const itemDate = (exp.date || '').substring(0, 10);
                 if (window.currentExpPreset === 'today') return itemDate === todayStr;
                 if (window.currentExpPreset === 'custom' && fromDate && toDate) {
@@ -11547,9 +11609,33 @@ window.renderProfitLossReport = function() {
         return true;
     }
 
-    const filteredSales = (window.salesHistory || []).filter(s => isWithinPeriod(s.date));
-    const filteredExpenses = (window.expensesList || []).filter(e => isWithinPeriod(e.date));
-    const filteredReturns = (window.returnsList || []).filter(r => isWithinPeriod(r.date));
+    const branchFilter = document.getElementById('pl-branch-filter')?.value || 'all';
+    const branchSelectEl = document.getElementById('pl-branch-filter');
+    const branchDisplayName = branchSelectEl && branchSelectEl.selectedIndex >= 0 
+        ? branchSelectEl.options[branchSelectEl.selectedIndex].text 
+        : 'All Stores (Total Business)';
+
+    const filteredSales = (window.salesHistory || []).filter(s => {
+        if (!isWithinPeriod(s.date)) return false;
+        if (branchFilter !== 'all' && (s.branchId || 'main') !== branchFilter) return false;
+        return true;
+    });
+
+    const filteredExpenses = (window.expensesList || []).filter(e => {
+        if (!isWithinPeriod(e.date)) return false;
+        if (branchFilter !== 'all' && (e.branchId || 'main') !== branchFilter) return false;
+        return true;
+    });
+
+    const filteredReturns = (window.returnsList || []).filter(r => {
+        if (!isWithinPeriod(r.date)) return false;
+        if (branchFilter !== 'all') {
+            const originalSale = (window.salesHistory || []).find(s => s.invoiceId === r.invoiceRef);
+            const rBranch = originalSale ? (originalSale.branchId || 'main') : (r.branchId || 'main');
+            if (rBranch !== branchFilter) return false;
+        }
+        return true;
+    });
 
     // 1. Returns Tracking & Calculation
     let totalReturnMarginLoss = 0;
@@ -11621,11 +11707,14 @@ window.renderProfitLossReport = function() {
             totalGrossRevenue += lineSale;
             totalGrossCogs += lineCost;
 
+            const branchTag = s.branchName ? `<br><small style="color:var(--primary); font-weight:700;"><i class='bx bx-store'></i> ${s.branchName}</small>` : '';
+
             rowsHtml += `
                 <tr>
                     <td style="text-align: left; padding: 12px 14px;">
                         <strong style="color: #0f172a; font-size: 0.95rem;">${it.name || 'Product'}</strong> 
                         <span style="color: #64748b; font-size: 0.8rem; margin-left: 4px;">(inv #${s.invoiceId || '-'})</span>
+                        ${branchTag}
                     </td>
                     <td style="text-align: center; font-weight: 800; color: #1e293b; padding: 12px 14px;">${qty}</td>
                     <td style="text-align: right; color: #475569; padding: 12px 14px; font-weight: 600;">Rs. ${costPrice.toLocaleString()}</td>
@@ -11649,11 +11738,13 @@ window.renderProfitLossReport = function() {
             let expRows = '';
             filteredExpenses.forEach(e => {
                 const amt = Number(e.amount || 0);
+                const branchExpTag = e.branchName ? `<br><small style="color:var(--primary); font-weight:700;"><i class='bx bx-store'></i> ${e.branchName}</small>` : '';
+
                 expRows += `
                     <tr>
                         <td style="padding: 10px 8px; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; color: #475569; font-weight: 600;">${(e.date || '').substring(0, 10)}</td>
                         <td style="padding: 10px 8px; border-bottom: 1px solid #f1f5f9;"><span class="status-badge" style="background: #f1f5f9; color: #334155; font-size: 0.76rem; font-weight: 700;">${e.category || 'General'}</span></td>
-                        <td style="padding: 10px 8px; border-bottom: 1px solid #f1f5f9; font-size: 0.88rem; color: #0f172a; font-weight: 700;">${e.title || '-'}</td>
+                        <td style="padding: 10px 8px; border-bottom: 1px solid #f1f5f9; font-size: 0.88rem; color: #0f172a; font-weight: 700;">${e.title || '-'}${branchExpTag}</td>
                         <td style="text-align: right; font-weight: 800; color: #ef4444; padding: 10px 8px; border-bottom: 1px solid #f1f5f9; font-size: 0.9rem;">Rs. ${amt.toLocaleString()}</td>
                     </tr>
                 `;
@@ -11750,9 +11841,33 @@ window.downloadCleanProfitLossPDF = function() {
         return `Rs. ${val.toFixed(2)}`;
     };
 
-    const filteredSales = (window.salesHistory || []).filter(s => isWithinPeriod(s.date));
-    const filteredExpenses = (window.expensesList || []).filter(e => isWithinPeriod(e.date));
-    const filteredReturns = (window.returnsList || []).filter(r => isWithinPeriod(r.date));
+    const branchFilter = document.getElementById('pl-branch-filter')?.value || 'all';
+    const branchSelectEl = document.getElementById('pl-branch-filter');
+    const branchDisplayName = branchSelectEl && branchSelectEl.selectedIndex >= 0 
+        ? branchSelectEl.options[branchSelectEl.selectedIndex].text 
+        : 'All Stores (Total Business)';
+
+    const filteredSales = (window.salesHistory || []).filter(s => {
+        if (!isWithinPeriod(s.date)) return false;
+        if (branchFilter !== 'all' && (s.branchId || 'main') !== branchFilter) return false;
+        return true;
+    });
+
+    const filteredExpenses = (window.expensesList || []).filter(e => {
+        if (!isWithinPeriod(e.date)) return false;
+        if (branchFilter !== 'all' && (e.branchId || 'main') !== branchFilter) return false;
+        return true;
+    });
+
+    const filteredReturns = (window.returnsList || []).filter(r => {
+        if (!isWithinPeriod(r.date)) return false;
+        if (branchFilter !== 'all') {
+            const originalSale = (window.salesHistory || []).find(s => s.invoiceId === r.invoiceRef);
+            const rBranch = originalSale ? (originalSale.branchId || 'main') : (r.branchId || 'main');
+            if (rBranch !== branchFilter) return false;
+        }
+        return true;
+    });
 
     // 1. Returns Tracking & Rows
     let totalReturnMarginLoss = 0;
@@ -11864,7 +11979,8 @@ window.downloadCleanProfitLossPDF = function() {
                 <div style="display: inline-block; background: #0f172a; color: #ffffff; font-size: 11px; font-weight: 800; padding: 3px 12px; border-radius: 4px; text-transform: uppercase;">
                     Profit &amp; Loss Statement
                 </div>
-                <div style="font-size: 10.5px; font-weight: 600; color: #6b7280; margin-top: 5px;">Period: ${periodDisplay}</div>
+                <div style="font-size: 11px; font-weight: 800; color: #0284c7; margin-top: 4px;">Store / Branch: ${branchDisplayName}</div>
+                <div style="font-size: 10.5px; font-weight: 600; color: #6b7280; margin-top: 2px;">Period: ${periodDisplay}</div>
             </div>
 
             <!-- Summary Table (Clean & Accurate Labels) -->
@@ -12216,7 +12332,15 @@ window.downloadCleanProfitLossPDF = function() {
             const fromDate = document.getElementById('pur-rep-date-from')?.value;
             const toDate = document.getElementById('pur-rep-date-to')?.value;
 
+            const branchFilter = document.getElementById('pur-rep-branch-filter')?.value || 'all';
+
             const filtered = (window.purchasesList || []).filter(p => {
+                // Store / Branch Filter
+                if (branchFilter !== 'all') {
+                    const pBranch = p.destinationId || p.branchId || 'main';
+                    if (pBranch !== branchFilter) return false;
+                }
+
                 const pDate = (p.date || '').substring(0, 10);
                 if (window.currentPurRepPreset === 'today') return pDate === todayStr;
                 if (window.currentPurRepPreset === 'weekly') {
@@ -12399,7 +12523,16 @@ window.downloadCleanProfitLossPDF = function() {
             const fromDate = document.getElementById('ret-rep-date-from')?.value;
             const toDate = document.getElementById('ret-rep-date-to')?.value;
 
+            const branchFilter = document.getElementById('ret-rep-branch-filter')?.value || 'all';
+
             const filtered = (window.returnsList || []).filter(r => {
+                // Store / Branch Filter
+                if (branchFilter !== 'all') {
+                    const originalSale = (window.salesHistory || []).find(s => s.invoiceId === r.invoiceRef);
+                    const rBranch = originalSale ? (originalSale.branchId || 'main') : (r.branchId || 'main');
+                    if (rBranch !== branchFilter) return false;
+                }
+
                 const rDate = (r.date || '').substring(0, 10);
                 if (window.currentRetRepPreset === 'today') return rDate === todayStr;
                 if (window.currentRetRepPreset === 'weekly') {
@@ -13145,7 +13278,7 @@ window.downloadCleanProfitLossPDF = function() {
             window.setCashBookReportPreset('all');
         };
 
-   // RENDER UNIFIED CASH BOOK LEDGER (CLEAN 5 COLUMNS - NO ACTION BUTTONS)
+   // RENDER UNIFIED CASH BOOK LEDGER (CLEAN 5 COLUMNS - STORE FILTER ENABLED)
     window.renderCashBookReport = function() {
         const tbody = document.getElementById('cb-transaction-history-tbody');
         const periodText = document.getElementById('cb-report-period-text');
@@ -13156,6 +13289,7 @@ window.downloadCleanProfitLossPDF = function() {
         const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
         const fromDate = document.getElementById('cb-rep-date-from')?.value;
         const toDate = document.getElementById('cb-rep-date-to')?.value;
+        const branchFilter = document.getElementById('cb-rep-branch-filter')?.value || 'all';
 
         function isWithinPeriod(dateStr) {
             if (!dateStr) return false;
@@ -13179,14 +13313,15 @@ window.downloadCleanProfitLossPDF = function() {
 
         const allTransactions = [];
 
-       // 1. CASH IN: Daily Counter Cash Sales (Net Cash in Hand = Sales - Refunds - Expenses)
+        // 1. CASH IN: Daily Counter Cash Sales (Filtered by selected Branch)
         const dailySummaryMap = {};
 
-        // A. Cash Sales / Payment Received (All Reports ke sath 100% Synced)
+        // A. Cash Sales / Payment Received
         (window.salesHistory || []).forEach(s => {
+            if (branchFilter !== 'all' && (s.branchId || 'main') !== branchFilter) return;
+
             const status = String(s.paymentStatus || 'Paid').trim().toLowerCase();
             const isUnpaid = (status === 'unpaid');
-            // Agar invoice Paid hai ya partial payment mili hai to received amount uthayein
             const paid = s.paidAmount !== undefined ? Number(s.paidAmount) : (isUnpaid ? 0 : Number(s.total || 0));
 
             if (paid > 0 && isWithinPeriod(s.date)) {
@@ -13203,8 +13338,14 @@ window.downloadCleanProfitLossPDF = function() {
             }
         });
 
-        // B. Customer Returns / Refunds (Jo cash wapas diya gaya)
+        // B. Customer Returns / Refunds
         (window.returnsList || []).forEach(r => {
+            if (branchFilter !== 'all') {
+                const originalSale = (window.salesHistory || []).find(s => s.invoiceId === r.invoiceRef);
+                const rBranch = originalSale ? (originalSale.branchId || 'main') : (r.branchId || 'main');
+                if (rBranch !== branchFilter) return;
+            }
+
             if (isWithinPeriod(r.date)) {
                 const d = (r.date || '').substring(0, 10);
                 if (!dailySummaryMap[d]) {
@@ -13219,8 +13360,10 @@ window.downloadCleanProfitLossPDF = function() {
             }
         });
 
-        // C. Daily Store Expenses (Dukan ke rozana kharchay)
+        // C. Daily Store Expenses
         (window.expensesList || []).forEach(e => {
+            if (branchFilter !== 'all' && (e.branchId || 'main') !== branchFilter) return;
+
             if (isWithinPeriod(e.date)) {
                 const d = (e.date || '').substring(0, 10);
                 if (!dailySummaryMap[d]) {
@@ -15934,11 +16077,19 @@ window.deleteSpecificBranch = async function(branchId) {
 };
 
 // =========================================================================
-// POPULATE REPORT DROPDOWNS ON LOAD
+// POPULATE REPORT DROPDOWNS ON LOAD (ALL 8 STORE DROPDOWNS POPULATOR)
 // =========================================================================
 window.populateReportDropdowns = function() {
-    const salesDrop = document.getElementById('sales-branch-filter');
-    const reportsDrop = document.getElementById('all-rep-branch-filter');
+    const dropdownIds = [
+        'sales-branch-filter',
+        'all-rep-branch-filter',
+        'pl-branch-filter',
+        'pur-details-branch-filter',
+        'pur-rep-branch-filter',
+        'ret-rep-branch-filter',
+        'exp-rep-branch-filter',
+        'cb-rep-branch-filter'
+    ];
     
     const currentUserStr = sessionStorage.getItem('pos_current_user');
     let assignedBranch = 'all';
@@ -15963,22 +16114,20 @@ window.populateReportDropdowns = function() {
         }
     } else {
         optionsHtml = `<option value="all">All Stores (Total Business)</option>`;
-        optionsHtml += `<option value="main">Main Godown / Walk-in</option>`;
+        optionsHtml += `<option value="main">Main Godown / Warehouse</option>`;
         (window.branchesList || []).forEach(branch => {
             optionsHtml += `<option value="${branch.id}">${branch.name} (${branch.area})</option>`;
         });
     }
 
-    if (salesDrop) {
-        const prevSalesVal = salesDrop.value;
-        salesDrop.innerHTML = optionsHtml;
-        if (isSuper) salesDrop.value = prevSalesVal || 'all';
-    }
-    if (reportsDrop) {
-        const prevRepVal = reportsDrop.value;
-        reportsDrop.innerHTML = optionsHtml;
-        if (isSuper) reportsDrop.value = prevRepVal || 'all';
-    }
+    dropdownIds.forEach(id => {
+        const dropEl = document.getElementById(id);
+        if (dropEl) {
+            const prevVal = dropEl.value;
+            dropEl.innerHTML = optionsHtml;
+            if (isSuper && prevVal) dropEl.value = prevVal;
+        }
+    });
 };
 
 // Intercept branch update to also update report dropdowns
