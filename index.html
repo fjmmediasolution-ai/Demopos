@@ -9770,10 +9770,14 @@ document.getElementById('save-settings-btn')?.addEventListener('click', async ()
                 const sellEl = document.getElementById('dash-total-sell');
                 if (sellEl) sellEl.textContent = `Rs. ${totalCashBankSales.toLocaleString()}`;
 
-                // 3. Filtered Receivables (Udhar) for Selected Date
+                // 3. Filtered Receivables (Udhar) for Selected Date (Baqaya Asal Balance)
                 const totalCreditSales = targetSales
-                    .filter(s => s.paymentStatus === 'Unpaid')
-                    .reduce((acc, sale) => acc + Number(sale.total || 0), 0);
+                    .filter(s => s.paymentStatus === 'Unpaid' || s.paymentStatus === 'Partial')
+                    .reduce((acc, sale) => {
+                        const total = Number(sale.total || 0);
+                        const paid = sale.paidAmount !== undefined ? Number(sale.paidAmount) : 0;
+                        return acc + Math.max(0, total - paid);
+                    }, 0);
                 const udharEl = document.getElementById('dash-total-udhar');
                 if (udharEl) udharEl.textContent = `Rs. ${totalCreditSales.toLocaleString()}`;
 
@@ -10791,7 +10795,7 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
             }
         };
 
-        // 6. Return Save Karna aur Store Stock Wapas Barhana
+        // 6. Return Save Karna, Stock Wapas Barhana aur Credit (Udhar) Adjust Karna
         window.saveReturn = async function() {
             const rawRef = (document.getElementById('return-inv-ref')?.value || '').trim();
             const cleanRef = rawRef.replace('#', '').trim().toLowerCase();
@@ -10810,7 +10814,7 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
                 return;
             }
 
-if (qty <= 0) {
+            if (qty <= 0) {
                 alert("Quantity must be at least 1!");
                 return;
             }
@@ -10820,17 +10824,18 @@ if (qty <= 0) {
                 alert(`Is bill mein sirf ${maxBillQty} piece biki theen, is se zyada return nahi ho saktay!`);
                 return;
             }
-            // Bill dhoondein
+
+            // Asal Bill Dhoondein
             const matchedSale = (window.salesHistory || []).find(s => 
                 String(s.invoiceId).trim().toLowerCase() === cleanRef
             );
 
-const nextRetSeq = (window.returnsList ? window.returnsList.length : 0) + 1; const returnId = "RET-" + String(nextRetSeq).padStart(4, '0'); // RET-0001, RET-0002...
+            const nextRetSeq = (window.returnsList ? window.returnsList.length : 0) + 1;
+            const returnId = "RET-" + String(nextRetSeq).padStart(4, '0');
             const now = new Date();
             const returnDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
             const customerName = matchedSale ? (matchedSale.customerName || 'Walk-in') : 'Customer';
 
-            // Original product se cost price nikalna taake return ka asal profit/margin loss track ho sake
             const originalProduct = (window.menuItems || []).find(p => p.id === productId);
             const itemCostPrice = originalProduct ? Number(originalProduct.costPrice || 0) : 0;
 
@@ -10850,12 +10855,12 @@ const nextRetSeq = (window.returnsList ? window.returnsList.length : 0) + 1; con
 
             try {
                 confirmBtn.disabled = true;
-                confirmBtn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Restoring Stock...";
+                confirmBtn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Restoring Stock & Updating Ledger...";
 
-                // Return Record Firestore mein save karein
+                // 1. Return Record Firestore mein save karein
                 await returnsDB.add(returnRecord);
 
-                // Stock usi Shop/branch mein wapas shamil karein jahan se bika tha
+                // 2. Stock usi Shop/branch mein wapas shamil karein
                 if (matchedSale && matchedSale.branchId && matchedSale.branchId !== 'all') {
                     const bStockRecord = (window.branchStockList || []).find(bs => 
                         bs.branchId === matchedSale.branchId && bs.productId === productId
@@ -10876,10 +10881,52 @@ const nextRetSeq = (window.returnsList ? window.returnsList.length : 0) + 1; con
                     });
                 }
 
-                alert(`Product return kamyabi say darj hogaya!\n"${productName}" ke +${qty} units stock mein wapas shamil kardiye gaye.`);
+                // 3. CREDIT / RECEIVABLE AUTOMATIC ADJUSTMENT (ASAL FIX)
+                if (matchedSale && matchedSale.id) {
+                    const saleTotal = Number(matchedSale.total || 0);
+                    const isCreditSale = (matchedSale.paymentMode || '').toLowerCase().includes('credit') || matchedSale.paymentStatus === 'Unpaid';
+                    const paidAmount = matchedSale.paidAmount !== undefined ? Number(matchedSale.paidAmount) : (matchedSale.paymentStatus === 'Paid' ? saleTotal : 0);
+                    const currentDue = Math.max(0, saleTotal - paidAmount);
+
+                    // Agar bill par udhar (Receivable) baqi tha:
+                    if (currentDue > 0 || isCreditSale) {
+                        const newBillTotal = Math.max(0, saleTotal - refundVal);
+                        const newRemainingDue = Math.max(0, newBillTotal - paidAmount);
+
+                        let newPaymentStatus = matchedSale.paymentStatus;
+                        if (newRemainingDue === 0) {
+                            newPaymentStatus = 'Paid'; // Udhar khatam ho gaya, ab receivable mein nahi ayega
+                        } else if (paidAmount > 0 && newRemainingDue > 0) {
+                            newPaymentStatus = 'Partial';
+                        } else {
+                            newPaymentStatus = 'Unpaid';
+                        }
+
+                        // Firestore mein asal invoice update karein
+                        await salesDB.doc(matchedSale.id).update({
+                            total: newBillTotal,
+                            paymentStatus: newPaymentStatus,
+                            lastReturnRef: returnId,
+                            lastReturnDeduction: refundVal,
+                            lastEditedAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+
+                        // Local memory array ko bhi foran update karein taake dashboard foran refresh ho
+                        matchedSale.total = newBillTotal;
+                        matchedSale.paymentStatus = newPaymentStatus;
+                    }
+                }
+
+                alert(`Product return kamyabi say darj hogaya!\n"${productName}" ke +${qty} units stock mein wapas shamil hogaye aur Udhar (Receivables) adjust kardia gaya.`);
                 window.closeReturnModal();
 
+                // Live Refresh All Screens
+                if (typeof window.updateDashboardMetrics === 'function') window.updateDashboardMetrics();
+                if (typeof window.renderSellView === 'function') window.renderSellView();
+                if (typeof window.renderAllReportsView === 'function') window.renderAllReportsView();
+
             } catch (err) {
+                console.error("Return error:", err);
                 alert("Return save karne mein masla aaya: " + err.message);
             } finally {
                 confirmBtn.disabled = false;
