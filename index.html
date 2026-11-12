@@ -1759,13 +1759,13 @@
                         <i class='bx bx-chevron-down submenu-arrow'></i>
                     </a>
                     <ul class="sub-menu">
-                        <li><a href="#" onclick="switchView('profit-loss')"><i class='bx bx-coin-stack'></i>Profit & Loss</a></li>
-                        <li><a href="#" onclick="switchView('stock-report')"><i class='bx bx-archive-in'></i>Stock Report</a></li>
-                        <li><a href="#" onclick="switchView('stock-audit')"><i class='bx bx-check-shield'></i>Stock Audit</a></li>
-                        <li><a href="#" onclick="switchView('purchaser-report')"><i class='bx bx-file-blank'></i>Purchaser Report</a></li>
-                        <li><a href="#" onclick="switchView('return-report')"><i class='bx bx-undo'></i>Return Report</a></li>
-                        <li><a href="#" onclick="switchView('expense-report')"><i class='bx bx-receipt'></i>Expense Report</a></li>
-                        <li><a href="#" onclick="switchView('cashbook-report')"><i class='bx bx-book-open'></i>Cash Book Report</a></li>
+                        <li id="sub-nav-pl"><a href="#" onclick="switchView('profit-loss')"><i class='bx bx-coin-stack'></i>Profit & Loss</a></li>
+                        <li id="sub-nav-stock"><a href="#" onclick="switchView('stock-report')"><i class='bx bx-archive-in'></i>Stock Report</a></li>
+                        <li id="sub-nav-audit"><a href="#" onclick="switchView('stock-audit')"><i class='bx bx-check-shield'></i>Stock Audit</a></li>
+                        <li id="sub-nav-purchaser"><a href="#" onclick="switchView('purchaser-report')"><i class='bx bx-file-blank'></i>Purchaser Report</a></li>
+                        <li id="sub-nav-return"><a href="#" onclick="switchView('return-report')"><i class='bx bx-undo'></i>Return Report</a></li>
+                        <li id="sub-nav-expense"><a href="#" onclick="switchView('expense-report')"><i class='bx bx-receipt'></i>Expense Report</a></li>
+                        <li id="sub-nav-cashbook"><a href="#" onclick="switchView('cashbook-report')"><i class='bx bx-book-open'></i>Cash Book Report</a></li>
                     </ul>
                 </li>
 
@@ -1873,7 +1873,7 @@
                                     <i class='bx bx-box'></i>
                                 </div>
                             </div>
-                            <div class="stat-card-sub"><i class='bx bx-check-circle' style="color:#0066ff;"></i> Available across store & godown</div>
+                            <div class="stat-card-sub"><i class='bx bx-check-circle' style="color:#0066ff;"></i> Available across stores</div>
                         </div>
 
                         <!-- 2. Total Sales -->
@@ -2023,9 +2023,19 @@
                 </main>
                 
                 <aside class="order-panel">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
-                        <h3 style="font-weight: 700; color: #0f172a; font-size: 1.1rem;">Current Cart</h3>
-                        <button class="outline-btn" style="padding: 4px 10px; font-size: 0.78rem;" onclick="clearCart()">Clear Cart</button>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 10px; flex-wrap:wrap; gap:6px;">
+                        <h3 style="font-weight: 700; color: #0f172a; font-size: 1.05rem;">Current Cart</h3>
+                        <div style="display:flex; gap:6px; align-items:center;">
+                            <!-- Hold / Pending Button -->
+                            <button type="button" class="save-btn" style="padding: 5px 9px; font-size: 0.75rem; background:#f59e0b; background-image:none;" onclick="holdCurrentCart()" title="Bill ko temporary hold / pending karein">
+                                <i class='bx bx-pause-circle'></i> Hold Bill
+                            </button>
+                            <!-- View Held Bills Modal Button with Count Badge -->
+                            <button type="button" class="outline-btn" style="padding: 5px 9px; font-size: 0.75rem; position:relative;" onclick="openHeldOrdersModal()" title="Pending Bills ki list dekhein">
+                                <i class='bx bx-time-five'></i> Pending (<b id="held-orders-count">0</b>)
+                            </button>
+                            <button type="button" class="outline-btn" style="padding: 5px 8px; font-size: 0.75rem; color:#ef4444; border-color:#fca5a5;" onclick="clearCart()">Clear</button>
+                        </div>
                     </div>
                     <div id="cart-items"><div class="cart-empty-msg">Cart is empty</div></div>
 
@@ -2146,19 +2156,7 @@
                                     <i class='bx bx-user-pin' style="color:#10b981;"></i> Purchaser & Payment Details
                                 </div>
 
-                                <!-- MAAL KAHAN JAYEGA (MAIN GODOWN / WAREHOUSE LABEL) -->
-                                <div class="form-group" style="margin-bottom:10px;">
-                                    <label style="font-weight:800; color:#0f172a; font-size:0.88rem;">
-                                        <i class='bx bx-building' style="color:#0284c7;"></i> Receiving Destination (Warehouse Allocation):
-                                    </label>
-                                    <div style="display:flex; align-items:center; gap:8px; background:#f0fdf4; border:1.5px solid #86efac; padding:10px 12px; border-radius:10px;">
-                                        <i class='bx bxs-check-shield' style="color:#16a34a; font-size:1.3rem;"></i>
-                                        <div>
-                                            <strong style="color:#15803d; font-size:0.92rem; display:block;">Main Warehouse / Godown</strong>
-                                            <small style="color:#166534; font-size:0.75rem;">New purchased goods will be received directly into Main Warehouse.</small>
-                                        </div>
-                                    </div>
-                                </div>
+                               
 
                                 <div class="form-group" style="margin-bottom:10px;">
                                     <label>Purchaser Name *</label>
@@ -2913,7 +2911,7 @@
                                 <div class="pos-branch-select-box" style="padding: 6px 14px; background: #ffffff; border: 1.5px solid var(--primary);">
                                     <label style="font-weight: 700; color: #0f172a; font-size: 0.88rem;"><i class='bx bx-map-pin' style="color:var(--primary);"></i> Select Area / Store:</label>
                                     <select id="stock-report-branch-filter" onchange="renderStockReport()" style="font-weight: 800; color: var(--primary);">
-                                        <option value="all">Main Godown / All Areas</option>
+                                        <option value="all">All Stores (Total Business)</option>
                                     </select>
                                 </div>
                                 <button class="save-btn" onclick="generateStockReportPDF()"><i class='bx bxs-file-pdf'></i> Export Stock PDF</button>
@@ -2961,7 +2959,7 @@
                                 <div class="pos-branch-select-box" style="padding: 8px 14px; background: #fffcf2; border: 1.5px solid #f59e0b;">
                                     <label style="font-weight: 700; color: #b45309; font-size: 0.88rem;"><i class='bx bx-map-pin'></i> Select Area:</label>
                                     <select id="audit-branch-filter" style="font-weight: 800; color: #b45309; background: transparent; border: none; outline: none;">
-                                        <option value="godown">Main Godown (Warehouse Only)</option>
+                                        <option value="all">All Stores Combined</option>
                                     </select>
                                 </div>
                                 <button class="save-btn" id="btn-start-audit" style="background: #10b981; background-image: none; padding: 10px 20px;" onclick="toggleAuditMode()">
@@ -4168,7 +4166,7 @@
 <div class="form-group">
     <label><i class='bx bx-git-branch' style="color:var(--primary);"></i> Assigned Store / Branch Access *</label>
     <select id="perm-user-branch">
-        <option value="all">Main Godown / All Stores (Full Access)</option>
+        <option value="all">All Stores (Full Access)</option>
         <!-- Realtime branches will load here -->
     </select>
     <small style="color:#64748b; font-size:0.8rem; display:block; margin-top:3px;">
@@ -4192,29 +4190,47 @@
     </small>
 </div>
 
-<label style="font-weight: 700; margin-bottom: 8px; display: block;">Allowed Modules (Checked = Visible in Sidebar):</label>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 14px; border-radius: 12px; border: 1px solid var(--border-color); margin-bottom: 16px;">
-                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-dashboard"> Dashboard</label>
-                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-pos"> POS & Scan</label>
-                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-purchaser"> Purchaser</label>
-                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-reports"> Reports (Analytics)</label>
-                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-sales"> Sales & Ledger</label>
-                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-returns"> Return Management</label>
-                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-expenses"> Expenses</label>
-                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:var(--primary); font-weight:700;"><input type="checkbox" id="perm-all-reports"> All Reports (Master Financial Audit)</label>
-                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer;"><input type="checkbox" id="perm-settings"> Settings</label>
-                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:var(--primary); font-weight:700;"><input type="checkbox" id="perm-users"> Users & Access</label>
+<!-- 1. MAIN ALLOWED MODULES -->
+            <label style="font-weight: 800; font-size: 0.95rem; color: #0f172a; margin-bottom: 8px; display: block;">
+                Allowed Modules (Checked = Visible in Sidebar):
+            </label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f8fafc; padding: 14px; border-radius: 14px; border: 1.5px solid #e2e8f0; margin-bottom: 16px;">
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:600; cursor:pointer; color:#0f172a;"><input type="checkbox" id="perm-dashboard"> Dashboard</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:600; cursor:pointer; color:#0f172a;"><input type="checkbox" id="perm-pos"> POS & Scan</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:600; cursor:pointer; color:#0f172a;"><input type="checkbox" id="perm-purchaser"> Purchaser</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:600; cursor:pointer; color:#0f172a;"><input type="checkbox" id="perm-reports"> Reports (Analytics)</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:600; cursor:pointer; color:#0f172a;"><input type="checkbox" id="perm-sales"> Sales & Ledger</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:600; cursor:pointer; color:#0f172a;"><input type="checkbox" id="perm-returns"> Return Management</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:600; cursor:pointer; color:#0f172a;"><input type="checkbox" id="perm-expenses"> Expenses</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:700; cursor:pointer; color:#e11d48;"><input type="checkbox" id="perm-all-reports"> All Reports (Master Financial Audit)</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:600; cursor:pointer; color:#0f172a;"><input type="checkbox" id="perm-settings"> Settings</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:700; cursor:pointer; color:#e11d48;"><input type="checkbox" id="perm-users"> Users & Access</label>
             </div>
 
-            <!-- STOCK REPORT COLUMNS CONTROL -->
-            <label style="font-weight: 700; margin-bottom: 8px; display: block; color: var(--primary);"><i class='bx bx-table'></i> Stock Report Columns Access:</label>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #e0f2fe; padding: 14px; border-radius: 12px; border: 1px solid #bae6fd; margin-bottom: 16px;">
-                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:#0f172a; font-weight:600;"><input type="checkbox" id="perm-col-barcode"> Barcode</label>
-                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:#0f172a; font-weight:600;"><input type="checkbox" id="perm-col-product"> Product</label>
-                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:#0f172a; font-weight:600;"><input type="checkbox" id="perm-col-cost"> Cost Price</label>
-                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:#0f172a; font-weight:600;"><input type="checkbox" id="perm-col-sale"> Selling Price</label>
-                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:#0f172a; font-weight:600;"><input type="checkbox" id="perm-col-stock"> Total Stock</label>
+            <!-- 2. INDIVIDUAL REPORTS ACCESS (EXACT TO SCREENSHOT) -->
+            <label style="font-weight: 800; font-size: 0.92rem; color: #0284c7; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                <i class='bx bx-line-chart'></i> Individual Reports Access (Select which reports user can see):
+            </label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #f0f9ff; padding: 14px; border-radius: 14px; border: 1.5px solid #bae6fd; margin-bottom: 16px;">
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:700; cursor:pointer; color:#0f172a;"><input type="checkbox" id="perm-rep-pl"> Profit & Loss</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:700; cursor:pointer; color:#0f172a;"><input type="checkbox" id="perm-rep-stock"> Stock Report</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:700; cursor:pointer; color:#0f172a;"><input type="checkbox" id="perm-rep-audit"> Stock Audit</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:700; cursor:pointer; color:#0f172a;"><input type="checkbox" id="perm-rep-purchaser"> Purchaser Report</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:700; cursor:pointer; color:#0f172a;"><input type="checkbox" id="perm-rep-return"> Return Report</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:700; cursor:pointer; color:#0f172a;"><input type="checkbox" id="perm-rep-expense"> Expense Report</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; font-weight:700; cursor:pointer; color:#0f172a; grid-column: span 2;"><input type="checkbox" id="perm-rep-cashbook"> Cash Book Report</label>
+            </div>
+
+            <!-- 3. STOCK REPORT COLUMNS CONTROL -->
+            <label style="font-weight: 800; font-size: 0.92rem; color: #e11d48; margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+                <i class='bx bx-table'></i> Stock Report Columns Access:
+            </label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #e0f2fe; padding: 14px; border-radius: 14px; border: 1.5px solid #bae6fd; margin-bottom: 16px;">
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:#0f172a; font-weight:700;"><input type="checkbox" id="perm-col-barcode"> Barcode</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:#0f172a; font-weight:700;"><input type="checkbox" id="perm-col-product"> Product</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:#0f172a; font-weight:700;"><input type="checkbox" id="perm-col-cost"> Cost Price</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:#0f172a; font-weight:700;"><input type="checkbox" id="perm-col-sale"> Selling Price</label>
+                <label style="display:flex; align-items:center; gap:8px; font-size:0.88rem; cursor:pointer; color:#0f172a; font-weight:700;"><input type="checkbox" id="perm-col-stock"> Total Stock</label>
             </div>
 
             <button class="save-btn" style="width: 100%; justify-content: center;" onclick="saveUserPermissions()"><i class='bx bx-check-shield'></i> Save Permissions</button>
@@ -4285,7 +4301,7 @@ window.openExpenseModal = function() {
 
     // Populate branch select with existing stores
     if (branchSelect) {
-        branchSelect.innerHTML = `<option value="main">Main Warehouse / Godown</option>`;
+        branchSelect.innerHTML = ``;
         const seenKeys = new Set();
         (window.branchesList || []).forEach(b => {
             const key = `${(b.name || '').trim().toLowerCase()}_${(b.area || '').trim().toLowerCase()}`;
@@ -4294,6 +4310,9 @@ window.openExpenseModal = function() {
                 branchSelect.innerHTML += `<option value="${b.id}">${b.name} (${b.area})</option>`;
             }
         });
+        if ((window.branchesList || []).length === 0) {
+            branchSelect.innerHTML = `<option value="">No Store Available</option>`;
+        }
 
         // Auto-assign if current user is restricted to a specific branch
         const currentUserStr = sessionStorage.getItem('pos_current_user');
@@ -4330,10 +4349,10 @@ window.saveExpense = async function() {
     const amount = parseFloat(document.getElementById('expense-amount')?.value);
     const branchSelect = document.getElementById('expense-branch');
 
-    const branchId = branchSelect ? branchSelect.value : 'main';
+    const branchId = branchSelect ? branchSelect.value : '';
     const branchName = branchSelect && branchSelect.selectedIndex >= 0 
         ? branchSelect.options[branchSelect.selectedIndex].text 
-        : 'Main Warehouse / Godown';
+        : 'Store';
 
     if (!title) {
         alert("Please enter expense title / description!");
@@ -5491,10 +5510,7 @@ if (typeof window.saveAllDataToLocalDrive === 'function') {
                         <tr>
                             <td>
                                 <strong style="color:var(--primary);">${displaySerial}</strong><br>
-                                <small style="color:#64748b;">${(item.date || '').substring(0, 16)}</small><br>
-                                <span style="background:#f0fdf4; color:#15803d; font-size:0.72rem; font-weight:800; padding:2px 6px; border-radius:4px; border:1px solid #bbf7d0; display:inline-block; margin-top:3px;">
-                                    <i class='bx bx-building'></i> Main Godown
-                                </span>
+                                <small style="color:#64748b;">${(item.date || '').substring(0, 16)}</small>
                             </td>
                             <td>
                                 <strong>${item.vendorName || '-'}</strong><br>
@@ -7493,6 +7509,193 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
             updateSummary();
         };
 
+// =========================================================
+// HOLD BILL / PENDING CART SYSTEM (PARK & RESUME)
+// =========================================================
+
+// LocalStorage se pehle se roke hue bills uthana
+window.getHeldCartsList = function() {
+    try {
+        const stored = localStorage.getItem('pos_held_carts');
+        return stored ? JSON.parse(stored) : [];
+    } catch(e) {
+        return [];
+    }
+};
+
+window.saveHeldCartsList = function(list) {
+    localStorage.setItem('pos_held_carts', JSON.stringify(list || []));
+    window.updateHeldOrdersBadge();
+};
+
+window.updateHeldOrdersBadge = function() {
+    const list = window.getHeldCartsList();
+    const countEl = document.getElementById('held-orders-count');
+    if (countEl) countEl.textContent = list.length;
+};
+
+// 1. Current Cart ko Hold / Pending par daalna
+window.holdCurrentCart = function() {
+    if (!cart || cart.length === 0) {
+        Toast.fire({ icon: 'warning', title: 'Cart khali hai! Hold karne ke liye items add karein.' });
+        return;
+    }
+
+    const custName = document.getElementById('pos-cust-name')?.value.trim() || 'Walk-in';
+    const custPhone = document.getElementById('pos-cust-phone')?.value.trim() || '';
+    const selectedBranch = document.getElementById('pos-selected-branch')?.value || '';
+    
+    let branchName = 'Store';
+    const bObj = (window.branchesList || []).find(b => b.id === selectedBranch);
+    if (bObj) branchName = bObj.name;
+
+    const now = new Date();
+    const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    const totalAmount = cart.reduce((sum, it) => sum + (Number(it.price || 0) * it.qty), 0);
+
+    const heldItem = {
+        holdId: 'HOLD-' + Date.now().toString().slice(-4),
+        timestamp: Date.now(),
+        timeStr: timeStr,
+        customerName: custName,
+        customerPhone: custPhone,
+        branchId: selectedBranch,
+        branchName: branchName,
+        paymentMode: window.currentPaymentMode || 'Cash',
+        total: totalAmount,
+        cartItems: JSON.parse(JSON.stringify(cart))
+    };
+
+    const heldList = window.getHeldCartsList();
+    heldList.unshift(heldItem); // Naya bill top par aayega
+    window.saveHeldCartsList(heldList);
+
+    // Cart ko foran saaf karein taake aglay customer ka bill ban sake
+    cart = [];
+    const nameEl = document.getElementById('pos-cust-name');
+    const phoneEl = document.getElementById('pos-cust-phone');
+    const cashInEl = document.getElementById('pos-cash-received-input');
+    if (nameEl) nameEl.value = '';
+    if (phoneEl) phoneEl.value = '';
+    if (cashInEl) cashInEl.value = '';
+
+    window.setPaymentMode('Cash');
+    window.renderCart();
+
+    Toast.fire({
+        icon: 'success',
+        title: `Bill Hold par rakh diya gaya (${heldItem.holdId})! Ab aglay customer ka bill banayein.`
+    });
+};
+
+// 2. Pending Orders ka Modal Kholna & Table Render
+window.openHeldOrdersModal = function() {
+    window.renderHeldOrdersTable();
+    document.getElementById('held-orders-modal')?.classList.add('visible');
+};
+
+window.closeHeldOrdersModal = function() {
+    document.getElementById('held-orders-modal')?.classList.remove('visible');
+};
+
+window.renderHeldOrdersTable = function() {
+    const tbody = document.getElementById('held-orders-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    const list = window.getHeldCartsList();
+    if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="empty-placeholder">Koi pending bill mojood nahi hai.</td></tr>`;
+        return;
+    }
+
+    list.forEach(item => {
+        const itemsSummary = (item.cartItems || []).map(i => `${i.name} (x${i.qty})`).join(', ');
+        const totalPieces = (item.cartItems || []).reduce((acc, i) => acc + Number(i.qty || 1), 0);
+
+        tbody.innerHTML += `
+            <tr>
+                <td>
+                    <strong style="color:var(--primary); font-size:0.9rem;">${item.holdId}</strong><br>
+                    <small style="color:#64748b;"><i class='bx bx-time'></i> ${item.timeStr}</small>
+                </td>
+                <td>
+                    <strong>${item.customerName || 'Walk-in'}</strong><br>
+                    <small style="color:#0284c7;">${item.branchName || 'Store'}</small>
+                </td>
+                <td>
+                    <span style="font-weight:700; color:#0f172a;">${totalPieces} pcs</span><br>
+                    <small style="color:#64748b; display:block; max-width:220px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${itemsSummary}">
+                        ${itemsSummary}
+                    </small>
+                </td>
+                <td style="text-align:right;">
+                    <strong style="color:#10b981; font-size:0.95rem;">Rs. ${Number(item.total || 0).toLocaleString()}</strong>
+                </td>
+                <td style="text-align:center; white-space:nowrap;">
+                    <button type="button" class="btn-pay" style="padding:5px 8px; font-size:0.75rem;" onclick="resumeHeldCart('${item.holdId}')" title="Cart mein wapas layein">
+                        <i class='bx bx-play'></i> Resume
+                    </button>
+                    <button type="button" class="btn-delete" style="padding:5px 7px; font-size:0.75rem; margin-left:3px;" onclick="deleteHeldCart('${item.holdId}')" title="Khatam karein">
+                        <i class='bx bx-trash'></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+};
+
+// 3. Roke hue Bill ko Cart mein Wapas Lana (Resume)
+window.resumeHeldCart = function(holdId) {
+    const list = window.getHeldCartsList();
+    const item = list.find(h => h.holdId === holdId);
+    if (!item) return;
+
+    // Agar cart mein pehle se koi doosra saaman chal raha ho toh alert dein
+    if (cart && cart.length > 0) {
+        if (!confirm("Current cart mein pehle se saaman mojood hai. Kya aap use hata kar yeh pending bill restore karna chahte hain?")) {
+            return;
+        }
+    }
+
+    // Cart wapas load karein
+    cart = JSON.parse(JSON.stringify(item.cartItems || []));
+
+    // Customer aur Branch info wapas daalein
+    const nameEl = document.getElementById('pos-cust-name');
+    const phoneEl = document.getElementById('pos-cust-phone');
+    const branchSel = document.getElementById('pos-selected-branch');
+
+    if (nameEl) nameEl.value = (item.customerName !== 'Walk-in') ? item.customerName : '';
+    if (phoneEl) phoneEl.value = item.customerPhone || '';
+    if (branchSel && item.branchId) branchSel.value = item.branchId;
+
+    if (item.paymentMode) {
+        window.setPaymentMode(item.paymentMode);
+    }
+
+    // Pending list se nikal dein
+    const remainingList = list.filter(h => h.holdId !== holdId);
+    window.saveHeldCartsList(remainingList);
+
+    window.closeHeldOrdersModal();
+    window.renderCart();
+
+    Toast.fire({
+        icon: 'success',
+        title: `Pending bill (${holdId}) cart mein restore ho gaya hai!`
+    });
+};
+
+// 4. Pending Bill Delete Karna
+window.deleteHeldCart = function(holdId) {
+    if (!confirm("Kya aap waqai is pending bill ko khatam karna chahte hain?")) return;
+    const list = window.getHeldCartsList().filter(h => h.holdId !== holdId);
+    window.saveHeldCartsList(list);
+    window.renderHeldOrdersTable();
+    Toast.fire({ icon: 'info', title: 'Pending bill delete ho gaya.' });
+};
+
         function updateSummary() {
             const grossSubtotal = cart.reduce((a, b) => a + (Number(b.originalPrice || b.price || 0) * b.qty), 0);
             const discountedSubtotal = cart.reduce((a, b) => a + (Number(b.price || 0) * b.qty), 0);
@@ -7932,29 +8135,18 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
                 const itemPrice = Number(item.price || 0);
                 const escapedName = item.name.replace(/'/g, "\\'");
 
-                // Badge text: Batayega ke maal Shop par hai ya godown mein
-                let stockBreakdownText = `Kul Stock: ${item.totalCombinedStock} pcs`;
-                if (item.storesStock > 0 && item.godownStock > 0) {
-                    stockBreakdownText = `Shop: ${item.storesStock} | Godown: ${item.godownStock}`;
-                } else if (item.storesStock > 0) {
-                    stockBreakdownText = `Shop: ${item.storesStock} pcs`;
-                } else {
-                    stockBreakdownText = `Godown: ${item.godownStock} pcs`;
-                }
+                let stockBreakdownText = `Total Stock: ${item.totalCombinedStock} pcs`;
 
                 card.innerHTML = `
                     <div style="width:100%;">
                         <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;">
                             <img src="${item.img || DEFAULT_PROD_IMG}" style="width:50px; height:50px; border-radius:8px; object-fit:cover;">
-                            <span style="background:#dcfce7; color:#15803d; font-size:0.75rem; font-weight:800; padding:3px 8px; border-radius:6px; border:1px solid #bbf7d0;" title="${stockBreakdownText}">
+                            <span style="background:#dcfce7; color:#15803d; font-size:0.75rem; font-weight:800; padding:3px 8px; border-radius:6px; border:1px solid #bbf7d0;">
                                 In Stock: ${item.totalCombinedStock} pcs
                             </span>
                         </div>
                         <h4 style="font-size:1.05rem; font-weight:800; margin:4px 0; color:#0f172a;">${item.name}</h4>
-                        <div style="font-size:0.78rem; color:#0284c7; font-weight:700; margin-bottom:2px;">
-                            <i class='bx bx-buildings'></i> ${stockBreakdownText}
-                        </div>
-                        <div style="font-size:0.95rem; font-weight:800; color:var(--primary);">Rs. ${itemPrice.toLocaleString()}</div>
+                        <div style="font-size:0.95rem; font-weight:800; color:var(--primary); margin-top:6px;">Rs. ${itemPrice.toLocaleString()}</div>
                     </div>
 
                     <div style="background:#ffffff; padding:8px; border:1px solid #f1f5f9; border-radius:10px; margin:12px 0; width:100%; display:flex; justify-content:center;">
@@ -8006,6 +8198,7 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
                 const currentUser = JSON.parse(currentUserStr);
                 if (currentUser.role !== 'superadmin' && currentUser.role !== 'supermaster') {
                     const p = currentUser.permissions || {};
+                    const subR = p.subReports || {};
                     const viewPermMap = {
                         'dashboard': p.dashboard,
                         'pos': p.pos,
@@ -8013,15 +8206,15 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
                         'purchase-details': p.purchaser,
                         'branch-transfer': p.purchaser,
                         'product-barcodes': p.purchaser,
-                        'profit-loss': p.reports,
-                        'stock-report': p.reports,
-                        'stock-audit': p.reports,
-                        'purchaser-report': p.reports,
-                        'return-report': p.reports,
+                        'profit-loss': (p.reports && subR.profitLoss !== false),
+                        'stock-report': (p.reports && subR.stockReport !== false),
+                        'stock-audit': (p.reports && subR.stockAudit !== false),
+                        'purchaser-report': (p.reports && subR.purchaserReport !== false),
+                        'return-report': (p.reports && subR.returnReport !== false),
                         'exchange': p.returns,
-                        'exchange-report': p.reports,
-                        'expense-report': p.reports,
-                        'cashbook-report': p.reports,
+                        'exchange-report': (p.reports && subR.returnReport !== false),
+                        'expense-report': (p.reports && subR.expenseReport !== false),
+                        'cashbook-report': (p.reports && subR.cashbookReport !== false),
                         'sell': p.sales,
                         'all-reports': p.allReports,
                         'return': p.returns,
@@ -8420,6 +8613,15 @@ cashEntriesDB.orderBy('timestamp', 'desc').onSnapshot(snapshot => {
 
             permissions: {
                 dashboard: true, pos: true, purchaser: true, reports: true,
+                subReports: {
+                    profitLoss: true,
+                    stockReport: true,
+                    stockAudit: true,
+                    purchaserReport: true,
+                    returnReport: true,
+                    expenseReport: true,
+                    cashbookReport: true
+                },
                 sales: true, dailySheet: true, allReports: true, returns: true,
                 exchanges: true, expenses: true, settings: true, users: true,
                 stockCols: { barcode: true, product: true, costPrice: true, sellingPrice: true, totalStock: true }
@@ -8695,115 +8897,119 @@ window.openUserAccessModal = function(userId) {
     const user = window.systemUsersList.find(u => u.id === userId);
     if (!user) return;
 
-    // User details show karein
     if(document.getElementById('perm-user-id')) document.getElementById('perm-user-id').value = user.id;
     if(document.getElementById('perm-user-name')) document.getElementById('perm-user-name').textContent = `${user.username} (${user.email || ''})`;
     if(document.getElementById('perm-user-status')) document.getElementById('perm-user-status').value = user.status || 'active';
     
-    // Load Business Type into Dropdown
     if(document.getElementById('perm-user-business')) {
         document.getElementById('perm-user-business').value = user.businessType || 'general_store';
     }
 
-    // CHECK FOR SUPER MASTER: Sirf Developer ko Business Type box dikhao
     const currentSessionUser = sessionStorage.getItem('pos_current_user');
     const bizContainer = document.getElementById('business-category-container');
-    
     if (bizContainer) {
         let isSuperMasterLoggedIn = false;
         if (currentSessionUser) {
             try {
                 const sessionParsed = JSON.parse(currentSessionUser);
-                if (sessionParsed.role === 'supermaster') {
-                    isSuperMasterLoggedIn = true;
-                }
-            } catch(e) { console.warn("Session parse error"); }
+                if (sessionParsed.role === 'supermaster') isSuperMasterLoggedIn = true;
+            } catch(e) {}
         }
-        
-        // Agar Super Master hai toh display block kardo, warna none (hide)
         bizContainer.style.display = isSuperMasterLoggedIn ? 'block' : 'none';
     }
 
-    // Store / Branch dropdown populate karein
     const branchSelect = document.getElementById('perm-user-branch');
     if (branchSelect) {
-        branchSelect.innerHTML = `<option value="all">Main Godown / All Stores (Full Access)</option>`;
+        branchSelect.innerHTML = `<option value="all">All Stores (Full Access)</option>`;
         (window.branchesList || []).forEach(b => {
             branchSelect.innerHTML += `<option value="${b.id}">${b.name} (${b.area})</option>`;
         });
-        // User ko jo store pehle se mila hua hai usko select karein
         branchSelect.value = user.assignedBranch || 'all';
     }
 
-    // Checkboxes ko safely set karein (Crash-Proof)
     const p = user.permissions || {};
     const setCheck = (id, val) => { const el = document.getElementById(id); if (el) el.checked = !!val; };
     
-    setCheck('perm-dashboard', p.dashboard);
-    setCheck('perm-pos', p.pos);
-    setCheck('perm-purchaser', p.purchaser);
-    setCheck('perm-reports', p.reports);
-    setCheck('perm-sales', p.sales);
-    setCheck('perm-returns', p.returns);
-    setCheck('perm-expenses', p.expenses);
-    setCheck('perm-all-reports', p.allReports);
-    setCheck('perm-settings', p.settings);
-    setCheck('perm-users', p.users);
+    // Allowed Main Modules
+    setCheck('perm-dashboard', p.dashboard !== false);
+    setCheck('perm-pos', p.pos !== false);
+    setCheck('perm-purchaser', p.purchaser !== false);
+    setCheck('perm-reports', p.reports !== false);
+    setCheck('perm-sales', p.sales !== false);
+    setCheck('perm-returns', p.returns !== false);
+    setCheck('perm-expenses', p.expenses !== false);
+    setCheck('perm-all-reports', p.allReports !== false);
+    setCheck('perm-settings', p.settings !== false);
+    setCheck('perm-users', p.users !== false);
+
+    // Individual Reports Access (7 Checkboxes)
+    const subRep = p.subReports || {};
+    setCheck('perm-rep-pl', subRep.profitLoss !== false);
+    setCheck('perm-rep-stock', subRep.stockReport !== false);
+    setCheck('perm-rep-audit', subRep.stockAudit !== false);
+    setCheck('perm-rep-purchaser', subRep.purchaserReport !== false);
+    setCheck('perm-rep-return', subRep.returnReport !== false);
+    setCheck('perm-rep-expense', subRep.expenseReport !== false);
+    setCheck('perm-rep-cashbook', subRep.cashbookReport !== false);
 
     // Stock Report Columns Checkboxes
     const cols = p.stockCols || { barcode: true, product: true, costPrice: true, sellingPrice: true, totalStock: true };
-    setCheck('perm-col-barcode', cols.barcode);
-    setCheck('perm-col-product', cols.product);
-    setCheck('perm-col-cost', cols.costPrice);
-    setCheck('perm-col-sale', cols.sellingPrice);
-    setCheck('perm-col-stock', cols.totalStock);
+    setCheck('perm-col-barcode', cols.barcode !== false);
+    setCheck('perm-col-product', cols.product !== false);
+    setCheck('perm-col-cost', cols.costPrice !== false);
+    setCheck('perm-col-sale', cols.sellingPrice !== false);
+    setCheck('perm-col-stock', cols.totalStock !== false);
 
-    // Modal show karein
     document.getElementById('user-access-modal')?.classList.add('visible');
 };
 
-// 3. User Access Save karne ka function (Database mein Store + Permissions save karega)
+// 3. User Access Save karne ka function
 window.saveUserPermissions = async function() {
-   const userId = document.getElementById('perm-user-id').value;
+    const userId = document.getElementById('perm-user-id').value;
     const status = document.getElementById('perm-user-status').value;
     const businessType = document.getElementById('perm-user-business') ? document.getElementById('perm-user-business').value : 'general_store';
     
-    // Assigned branch ka faisla
     const branchSelect = document.getElementById('perm-user-branch');
     const assignedBranch = branchSelect ? branchSelect.value : 'all';
 
-    // Nayi permissions tayyar karein
     const newPermissions = {
-        dashboard: document.getElementById('perm-dashboard').checked,
-        pos: document.getElementById('perm-pos').checked,
-        purchaser: document.getElementById('perm-purchaser').checked,
-        reports: document.getElementById('perm-reports').checked,
-        sales: document.getElementById('perm-sales').checked,
-        returns: document.getElementById('perm-returns').checked,
-        expenses: document.getElementById('perm-expenses').checked,
-        allReports: document.getElementById('perm-all-reports').checked,
-        settings: document.getElementById('perm-settings').checked,
-        users: document.getElementById('perm-users').checked,
+        dashboard: document.getElementById('perm-dashboard')?.checked || false,
+        pos: document.getElementById('perm-pos')?.checked || false,
+        purchaser: document.getElementById('perm-purchaser')?.checked || false,
+        reports: document.getElementById('perm-reports')?.checked || false,
+        subReports: {
+            profitLoss: document.getElementById('perm-rep-pl')?.checked || false,
+            stockReport: document.getElementById('perm-rep-stock')?.checked || false,
+            stockAudit: document.getElementById('perm-rep-audit')?.checked || false,
+            purchaserReport: document.getElementById('perm-rep-purchaser')?.checked || false,
+            returnReport: document.getElementById('perm-rep-return')?.checked || false,
+            expenseReport: document.getElementById('perm-rep-expense')?.checked || false,
+            cashbookReport: document.getElementById('perm-rep-cashbook')?.checked || false
+        },
+        sales: document.getElementById('perm-sales')?.checked || false,
+        returns: document.getElementById('perm-returns')?.checked || false,
+        expenses: document.getElementById('perm-expenses')?.checked || false,
+        allReports: document.getElementById('perm-all-reports')?.checked || false,
+        settings: document.getElementById('perm-settings')?.checked || false,
+        users: document.getElementById('perm-users')?.checked || false,
         stockCols: {
-            barcode: document.getElementById('perm-col-barcode').checked,
-            product: document.getElementById('perm-col-product').checked,
-            costPrice: document.getElementById('perm-col-cost').checked,
-            sellingPrice: document.getElementById('perm-col-sale').checked,
-            totalStock: document.getElementById('perm-col-stock').checked
+            barcode: document.getElementById('perm-col-barcode')?.checked || false,
+            product: document.getElementById('perm-col-product')?.checked || false,
+            costPrice: document.getElementById('perm-col-cost')?.checked || false,
+            sellingPrice: document.getElementById('perm-col-sale')?.checked || false,
+            totalStock: document.getElementById('perm-col-stock')?.checked || false
         }
     };
 
     try {
-        // Firebase Firestore update
         await usersDB.doc(userId).update({
             status: status,
             assignedBranch: assignedBranch,
-            businessType: businessType, // Database update with new category
+            businessType: businessType,
             permissions: newPermissions,
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
 
-        // Agar current logged-in user ki apni permission change hui hai to foran local session update karein
         const currentSession = sessionStorage.getItem('pos_current_user');
         if (currentSession) {
             try {
@@ -8811,16 +9017,15 @@ window.saveUserPermissions = async function() {
                 if (curObj.id === userId) {
                     curObj.permissions = newPermissions;
                     curObj.assignedBranch = assignedBranch;
-                    curObj.businessType = businessType; // Update local session
+                    curObj.businessType = businessType;
                     sessionStorage.setItem('pos_current_user', JSON.stringify(curObj));
                     window.applyUserPermissions(curObj);
                 }
             } catch(e) {}
         }
 
-        // Popup close karein
         window.closeUserAccessModal();
-        alert("User Permissions aur Store Access kamyabi say update hogaye!");
+        alert("User Permissions aur Individual Reports Access kamyabi say update hogaye!");
     } catch(e) {
         alert("Error saving permissions: " + e.message);
     }
@@ -8864,8 +9069,26 @@ window.applyUserPermissions = function(user) {
                 firstPermittedView = navItems[navId].view;
             }
         } else {
-            // Jin modules ka access nahi hai wo sidebar se mukammal gayab (hidden) ho jayenge
             itemEl.style.display = 'none';
+        }
+    });
+
+    // Sub-reports individual visibility control
+    const subReps = p.subReports || {};
+    const subRepMap = {
+        'sub-nav-pl': subReps.profitLoss,
+        'sub-nav-stock': subReps.stockReport,
+        'sub-nav-audit': subReps.stockAudit,
+        'sub-nav-purchaser': subReps.purchaserReport,
+        'sub-nav-return': subReps.returnReport,
+        'sub-nav-expense': subReps.expenseReport,
+        'sub-nav-cashbook': subReps.cashbookReport
+    };
+
+    Object.keys(subRepMap).forEach(sId => {
+        const sEl = document.getElementById(sId);
+        if (sEl) {
+            sEl.style.display = (isSuper || subRepMap[sId] !== false) ? '' : 'none';
         }
     });
 
@@ -9060,6 +9283,10 @@ window.applyUserPermissions = function(user) {
 
        document.addEventListener('DOMContentLoaded', () => {
     window.applyTheme(window.currentTheme);
+
+    if (typeof window.updateHeldOrdersBadge === 'function') {
+        window.updateHeldOrdersBadge();
+    }
 
     const activeUserStr = sessionStorage.getItem('pos_current_user');
     let isSuperMaster = false;
@@ -11408,7 +11635,7 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
 
             const branchSelect = document.getElementById('edit-exp-branch');
             if (branchSelect) {
-                branchSelect.innerHTML = `<option value="main">Main Warehouse / Godown</option>`;
+                branchSelect.innerHTML = ``;
                 const seenKeys = new Set();
                 (window.branchesList || []).forEach(b => {
                     const key = `${(b.name || '').trim().toLowerCase()}_${(b.area || '').trim().toLowerCase()}`;
@@ -11417,7 +11644,7 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
                         branchSelect.innerHTML += `<option value="${b.id}">${b.name} (${b.area})</option>`;
                     }
                 });
-                branchSelect.value = exp.branchId || 'main';
+                branchSelect.value = exp.branchId || (window.branchesList[0]?.id || '');
             }
 
             document.getElementById('edit-expense-modal')?.classList.add('visible');
@@ -11489,7 +11716,7 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
                 expenses.forEach(exp => {
                     const amt = Number(exp.amount || 0);
                     totalAmount += amt;
-                    const branchDisp = exp.branchName || 'Main Warehouse / Godown';
+                    const branchDisp = exp.branchName || 'Store';
 
                     tbody.innerHTML += `
                         <tr>
@@ -12127,20 +12354,45 @@ window.downloadCleanProfitLossPDF = function() {
 
     html2pdf().set(opt).from(element).save();
 };
-       // Area Dropdown Populate Karna (Godown aur Stores alag alag)
-        window.populateStockReportBranchDropdown = function() {
+
+window.populateStockReportBranchDropdown = function() {
             const selectEl = document.getElementById('stock-report-branch-filter');
             if (!selectEl) return;
-            const currentSelected = selectEl.value || 'godown';
 
-            selectEl.innerHTML = `
-                <option value="godown">Main Godown (Warehouse Only)</option>
-                <option value="all">Overall (Godown + All Stores Combined)</option>
-            `;
-            (window.branchesList || []).forEach(branch => {
-                selectEl.innerHTML += `<option value="${branch.id}">${branch.name} - ${branch.area}</option>`;
-            });
-            selectEl.value = currentSelected;
+            const currentUserStr = sessionStorage.getItem('pos_current_user');
+            let assignedBranch = 'all';
+            let isSuper = false;
+
+            if (currentUserStr) {
+                try {
+                    const u = JSON.parse(currentUserStr);
+                    assignedBranch = u.assignedBranch || 'all';
+                    if (u.role === 'superadmin' || u.role === 'supermaster') isSuper = true;
+                } catch(e) {}
+            }
+
+            selectEl.innerHTML = '';
+
+            // Agar staff user ko makhsoos branch (e.g. Quetta) assign hai
+            if (!isSuper && assignedBranch && assignedBranch !== 'all') {
+                const assignedObj = (window.branchesList || []).find(b => b.id === assignedBranch);
+                if (assignedObj) {
+                    selectEl.innerHTML = `<option value="${assignedObj.id}">${assignedObj.name} - ${assignedObj.area}</option>`;
+                    selectEl.value = assignedObj.id;
+                    selectEl.disabled = true; // Lock: doosri shop select nahi kar sakta
+                } else {
+                    selectEl.innerHTML = `<option value="">No Store Assigned</option>`;
+                    selectEl.disabled = true;
+                }
+            } else {
+                // Master Admin ke liye sirf All Stores aur bani hui branches aayengi (Godown nahi aayega)
+                selectEl.disabled = false;
+                selectEl.innerHTML = `<option value="all">All Stores (Total Business)</option>`;
+                (window.branchesList || []).forEach(branch => {
+                    selectEl.innerHTML += `<option value="${branch.id}">${branch.name} - ${branch.area}</option>`;
+                });
+                if (!selectEl.value) selectEl.value = 'all';
+            }
         };
 
      window.renderStockReport = function() {
@@ -12150,7 +12402,7 @@ window.downloadCleanProfitLossPDF = function() {
             const theadTr = document.querySelector('#report-tbody')?.previousElementSibling?.querySelector('tr');
             const remainEl = document.getElementById('report-remaining');
             const saleValEl = document.getElementById('report-sale-val');
-            const selectedBranch = document.getElementById('stock-report-branch-filter')?.value || 'godown';
+            const selectedBranch = document.getElementById('stock-report-branch-filter')?.value || 'all';
             const searchTerm = (document.getElementById('stock-report-search-input')?.value || '').toLowerCase().trim();
 
             if (!tbody || !theadTr) return;
@@ -12170,7 +12422,7 @@ window.downloadCleanProfitLossPDF = function() {
             // DYNAMIC HEADER RENDER
             theadTr.innerHTML = `
                 ${cols.barcode ? `<th style="text-align: left; width: 18%;">Barcode</th>` : ''}
-                ${cols.product ? `<th style="text-align: left; width: 34%;">Product & Location</th>` : ''}
+                ${cols.product ? `<th style="text-align: left; width: 34%;">Product</th>` : ''}
                 ${cols.costPrice ? `<th style="text-align: right; width: 16%;">Cost Price</th>` : ''}
                 ${cols.sellingPrice ? `<th style="text-align: right; width: 16%;">Selling Price</th>` : ''}
                 ${cols.totalStock ? `<th style="text-align: center; width: 16%;">Available Stock</th>` : ''}
@@ -12183,23 +12435,7 @@ window.downloadCleanProfitLossPDF = function() {
             const products = window.menuItems || [];
             let displayRows = [];
 
-            // CASE 1: Sirf Main Godown ka bacha hua stock
-            if (selectedBranch === 'godown') {
-                displayRows = products.map(p => {
-                    const godownQty = Number(p.stock || 0);
-                    return {
-                        id: p.id,
-                        barcode: p.barcode || 'N/A',
-                        name: p.name || '',
-                        costPrice: Number(p.costPrice || 0),
-                        price: Number(p.price || 0),
-                        stock: godownQty,
-                        areaTag: 'Main Godown / Warehouse'
-                    };
-                });
-            } 
-            // CASE 2: Godown + Tamam Stores ka total jamah shuda stock
-            else if (selectedBranch === 'all') {
+            if (selectedBranch === 'all') {
                 displayRows = products.map(p => {
                     const godownQty = Number(p.stock || 0);
                     const storesQty = (window.branchStockList || [])
@@ -12214,14 +12450,12 @@ window.downloadCleanProfitLossPDF = function() {
                         costPrice: Number(p.costPrice || 0),
                         price: Number(p.price || 0),
                         stock: totalQty,
-                        areaTag: `Godown: ${godownQty} | Stores: ${storesQty}`
+                        areaTag: 'All Stores'
                     };
                 });
-            } 
-            // CASE 3: Makhsoos Store / Shop ka stock
-            else {
+            } else {
                 const branchObj = (window.branchesList || []).find(b => b.id === selectedBranch);
-                const areaLabel = branchObj ? `${branchObj.name} (${branchObj.area})` : 'Store Shop';
+                const areaLabel = branchObj ? `${branchObj.name} (${branchObj.area})` : 'Store';
 
                 displayRows = products.map(p => {
                     const bStockRecord = (window.branchStockList || []).find(bs => bs.branchId === selectedBranch && bs.productId === p.id);
@@ -15806,10 +16040,9 @@ window.initStockAuditView = function() {
     const selectEl = document.getElementById('audit-branch-filter');
     if (!selectEl) return;
     
-    // Agar audit run nahi ho raha to dropdown populate karein
     if (!window.isAuditRunning) {
-        const currentSelected = selectEl.value || 'godown';
-        selectEl.innerHTML = `<option value="godown">Main Godown (Warehouse Only)</option>`;
+        const currentSelected = selectEl.value || (window.branchesList && window.branchesList[0] ? window.branchesList[0].id : 'all');
+        selectEl.innerHTML = `<option value="all">All Stores Combined</option>`;
         (window.branchesList || []).forEach(branch => {
             selectEl.innerHTML += `<option value="${branch.id}">${branch.name} - ${branch.area}</option>`;
         });
@@ -16123,9 +16356,6 @@ window.deleteSpecificBranch = async function(branchId) {
     }
 };
 
-// =========================================================================
-// POPULATE REPORT DROPDOWNS ON LOAD (ALL 8 STORE DROPDOWNS POPULATOR)
-// =========================================================================
 window.populateReportDropdowns = function() {
     const dropdownIds = [
         'sales-branch-filter',
@@ -16135,7 +16365,9 @@ window.populateReportDropdowns = function() {
         'pur-rep-branch-filter',
         'ret-rep-branch-filter',
         'exp-rep-branch-filter',
-        'cb-rep-branch-filter'
+        'cb-rep-branch-filter',
+        'stock-report-branch-filter',
+        'audit-branch-filter'
     ];
     
     const currentUserStr = sessionStorage.getItem('pos_current_user');
@@ -16150,33 +16382,29 @@ window.populateReportDropdowns = function() {
         } catch(e) {}
     }
 
-    let optionsHtml = '';
-    
-    if (!isSuper && assignedBranch !== 'all') {
-        const branch = (window.branchesList || []).find(b => b.id === assignedBranch);
-        if (branch) {
-            optionsHtml = `<option value="${branch.id}">${branch.name}</option>`;
-        } else {
-            optionsHtml = `<option value="">No Store Assigned</option>`;
-        }
-    } else {
-        optionsHtml = `<option value="all">All Stores (Total Business)</option>`;
-        optionsHtml += `<option value="main">Main Godown / Warehouse</option>`;
-        (window.branchesList || []).forEach(branch => {
-            optionsHtml += `<option value="${branch.id}">${branch.name} (${branch.area})</option>`;
-        });
-    }
-
     dropdownIds.forEach(id => {
         const dropEl = document.getElementById(id);
-        if (dropEl) {
+        if (!dropEl) return;
+
+        if (!isSuper && assignedBranch && assignedBranch !== 'all') {
+            const branch = (window.branchesList || []).find(b => b.id === assignedBranch);
+            dropEl.innerHTML = branch 
+                ? `<option value="${branch.id}">${branch.name} (${branch.area})</option>` 
+                : `<option value="">No Store Assigned</option>`;
+            dropEl.value = assignedBranch;
+            dropEl.disabled = true; // Lock: staff doosri branch nahi dekh sakta
+        } else {
+            dropEl.disabled = false;
+            let optionsHtml = `<option value="all">All Stores (Total Business)</option>`;
+            (window.branchesList || []).forEach(branch => {
+                optionsHtml += `<option value="${branch.id}">${branch.name} (${branch.area})</option>`;
+            });
             const prevVal = dropEl.value;
             dropEl.innerHTML = optionsHtml;
-            if (isSuper && prevVal) dropEl.value = prevVal;
+            if (prevVal) dropEl.value = prevVal;
         }
     });
 };
-
 // Intercept branch update to also update report dropdowns
 const originalRenderBranchListView = window.renderBranchListView;
 window.renderBranchListView = function() {
@@ -16885,6 +17113,44 @@ Your software license subscription has expired or the account has been suspended
             <button onclick="openDeveloperOverrideModal()" style="background:transparent; border:1px solid #334155; color:#64748b; padding:8px 18px; border-radius:10px; font-size:12px; cursor:pointer; font-weight:600;">
                 <i class='bx bx-shield-quarter'></i> Developer Unlock
             </button>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: HELD / PENDING CARTS LIST -->
+<div id="held-orders-modal" class="modal-overlay">
+    <div class="modal-content" style="max-width: 620px;">
+        <span class="close-modal" onclick="closeHeldOrdersModal()">&times;</span>
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+            <i class='bx bx-time-five' style="font-size:1.6rem; color:#f59e0b;"></i>
+            <h3 style="font-size:1.25rem; font-weight:800; color:#0f172a; margin:0;">Held / Pending Bills</h3>
+        </div>
+        <p style="color:#64748b; font-size:0.83rem; margin-bottom:14px;">
+            Customer ke roke hue bills. "Resume" par click karke cart dobara active karein.
+        </p>
+
+        <div style="max-height: 380px; overflow-y: auto; border:1px solid var(--border-color); border-radius:12px;">
+            <table class="custom-table" style="font-size:0.85rem; width:100%;">
+                <thead>
+                    <tr style="background:#f8fafc;">
+                        <th style="width:20%;">Hold ID / Time</th>
+                        <th style="width:25%;">Customer / Store</th>
+                        <th style="width:30%;">Items</th>
+                        <th style="text-align:right; width:15%;">Total</th>
+                        <th style="text-align:center; width:10%;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="held-orders-tbody">
+                    <tr>
+                        <td colspan="5" class="empty-placeholder">Koi pending bill mojood nahi hai.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:14px;">
+            <button type="button" class="outline-btn" onclick="closeHeldOrdersModal()">Close</button>
+            <small style="color:#64748b;">Pending bill tab tak save rehta hai jab tak aap Resume ya Delete na karein.</small>
         </div>
     </div>
 </div>
