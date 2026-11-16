@@ -2653,7 +2653,7 @@
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
                         <div>
                             <h2>Product Exchange Management</h2>
-                            <p style="color: #64748b; font-size: 0.88rem;">Customer se purani cheez le kar nayi cheez tabdeel karein aur keemat adjust karein.</p>
+                            <p style="color: #64748b; font-size: 0.88rem;">Exchange sold items with replacements and adjust price differences automatically..</p>
                         </div>
                         <button class="save-btn" style="background:#8b5cf6; background-image:none;" onclick="openUniversalExchangeModal()">
                             <i class='bx bx-refresh'></i> Direct Exchange
@@ -2770,16 +2770,24 @@
             <!-- 10. EXPENSE VIEW -->
             <div id="expense-view" class="view">
                 <div class="content-wrapper">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
                         <h2>Store Expenses Tracking</h2>
-                        <button class="save-btn" onclick="openExpenseModal()"><i class='bx bx-plus'></i> Add Expense</button>
+                        <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                            <div class="pos-branch-select-box" style="padding: 6px 14px; background: #ffffff; border: 1.5px solid var(--primary);">
+                                <label style="font-weight: 700; color: #0f172a; font-size: 0.85rem;"><i class='bx bx-store' style="color:var(--primary);"></i> Store:</label>
+                                <select id="expense-branch-filter" onchange="renderExpenseView()" style="font-weight: 800; color: var(--primary); max-width: 190px; outline: none; border: none; background: transparent;">
+                                    <option value="all">All Stores (Total Business)</option>
+                                </select>
+                            </div>
+                            <button class="save-btn" onclick="openExpenseModal()"><i class='bx bx-plus'></i> Add Expense</button>
+                        </div>
                     </div>
                     <div class="dashboard-grid" style="margin-bottom: 20px;">
                         <div class="stat-card" style="border-left: 5px solid #64748b;"><h3>Total Expenses</h3><p id="total-expense-card-val">Rs. 0</p></div>
                     </div>
                     <div class="stock-table-wrapper">
                         <table class="custom-table">
-                            <thead><tr><th>Title</th><th>Category</th><th>Date</th><th>Amount</th><th>Action</th></tr></thead>
+                            <thead><tr><th>Title</th><th>Category</th><th>Store / Branch</th><th>Date</th><th>Amount</th><th>Action</th></tr></thead>
                             <tbody id="expense-tbody"></tbody>
                         </table>
                     </div>
@@ -2920,6 +2928,7 @@
 
                     <div class="dashboard-grid" style="margin-bottom: 10px;">
                             <div class="stat-card" style="border-left: 5px solid #10b981;"><h3>Total Stock Left</h3><p id="report-remaining">0</p></div>
+                            <div class="stat-card" id="report-cost-card" style="border-left: 5px solid #f59e0b;"><h3>Total Cost Value</h3><p id="report-cost-val" style="color: #d97706;">Rs. 0</p></div>
                             <div class="stat-card" style="border-left: 5px solid #0284c7;"><h3>Expected Sale Val</h3><p id="report-sale-val">Rs. 0</p></div>
                         </div>
 
@@ -3506,13 +3515,13 @@
                         
                         <!-- NEW LOGO UPLOAD SECTION -->
                         <div class="form-group" style="margin-top: 15px; background: #f8fafc; padding: 15px; border-radius: 12px; border: 1px dashed var(--border-color);">
-                            <label><i class='bx bx-image-add' style="color:var(--primary);"></i> Main Business Logo (PDF Reports ke liye)</label>
+                            <label><i class='bx bx-image-add' style="color:var(--primary);"></i> Main Business Logo (For PDF Reports & Receipts)</label>
                             <div style="display:flex; gap:15px; align-items:center; margin-top: 8px;">
                                 <input type="file" id="setting-biz-logo-input" accept="image/*" onchange="previewSettingsLogo(this)" style="padding:7px; font-size:0.85rem; max-width: 250px;">
                                 <img id="setting-biz-logo-preview" src="" style="max-width: 120px; max-height: 60px; object-fit: contain; border: 1px solid #cbd5e1; border-radius: 6px; display: none; background: white; padding: 4px;">
                                 <button type="button" class="btn-delete" onclick="removeSettingsLogo()" style="padding: 6px 10px; display: none;" id="btn-remove-logo"><i class='bx bx-trash'></i></button>
                             </div>
-                            <small style="color:#64748b; font-size:0.8rem; display:block; margin-top:5px;">Yeh logo aapki tamam PDF reports aur bills par business naam ki jagah nazar aayega.</small>
+                            <small style="color:#64748b; font-size:0.8rem; display:block; margin-top:5px;">This logo will appear on all PDF reports and customer invoices.</small>
                         </div>
                         
                         <div class="form-group" style="margin-top: 15px;"><label>Business Name</label><input type="text" id="restaurant-name" value="KORVEXA SOFTWARE"></div>
@@ -3521,7 +3530,7 @@
                         
                         <div class="form-group">
                             <label><i class='bx bxs-discount' style="color:var(--primary);"></i> Global Store Discount (%)</label>
-                            <input type="number" id="store-global-discount" min="0" max="100" placeholder="e.g. 10 (Zero ya khali choren agar discount na ho)">
+                            <input type="number" id="store-global-discount" min="0" max="100" placeholder="e.g. 10 (Leave blank or 0 for no discount)">
                             <small style="color: #64748b; font-size: 0.8rem;">Enter percentage; discount will apply automatically to all POS products.</small>
                         </div>
 
@@ -4031,6 +4040,13 @@
             <p id="modal-cash-entry-subtitle" style="color:#64748b; font-size:0.85rem; margin-bottom: 16px;"></p>
             <input type="hidden" id="cash-entry-type">
             <input type="hidden" id="cash-entry-doc-id">
+
+            <div class="form-group">
+                <label><i class='bx bx-store-alt' style="color:var(--primary);"></i> Select Store / Branch *</label>
+                <select id="cash-entry-branch" style="font-weight: 700; color: #0f172a;">
+                    <!-- Stores yahan load honge -->
+                </select>
+            </div>
             
             <div class="form-group">
                 <label id="lbl-cash-person">Person / Source Name *</label>
@@ -4301,7 +4317,7 @@ window.openExpenseModal = function() {
 
     // Populate branch select with existing stores
     if (branchSelect) {
-        branchSelect.innerHTML = ``;
+        branchSelect.innerHTML = `<option value="">-- Select Store / Branch --</option>`;
         const seenKeys = new Set();
         (window.branchesList || []).forEach(b => {
             const key = `${(b.name || '').trim().toLowerCase()}_${(b.area || '').trim().toLowerCase()}`;
@@ -4314,7 +4330,7 @@ window.openExpenseModal = function() {
             branchSelect.innerHTML = `<option value="">No Store Available</option>`;
         }
 
-        // Auto-assign if current user is restricted to a specific branch
+        // Auto-assign & lock if current user is restricted to a specific branch
         const currentUserStr = sessionStorage.getItem('pos_current_user');
         if (currentUserStr) {
             try {
@@ -4324,9 +4340,13 @@ window.openExpenseModal = function() {
                     branchSelect.disabled = true;
                 } else {
                     branchSelect.disabled = false;
-                    // Default to POS selected branch if available
+                    const expFilterBranch = document.getElementById('expense-branch-filter')?.value;
                     const posBranch = document.getElementById('pos-selected-branch')?.value;
-                    if (posBranch && posBranch !== 'all') branchSelect.value = posBranch;
+                    if (expFilterBranch && expFilterBranch !== 'all') {
+                        branchSelect.value = expFilterBranch;
+                    } else if (posBranch && posBranch !== 'all') {
+                        branchSelect.value = posBranch;
+                    }
                 }
             } catch(e) {}
         }
@@ -4350,9 +4370,14 @@ window.saveExpense = async function() {
     const branchSelect = document.getElementById('expense-branch');
 
     const branchId = branchSelect ? branchSelect.value : '';
-    const branchName = branchSelect && branchSelect.selectedIndex >= 0 
+    const branchName = (branchSelect && branchSelect.selectedIndex >= 0 && branchId)
         ? branchSelect.options[branchSelect.selectedIndex].text 
-        : 'Store';
+        : '';
+
+    if (!branchId) {
+        alert("Please select a Store / Branch!");
+        return;
+    }
 
     if (!title) {
         alert("Please enter expense title / description!");
@@ -4425,16 +4450,16 @@ window.alert = function(message) {
 };
        
    
-  // 1. FIREBASE CONFIGURATION
-        const firebaseConfig = {
-            apiKey: "AIzaSyBikNeZBOjNMyI0KyKWpWud_l9EowWotQA",
-            authDomain: "korvexa-pos.firebaseapp.com",
-            projectId: "korvexa-pos",
-            storageBucket: "korvexa-pos.firebasestorage.app",
-            messagingSenderId: "663089875476",
-            appId: "1:663089875476:web:6da9af5a31cb636648f501",
-            measurementId: "G-YKHN60HV9L"
-        };
+  const firebaseConfig = {
+  apiKey: "AIzaSyBikNeZBOjNMyI0KyKWpWud_l9EowWotQA",
+  authDomain: "korvexa-pos.firebaseapp.com",
+  projectId: "korvexa-pos",
+  storageBucket: "korvexa-pos.firebasestorage.app",
+  messagingSenderId: "663089875476",
+  appId: "1:663089875476:web:6da9af5a31cb636648f501",
+  measurementId: "G-YKHN60HV9L"
+};
+
 
         firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
@@ -10019,8 +10044,6 @@ document.getElementById('save-settings-btn')?.addEventListener('click', async ()
                 const totalExpenses = targetExpenses.reduce((acc, exp) => acc + Number(exp.amount || 0), 0);
                 const expEl = document.getElementById('dash-total-expense');
                 if (expEl) expEl.textContent = `Rs. ${totalExpenses.toLocaleString()}`;
-                const cardExpEl = document.getElementById('total-expense-card-val');
-                if (cardExpEl) cardExpEl.textContent = `Rs. ${totalExpenses.toLocaleString()}`;
 
                 // 6. Estimated Net Profit for Selected Date
                 let totalSoldRevenue = targetSales.reduce((acc, s) => acc + Number(s.total || 0), 0);
@@ -10592,6 +10615,45 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
         // REAL CONTINUOUS CASH BOOK & DRAWER BALANCE SYSTEM
         // =========================================================================
 
+        // Helper: Cash Modal mein Store / Branch list load karna
+        window.populateCashEntryBranchDropdown = function(selectedBranchId = '') {
+            const branchSelect = document.getElementById('cash-entry-branch');
+            if (!branchSelect) return;
+
+            branchSelect.innerHTML = `<option value="">-- Select Store / Branch --</option>`;
+            const seenKeys = new Set();
+            (window.branchesList || []).forEach(b => {
+                const key = `${(b.name || '').trim().toLowerCase()}_${(b.area || '').trim().toLowerCase()}`;
+                if (!seenKeys.has(key)) {
+                    seenKeys.add(key);
+                    branchSelect.innerHTML += `<option value="${b.id}">${b.name} (${b.area})</option>`;
+                }
+            });
+
+            // Agar staff user kisi makhsoos store par lock ho
+            const currentUserStr = sessionStorage.getItem('pos_current_user');
+            if (currentUserStr) {
+                try {
+                    const u = JSON.parse(currentUserStr);
+                    if (u.role !== 'superadmin' && u.role !== 'supermaster' && u.assignedBranch && u.assignedBranch !== 'all') {
+                        branchSelect.value = u.assignedBranch;
+                        branchSelect.disabled = true;
+                        return;
+                    }
+                } catch(e) {}
+            }
+
+            branchSelect.disabled = false;
+            if (selectedBranchId) {
+                branchSelect.value = selectedBranchId;
+            } else {
+                const activeReportBranch = document.getElementById('cb-rep-branch-filter')?.value;
+                if (activeReportBranch && activeReportBranch !== 'all') {
+                    branchSelect.value = activeReportBranch;
+                }
+            }
+        };
+
         // Modal Open / Close for Handover (Cash Out) and Cash In
         window.openCashEntryModal = function(type) {
             const modal = document.getElementById('cash-entry-modal');
@@ -10605,27 +10667,29 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
             const noteInput = document.getElementById('cash-entry-note');
             const btn = document.getElementById('save-cash-entry-btn');
 
-            if (docIdInput) docIdInput.value = ''; // Nayi entry ke liye id khali
+            if (docIdInput) docIdInput.value = '';
             if (typeInput) typeInput.value = type;
             if (personInput) personInput.value = '';
             if (amtInput) amtInput.value = '';
             if (noteInput) noteInput.value = '';
             if (btn) btn.innerHTML = `<i class='bx bx-check-circle'></i> Save Entry`;
 
+            window.populateCashEntryBranchDropdown('');
+
             if (type === 'OUT') {
                 if (title) title.innerHTML = `<i class='bx bx-minus-circle' style="color:#ef4444;"></i> Cash Out (Handover to Owner / Bank)`;
-                if (sub) sub.textContent = "Shop ke galle se raqam nikal kar Malik ko di ya Bank jama karwayi.";
+                if (sub) sub.textContent = "Chuni hui branch ke galle se raqam nikal kar Malik ko di ya Bank jama karwayi.";
                 if (lblPerson) lblPerson.textContent = "Kisko Cash Diya? (e.g. Shop Malik / Manager / Bank) *";
             } else {
                 if (title) title.innerHTML = `<i class='bx bx-plus-circle' style="color:#10b981;"></i> Add Cash In (Drawer Fund)`;
-                if (sub) sub.textContent = "Khulla (change) rakhne ya kharchon ke liye galle mein cash shamil kiya.";
+                if (sub) sub.textContent = "Chuni hui branch ke galle mein cash shamil kiya.";
                 if (lblPerson) lblPerson.textContent = "Cash Kahan Se Aaya? (e.g. Malik ne diya, Bank se nikala) *";
             }
 
             modal?.classList.add('visible');
         };
 
-        // Edit Function: Purani Cash Entry ko Modal mein Load Karna
+        // Edit Function: Purani Cash Entry ko Modal mein Load Karna (Branch Assign karne ke liye)
         window.openEditCashEntryModal = function(docId) {
             const entry = (window.cashEntriesList || []).find(c => c.id === docId);
             if (!entry) { alert("Record nahi mila!"); return; }
@@ -10647,13 +10711,15 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
             if (amtInput) amtInput.value = entry.amount || '';
             if (noteInput) noteInput.value = entry.note || '';
 
+            window.populateCashEntryBranchDropdown(entry.branchId || '');
+
             if (entry.type === 'OUT') {
                 if (title) title.innerHTML = `<i class='bx bx-edit' style="color:#ef4444;"></i> Edit Cash Handover (Out)`;
-                if (sub) sub.textContent = "Cash Handover ki detail ya raqam update karein.";
+                if (sub) sub.textContent = "Store / Branch, detail ya raqam update karein.";
                 if (lblPerson) lblPerson.textContent = "Kisko Cash Diya? *";
             } else {
                 if (title) title.innerHTML = `<i class='bx bx-edit' style="color:#10b981;"></i> Edit Cash In (Drawer Fund)`;
-                if (sub) sub.textContent = "Cash In ki detail ya raqam update karein.";
+                if (sub) sub.textContent = "Store / Branch, detail ya raqam update karein.";
                 if (lblPerson) lblPerson.textContent = "Cash Kahan Se Aaya? *";
             }
 
@@ -10676,15 +10742,25 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
             document.getElementById('cash-entry-modal')?.classList.remove('visible');
         };
 
-        // Save ya Update Cash In / Cash Out Handover
+        // Save ya Update Cash In / Cash Out Handover (Store ID & Name ke sath)
         window.saveCashDrawerEntry = async function() {
             const docId = document.getElementById('cash-entry-doc-id')?.value;
             const type = document.getElementById('cash-entry-type')?.value || 'OUT';
+            const branchSelect = document.getElementById('cash-entry-branch');
+            const branchId = branchSelect ? branchSelect.value : '';
+            const branchName = (branchSelect && branchSelect.selectedIndex >= 0 && branchId)
+                ? branchSelect.options[branchSelect.selectedIndex].text
+                : '';
+
             const person = document.getElementById('cash-entry-person')?.value.trim();
             const amount = parseFloat(document.getElementById('cash-entry-amount')?.value);
             const note = document.getElementById('cash-entry-note')?.value.trim();
             const btn = document.getElementById('save-cash-entry-btn');
 
+            if (!branchId) {
+                alert("Baraye meherbani Store / Branch select karein!");
+                return;
+            }
             if (!person) {
                 alert("Baraye meherbani shakhs ya bank ka naam likhein!");
                 return;
@@ -10699,27 +10775,29 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
                 btn.innerHTML = "<i class='bx bx-loader-alt bx-spin'></i> Saving...";
 
                 if (docId) {
-                    // Agar purani entry edit ho rahi hai
                     await cashEntriesDB.doc(docId).update({
+                        branchId: branchId,
+                        branchName: branchName,
                         person: person,
                         amount: amount,
                         note: note || '',
                         lastEditedAt: firebase.firestore.FieldValue.serverTimestamp()
                     });
-                    Toast.fire({ icon: 'success', title: 'Cash Entry kamyabi say update hogayi!' });
+                    Toast.fire({ icon: 'success', title: `Entry [${branchName}] ke liye update hogayi!` });
                 } else {
-                    // Agar nayi entry add ho rahi hai
                     const now = new Date();
                     const entryDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
                     await cashEntriesDB.add({
                         type: type,
+                        branchId: branchId,
+                        branchName: branchName,
                         person: person,
                         amount: amount,
                         note: note || (type === 'OUT' ? 'Handover to Owner' : 'Drawer Fund In'),
                         date: entryDate,
                         timestamp: firebase.firestore.FieldValue.serverTimestamp()
                     });
-                    Toast.fire({ icon: 'success', title: `${type === 'OUT' ? 'Cash Handover' : 'Cash In'} entry save hogayi!` });
+                    Toast.fire({ icon: 'success', title: `${type === 'OUT' ? 'Cash Handover' : 'Cash In'} [${branchName}] mein save hogayi!` });
                 }
 
                 closeCashEntryModal();
@@ -11635,7 +11713,7 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
 
             const branchSelect = document.getElementById('edit-exp-branch');
             if (branchSelect) {
-                branchSelect.innerHTML = ``;
+                branchSelect.innerHTML = `<option value="">-- Select Store / Branch --</option>`;
                 const seenKeys = new Set();
                 (window.branchesList || []).forEach(b => {
                     const key = `${(b.name || '').trim().toLowerCase()}_${(b.area || '').trim().toLowerCase()}`;
@@ -11644,7 +11722,28 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
                         branchSelect.innerHTML += `<option value="${b.id}">${b.name} (${b.area})</option>`;
                     }
                 });
-                branchSelect.value = exp.branchId || (window.branchesList[0]?.id || '');
+
+                // Agar restricted branch user hai to branch change lock kar dein
+                const currentUserStr = sessionStorage.getItem('pos_current_user');
+                let isRestricted = false;
+                let userAssignedBranch = '';
+                if (currentUserStr) {
+                    try {
+                        const u = JSON.parse(currentUserStr);
+                        if (u.role !== 'superadmin' && u.role !== 'supermaster' && u.assignedBranch && u.assignedBranch !== 'all') {
+                            isRestricted = true;
+                            userAssignedBranch = u.assignedBranch;
+                        }
+                    } catch(e) {}
+                }
+
+                if (isRestricted) {
+                    branchSelect.value = userAssignedBranch;
+                    branchSelect.disabled = true;
+                } else {
+                    branchSelect.disabled = false;
+                    branchSelect.value = exp.branchId || '';
+                }
             }
 
             document.getElementById('edit-expense-modal')?.classList.add('visible');
@@ -11662,11 +11761,12 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
             const branchSelect = document.getElementById('edit-exp-branch');
             const saveBtn = document.getElementById('save-edit-exp-btn');
 
-            const branchId = branchSelect ? branchSelect.value : 'main';
-            const branchName = branchSelect && branchSelect.selectedIndex >= 0 
+            const branchId = branchSelect ? branchSelect.value : '';
+            const branchName = (branchSelect && branchSelect.selectedIndex >= 0 && branchId)
                 ? branchSelect.options[branchSelect.selectedIndex].text 
-                : 'Main Warehouse / Godown';
+                : '';
 
+            if (!branchId) { alert("Store / Branch select karna lazmi hai!"); return; }
             if (!title) { alert("Description / Title lazmi hai!"); return; }
             if (isNaN(amount) || amount <= 0) { alert("Durust amount likhein!"); return; }
 
@@ -11693,8 +11793,12 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
             }
         };
 
-        // Expenses Table ko Override karein taake Action column mein Edit + Delete dono dikhein
+        // Expenses Table (Strict Store Access & Branch Filtering)
         window.renderExpenseView = function() {
+            if (typeof window.populateReportDropdowns === 'function') {
+                window.populateReportDropdowns();
+            }
+
             const tbody = document.getElementById('expense-tbody');
             const totalCard = document.getElementById('total-expense-card-val');
 
@@ -11707,16 +11811,37 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
             if (!tbody) return;
             tbody.innerHTML = '';
 
-            const expenses = window.expensesList || [];
+            // User Access Check (Agar staff user kisi aik store par lock hai to sirf wahi store dikhe)
+            let branchFilter = document.getElementById('expense-branch-filter')?.value || 'all';
+            const currentUserStr = sessionStorage.getItem('pos_current_user');
+            if (currentUserStr) {
+                try {
+                    const u = JSON.parse(currentUserStr);
+                    if (u.role !== 'superadmin' && u.role !== 'supermaster' && u.assignedBranch && u.assignedBranch !== 'all') {
+                        branchFilter = u.assignedBranch;
+                    }
+                } catch(e) {}
+            }
+
+            const filteredExpenses = (window.expensesList || []).filter(exp => {
+                if (branchFilter !== 'all') {
+                    return (exp.branchId || '') === branchFilter;
+                }
+                return true;
+            });
+
             let totalAmount = 0;
 
-            if (expenses.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" class="empty-placeholder">Koi kharcha darj nahi hai. "+ Add Expense" dabayein.</td></tr>`;
+            if (filteredExpenses.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="empty-placeholder">Is store ka koi kharcha darj nahi hai. "+ Add Expense" dabayein.</td></tr>`;
             } else {
-                expenses.forEach(exp => {
+                filteredExpenses.forEach(exp => {
                     const amt = Number(exp.amount || 0);
                     totalAmount += amt;
-                    const branchDisp = exp.branchName || 'Store';
+
+                    const branchBadgeHtml = exp.branchName
+                        ? `<span style="background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.8rem;"><i class='bx bx-store'></i> ${exp.branchName}</span>`
+                        : `<span style="background:#fef3c7; color:#b45309; padding:3px 8px; border-radius:6px; font-weight:800; font-size:0.8rem;"><i class='bx bx-error'></i> Store Not Assigned</span>`;
 
                     tbody.innerHTML += `
                         <tr>
@@ -11726,11 +11851,7 @@ window.handleTransferScannedBarcode = function(rawBarcode) {
                                     ${exp.category || 'General'}
                                 </span>
                             </td>
-                            <td>
-                                <span style="background:#e0f2fe; color:#0369a1; padding:3px 8px; border-radius:6px; font-weight:700; font-size:0.8rem;">
-                                    <i class='bx bx-store'></i> ${branchDisp}
-                                </span>
-                            </td>
+                            <td>${branchBadgeHtml}</td>
                             <td><small style="color:#64748b; font-weight:600;">${exp.date || '-'}</small></td>
                             <td><strong style="color:#ef4444; font-size:1rem;">Rs. ${amt.toLocaleString()}</strong></td>
                             <td class="action-btns">
@@ -12401,6 +12522,8 @@ window.populateStockReportBranchDropdown = function() {
             const tbody = document.getElementById('report-tbody');
             const theadTr = document.querySelector('#report-tbody')?.previousElementSibling?.querySelector('tr');
             const remainEl = document.getElementById('report-remaining');
+            const costCardEl = document.getElementById('report-cost-card');
+            const costValEl = document.getElementById('report-cost-val');
             const saleValEl = document.getElementById('report-sale-val');
             const selectedBranch = document.getElementById('stock-report-branch-filter')?.value || 'all';
             const searchTerm = (document.getElementById('stock-report-search-input')?.value || '').toLowerCase().trim();
@@ -12413,10 +12536,15 @@ window.populateStockReportBranchDropdown = function() {
             if (currentUserStr) {
                 try {
                     const user = JSON.parse(currentUserStr);
-                    if (user.role !== 'superadmin' && user.permissions && user.permissions.stockCols) {
+                    if (user.role !== 'superadmin' && user.role !== 'supermaster' && user.permissions && user.permissions.stockCols) {
                         cols = user.permissions.stockCols;
                     }
                 } catch(e) {}
+            }
+
+            // Agar user ko Cost Price dekhne ki permission nahi hai to Total Cost Value card bhi chhup jayega
+            if (costCardEl) {
+                costCardEl.style.display = cols.costPrice ? 'flex' : 'none';
             }
 
             // DYNAMIC HEADER RENDER
@@ -12430,6 +12558,7 @@ window.populateStockReportBranchDropdown = function() {
 
             tbody.innerHTML = '';
             let totalRemainingUnits = 0;
+            let totalCostVal = 0;
             let totalSaleVal = 0;
 
             const products = window.menuItems || [];
@@ -12490,6 +12619,7 @@ window.populateStockReportBranchDropdown = function() {
             } else {
                 displayRows.forEach(item => {
                     totalRemainingUnits += item.stock;
+                    totalCostVal += (item.stock * item.costPrice);
                     totalSaleVal += (item.stock * item.price);
 
                     tbody.innerHTML += `
@@ -12505,10 +12635,11 @@ window.populateStockReportBranchDropdown = function() {
             }
 
             if (remainEl) remainEl.textContent = `${totalRemainingUnits} units`;
+            if (costValEl) costValEl.textContent = `Rs. ${totalCostVal.toLocaleString()}`;
             if (saleValEl) saleValEl.textContent = `Rs. ${totalSaleVal.toLocaleString()}`;
         };
 
-        // Area Filter ke sath PDF Export
+        // Area Filter ke sath PDF Export (With Total Cost Value)
         window.generateStockReportPDF = function() {
             const selectedBranch = document.getElementById('stock-report-branch-filter')?.value || 'all';
             let branchTitle = 'Main Godown & Overall Stores';
@@ -12522,7 +12653,7 @@ window.populateStockReportBranchDropdown = function() {
             let cols = { barcode: true, product: true, costPrice: true, sellingPrice: true, totalStock: true };
             if (currentUserStr) {
                 const user = JSON.parse(currentUserStr);
-                if (user.role !== 'superadmin' && user.permissions && user.permissions.stockCols) {
+                if (user.role !== 'superadmin' && user.role !== 'supermaster' && user.permissions && user.permissions.stockCols) {
                     cols = user.permissions.stockCols;
                 }
             }
@@ -12541,6 +12672,7 @@ window.populateStockReportBranchDropdown = function() {
             });
 
             const remainText = document.getElementById('report-remaining')?.textContent || '0 units';
+            const costText = document.getElementById('report-cost-val')?.textContent || 'Rs. 0';
             const saleText = document.getElementById('report-sale-val')?.textContent || 'Rs. 0';
 
             // DYNAMIC PDF HEADERS & TOTALS
@@ -12549,20 +12681,25 @@ window.populateStockReportBranchDropdown = function() {
 
             if (cols.barcode) { pdfHeaders.push({ title: 'Barcode', align: 'left' }); pdfTotals.push('-'); }
             if (cols.product) { pdfHeaders.push({ title: 'Product & Area', align: 'left' }); pdfTotals.push('-'); }
-            if (cols.costPrice) { pdfHeaders.push({ title: 'Cost Price', align: 'right' }); pdfTotals.push('-'); }
+            if (cols.costPrice) { pdfHeaders.push({ title: 'Cost Price', align: 'right' }); pdfTotals.push(costText); }
             if (cols.sellingPrice) { pdfHeaders.push({ title: 'Selling Price', align: 'right' }); pdfTotals.push(saleText); }
             if (cols.totalStock) { pdfHeaders.push({ title: 'Total Stock', align: 'center' }); pdfTotals.push(remainText); }
+
+            const pdfKpis = [
+                { label: 'Selected Area', value: branchTitle, color: '#0066ff' },
+                { label: 'Stock Left', value: remainText, color: '#10b981' }
+            ];
+            if (cols.costPrice) {
+                pdfKpis.push({ label: 'Total Cost Val', value: costText, color: '#d97706' });
+            }
+            pdfKpis.push({ label: 'Expected Sale Val', value: saleText, color: '#0284c7' });
 
             window.generateProfessionalPDF({
                 reportTitle: `STOCK & INVENTORY VALUATION REPORT`,
                 periodText: `Area / Location: ${branchTitle}`,
                 fileName: `Stock_Report_${branchTitle.replace(/[^a-zA-Z0-9_-]/g, '_')}`,
                 orientation: 'landscape',
-                kpis: [
-                    { label: 'Selected Area', value: branchTitle, color: '#0066ff' },
-                    { label: 'Stock Left', value: remainText, color: '#10b981' },
-                    { label: 'Expected Sale Val', value: saleText, color: '#0284c7' }
-                ],
+                kpis: pdfKpis,
                 headers: pdfHeaders,
                 rows: rows,
                 totals: pdfTotals
@@ -13559,7 +13696,9 @@ window.populateStockReportBranchDropdown = function() {
             window.setCashBookReportPreset('all');
         };
 
-   // RENDER UNIFIED CASH BOOK LEDGER (CLEAN 5 COLUMNS - STORE FILTER ENABLED)
+   // RENDER UNIFIED CASH BOOK LEDGER (BRANCH-WISE ISOLATED + CLEAN 5 COLUMNS)
+    window.cbPdfSummary = { totalIn: 0, totalOut: 0, netBal: 0, branchName: 'All Stores (Total Business)' };
+
     window.renderCashBookReport = function() {
         const tbody = document.getElementById('cb-transaction-history-tbody');
         const periodText = document.getElementById('cb-report-period-text');
@@ -13570,7 +13709,12 @@ window.populateStockReportBranchDropdown = function() {
         const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
         const fromDate = document.getElementById('cb-rep-date-from')?.value;
         const toDate = document.getElementById('cb-rep-date-to')?.value;
-        const branchFilter = document.getElementById('cb-rep-branch-filter')?.value || 'all';
+
+        const branchSelectEl = document.getElementById('cb-rep-branch-filter');
+        const branchFilter = branchSelectEl?.value || 'all';
+        const branchDisplayName = (branchSelectEl && branchSelectEl.selectedIndex >= 0)
+            ? branchSelectEl.options[branchSelectEl.selectedIndex].text
+            : 'All Stores (Total Business)';
 
         function isWithinPeriod(dateStr) {
             if (!dateStr) return false;
@@ -13594,7 +13738,7 @@ window.populateStockReportBranchDropdown = function() {
 
         const allTransactions = [];
 
-        // 1. CASH IN: Daily Counter Cash Sales (Filtered by selected Branch)
+        // 1. CASH IN: Daily Counter Cash Sales (Sirf Chuni Hui Branch ke)
         const dailySummaryMap = {};
 
         // A. Cash Sales / Payment Received
@@ -13608,12 +13752,7 @@ window.populateStockReportBranchDropdown = function() {
             if (paid > 0 && isWithinPeriod(s.date)) {
                 const d = (s.date || '').substring(0, 10);
                 if (!dailySummaryMap[d]) {
-                    dailySummaryMap[d] = {
-                        sales: 0,
-                        refunds: 0,
-                        expenses: 0,
-                        rawDate: new Date(s.date || now).getTime()
-                    };
+                    dailySummaryMap[d] = { sales: 0, refunds: 0, expenses: 0, rawDate: new Date(s.date || now).getTime() };
                 }
                 dailySummaryMap[d].sales += paid;
             }
@@ -13630,12 +13769,7 @@ window.populateStockReportBranchDropdown = function() {
             if (isWithinPeriod(r.date)) {
                 const d = (r.date || '').substring(0, 10);
                 if (!dailySummaryMap[d]) {
-                    dailySummaryMap[d] = {
-                        sales: 0,
-                        refunds: 0,
-                        expenses: 0,
-                        rawDate: new Date(r.date || now).getTime()
-                    };
+                    dailySummaryMap[d] = { sales: 0, refunds: 0, expenses: 0, rawDate: new Date(r.date || now).getTime() };
                 }
                 dailySummaryMap[d].refunds += Number(r.refund || 0);
             }
@@ -13648,21 +13782,15 @@ window.populateStockReportBranchDropdown = function() {
             if (isWithinPeriod(e.date)) {
                 const d = (e.date || '').substring(0, 10);
                 if (!dailySummaryMap[d]) {
-                    dailySummaryMap[d] = {
-                        sales: 0,
-                        refunds: 0,
-                        expenses: 0,
-                        rawDate: new Date(e.date || now).getTime()
-                    };
+                    dailySummaryMap[d] = { sales: 0, refunds: 0, expenses: 0, rawDate: new Date(e.date || now).getTime() };
                 }
                 dailySummaryMap[d].expenses += Number(e.amount || 0);
             }
         });
 
-        // D. Transaction List mein Net Cash in Hand Shamil Karna
+        // D. Net Daily Counter Cash
         Object.keys(dailySummaryMap).forEach(d => {
             const dayData = dailySummaryMap[d];
-            // Net Cash in Hand = Sales (47,175) - Refunds (9,375) - Expenses (300) = 37,500
             const netCashCollected = (dayData.sales - dayData.refunds - dayData.expenses);
 
             if (dayData.sales > 0 || netCashCollected !== 0) {
@@ -13677,8 +13805,12 @@ window.populateStockReportBranchDropdown = function() {
             }
         });
 
-        // 2. CASH OUT: Purchaser Payments (Vendors ko jo cash diya)
+        // 2. CASH OUT: Purchaser Payments (Branch Filter Applied)
         (window.purchasesList || []).forEach(p => {
+            if (branchFilter !== 'all') {
+                const pBranch = p.destinationId || p.branchId || 'main';
+                if (pBranch !== branchFilter) return;
+            }
             const paidAmt = Number(p.paidAmount || 0);
             if (paidAmt > 0 && isWithinPeriod(p.date)) {
                 const vendor = p.vendorName ? p.vendorName.trim() : 'Vendor';
@@ -13693,8 +13825,13 @@ window.populateStockReportBranchDropdown = function() {
             }
         });
 
-        // 3. CASH IN (+) AUR CASH HANDOVER (-) (Galle ki direct entries)
+        // 3. CASH IN (+) AUR CASH HANDOVER (-) (Sirf Usi Branch mein Show Honge)
         (window.cashEntriesList || []).forEach(c => {
+            // Branch check: Agar specific store select hai to sirf usi store ki entries dikhao
+            if (branchFilter !== 'all') {
+                if ((c.branchId || '') !== branchFilter) return;
+            }
+
             if (isWithinPeriod(c.date)) {
                 const isOut = (c.type === 'OUT');
                 const person = c.person ? c.person.trim() : '';
@@ -13709,6 +13846,10 @@ window.populateStockReportBranchDropdown = function() {
                 }
 
                 allTransactions.push({
+                    id: c.id,
+                    isManualEntry: true,
+                    branchId: c.branchId || '',
+                    branchName: c.branchName || '',
                     date: (c.date || '').substring(0, 10),
                     desc: entryDesc,
                     isSale: false,
@@ -13723,10 +13864,21 @@ window.populateStockReportBranchDropdown = function() {
         allTransactions.sort((a, b) => a.rawDate - b.rawDate);
 
         let runningBalance = 0;
+        let sumCashIn = 0;
+        let sumCashOut = 0;
         allTransactions.forEach(item => {
+            sumCashIn += item.cashIn;
+            sumCashOut += item.cashOut;
             runningBalance += (item.cashIn - item.cashOut);
             item.balance = runningBalance;
         });
+
+        window.cbPdfSummary = {
+            totalIn: sumCashIn,
+            totalOut: sumCashOut,
+            netBal: runningBalance,
+            branchName: branchDisplayName
+        };
 
         // Nayi entries ko upar dikhane ke liye reverse karein
         allTransactions.reverse();
@@ -13739,16 +13891,16 @@ window.populateStockReportBranchDropdown = function() {
         }
 
         if (periodText) {
-            periodText.textContent = `Duration: ${window.currentCBRepPreset.toUpperCase()} | Net Cash in Hand: Rs. ${runningBalance.toLocaleString()}`;
+            periodText.textContent = `Store: ${branchDisplayName} | Duration: ${window.currentCBRepPreset.toUpperCase()} | Net Cash in Hand: Rs. ${runningBalance.toLocaleString()}`;
         }
 
         // Agar koi entry na ho
         if (allTransactions.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 24px; color: #94a3b8; font-style: italic;">Is duration ka koi cash record mojood nahi hai.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding: 24px; color: #94a3b8; font-style: italic;">Is store ya duration ka koi cash record mojood nahi hai.</td></tr>`;
             return;
         }
 
-        // Cash Transaction History Table Render Karna (Saaf 5 Columns - No Buttons)
+        // Cash Transaction History Table Render Karna
         tbody.innerHTML = '';
         allTransactions.forEach((row, idx) => {
             const parts = row.date.split('-');
@@ -13761,6 +13913,24 @@ window.populateStockReportBranchDropdown = function() {
             let descHtml = `<span style="color: #1e293b; font-weight: 600;">${row.desc}</span>`;
             if (row.isSale) {
                 descHtml = `<strong style="color: #0f172a; font-weight: 800;">${row.desc}</strong>`;
+            } else if (row.isManualEntry) {
+                const branchTag = row.branchName
+                    ? `<span style="background:#e0f2fe; color:#0369a1; padding:2px 7px; border-radius:5px; font-size:0.74rem; font-weight:700;"><i class='bx bx-store'></i> ${row.branchName}</span>`
+                    : `<span style="background:#fef3c7; color:#b45309; padding:2px 7px; border-radius:5px; font-size:0.74rem; font-weight:800;"><i class='bx bx-error'></i> Store Assign Karein</span>`;
+
+                descHtml += `
+                    <div style="margin-top:5px; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+                        ${branchTag}
+                        <span class="cb-row-actions" style="display:inline-flex; gap:4px;">
+                            <button type="button" onclick="openEditCashEntryModal('${row.id}')" style="border:none; background:#eff6ff; color:#2563eb; padding:2px 7px; border-radius:5px; font-size:0.73rem; font-weight:700; cursor:pointer;" title="Store/Amount Edit Karein">
+                                <i class='bx bx-edit'></i> Edit
+                            </button>
+                            <button type="button" onclick="deleteCashEntry('${row.id}')" style="border:none; background:#fff1f2; color:#e11d48; padding:2px 7px; border-radius:5px; font-size:0.73rem; font-weight:700; cursor:pointer;" title="Delete Karein">
+                                <i class='bx bx-trash'></i>
+                            </button>
+                        </span>
+                    </div>
+                `;
             }
 
             const rowBg = idx % 2 === 0 ? '#ffffff' : '#f8fafc';
@@ -13784,7 +13954,7 @@ window.populateStockReportBranchDropdown = function() {
     };
 
 // =========================================================
-        // DEDICATED A4 PAGE CASH TRANSACTION HISTORY PDF GENERATOR
+        // DEDICATED A4 PAGE CASH TRANSACTION HISTORY PDF GENERATOR (BRANCH-WISE)
         // =========================================================
         window.downloadCashBookReportPDF = function() {
             const bizName = localStorage.getItem('pos_biz_name') || 'KORVEXA SOFTWARE';
@@ -13792,12 +13962,12 @@ window.populateStockReportBranchDropdown = function() {
             const printDate = new Date().toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' });
             const docRefNo = 'CB-' + Math.floor(100000 + Math.random() * 900000);
 
-            // KPI Values
-            const inVal = document.getElementById('kpi-cb-in')?.textContent || 'Rs. 0';
-            const purVal = document.getElementById('kpi-cb-purchaser')?.textContent || 'Rs. 0';
-            const netVal = document.getElementById('kpi-cb-net')?.textContent || 'Rs. 0';
+            const summary = window.cbPdfSummary || { totalIn: 0, totalOut: 0, netBal: 0, branchName: 'All Stores (Total Business)' };
+            const inVal = `Rs. ${Number(summary.totalIn || 0).toLocaleString()}`;
+            const outVal = `Rs. ${Number(summary.totalOut || 0).toLocaleString()}`;
+            const netVal = `Rs. ${Number(summary.netBal || 0).toLocaleString()}`;
 
-            // Gather rows from active on-screen ledger
+            // Gather rows from active on-screen ledger (buttons ko PDF se hatana)
             const trs = document.querySelectorAll('#cb-transaction-history-tbody tr');
             let tableRowsHtml = '';
 
@@ -13808,7 +13978,10 @@ window.populateStockReportBranchDropdown = function() {
                     const tds = tr.querySelectorAll('td');
                     if (tds.length === 5) {
                         const dateText = tds[0].innerText.trim();
-                        const descHtml = tds[1].innerHTML.trim(); // Retains bold for Remaining Balance
+                        const tempDesc = tds[1].cloneNode(true);
+                        tempDesc.querySelectorAll('.cb-row-actions').forEach(el => el.remove());
+                        const descHtml = tempDesc.innerHTML.trim();
+
                         const inText = tds[2].innerText.trim();
                         const outText = tds[3].innerText.trim();
                         const balText = tds[4].innerText.trim();
@@ -13828,7 +14001,7 @@ window.populateStockReportBranchDropdown = function() {
                 });
             }
 
-            // High Precision A4 Document Layout (210mm Printable Canvas)
+            // High Precision A4 Document Layout
             const printContent = `
                 <div style="width: 100%; max-width: 190mm; margin: 0 auto; padding: 4px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #0f172a; background: #ffffff; box-sizing: border-box;">
                     <style>
@@ -13837,7 +14010,6 @@ window.populateStockReportBranchDropdown = function() {
                         b, strong { font-weight: 800 !important; color: #0f172a !important; }
                     </style>
 
-                    <!-- Top Decorative Line -->
                     <div style="height: 4px; background: #0f172a; margin-bottom: 14px; border-radius: 2px;"></div>
 
                     <!-- Header Section -->
@@ -13848,7 +14020,7 @@ window.populateStockReportBranchDropdown = function() {
                                 : `<h1 style="font-size: 20px; font-weight: 900; margin: 0 0 3px 0; text-transform: uppercase; color: #0f172a; letter-spacing: -0.3px;">${bizName}</h1>`
                             }
                             <div style="font-size: 9.5px; font-weight: 600; color: #64748b;">
-                                Contact: <strong style="color:#0f172a;">${bizPhone}</strong> &nbsp;|&nbsp; Point of Sale & Inventory Accounting
+                                Contact: <strong style="color:#0f172a;">${bizPhone}</strong> &nbsp;|&nbsp; Store: <strong style="color:#0284c7;">${summary.branchName}</strong>
                             </div>
                         </div>
                         <div style="text-align: right;">
@@ -13861,18 +14033,18 @@ window.populateStockReportBranchDropdown = function() {
                         </div>
                     </div>
 
-                    <!-- 3 Summary KPI Boxes (Expenses Removed, Fitted in A4 Width) -->
+                    <!-- 3 Summary KPI Boxes -->
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px;">
                         <div style="background: #ffffff; border: 1px solid #cbd5e1; border-top: 3px solid #10b981; border-radius: 5px; padding: 6px 10px;">
                             <div style="font-size: 8px; font-weight: 800; color: #64748b; text-transform: uppercase;">Total Cash In</div>
                             <div style="font-size: 12.5px; font-weight: 900; color: #10b981; margin-top: 2px;">${inVal}</div>
                         </div>
-                        <div style="background: #ffffff; border: 1px solid #cbd5e1; border-top: 3px solid #8b5cf6; border-radius: 5px; padding: 6px 10px;">
-                            <div style="font-size: 8px; font-weight: 800; color: #64748b; text-transform: uppercase;">Purchaser Payments</div>
-                            <div style="font-size: 12.5px; font-weight: 900; color: #8b5cf6; margin-top: 2px;">${purVal}</div>
+                        <div style="background: #ffffff; border: 1px solid #cbd5e1; border-top: 3px solid #ef4444; border-radius: 5px; padding: 6px 10px;">
+                            <div style="font-size: 8px; font-weight: 800; color: #64748b; text-transform: uppercase;">Total Cash Out (Handover)</div>
+                            <div style="font-size: 12.5px; font-weight: 900; color: #ef4444; margin-top: 2px;">${outVal}</div>
                         </div>
                         <div style="background: #ffffff; border: 1px solid #cbd5e1; border-top: 3px solid #059669; border-radius: 5px; padding: 6px 10px;">
-                            <div style="font-size: 8px; font-weight: 800; color: #64748b; text-transform: uppercase;">Net Running Balance</div>
+                            <div style="font-size: 8px; font-weight: 800; color: #64748b; text-transform: uppercase;">Net Cash in Hand</div>
                             <div style="font-size: 12.5px; font-weight: 900; color: #059669; margin-top: 2px;">${netVal}</div>
                         </div>
                     </div>
@@ -13916,10 +14088,10 @@ window.populateStockReportBranchDropdown = function() {
             const element = document.createElement('div');
             element.innerHTML = printContent;
 
-            // Strict A4 Specifications
+            const safeStore = summary.branchName.replace(/[^a-zA-Z0-9_-]/g, '_');
             const opt = {
-                margin: [8, 8, 8, 8], // 8mm margins ensure maximum printable area without edge clipping
-                filename: `Cash_Transaction_History_${new Date().toISOString().slice(0, 10)}.pdf`,
+                margin: [8, 8, 8, 8],
+                filename: `Cash_Book_${safeStore}_${new Date().toISOString().slice(0, 10)}.pdf`,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2.5, useCORS: true, letterRendering: true },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -16364,6 +16536,7 @@ window.populateReportDropdowns = function() {
         'pur-details-branch-filter',
         'pur-rep-branch-filter',
         'ret-rep-branch-filter',
+        'expense-branch-filter',
         'exp-rep-branch-filter',
         'cb-rep-branch-filter',
         'stock-report-branch-filter',
